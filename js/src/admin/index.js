@@ -1,3 +1,8 @@
+import TrustLevelsPage from './components/TrustLevelsPage';
+
+import TrustLevel from '../common/models/TrustLevel';
+
 app.initializers.add('askvortsov/flarum-trust-levels', () => {
-  console.log('[askvortsov/flarum-trust-levels] Hello, admin!');
+  app.store.models.trust_levels = TrustLevel;
+  app.extensionData.for('askvortsov-trust-levels').registerPage(TrustLevelsPage);
 });
