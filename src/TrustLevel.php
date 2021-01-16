@@ -50,7 +50,7 @@ class TrustLevel extends AbstractModel
 
     public function users()
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'trust_level_user');
     }
 }
 
