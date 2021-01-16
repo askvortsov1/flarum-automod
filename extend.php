@@ -12,9 +12,13 @@
 namespace Askvortsov\TrustLevels;
 
 use Askvortsov\TrustLevels\Api\Controller;
+use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
+use Flarum\Api\Controller\ListUsersController;
+use Flarum\Api\Controller\ShowUserController;
+use Flarum\Api\Serializer\UserSerializer;
 use Flarum\Extend;
 use Flarum\Group\Group;
-use Flarum\User\Event\LoggedIn;
+use Flarum\User\User;
 
 return [
     (new Extend\Frontend('forum'))
@@ -35,7 +39,16 @@ return [
         ->hasMany('trustLevels', TrustLevel::class),
 
     (new Extend\Model(User::class))
-        ->belongsToMany('trustLevels', TrustLevel::class),
+        ->belongsToMany('trustLevels', TrustLevel::class, 'trust_level_user'),
+
+    (new Extend\ApiSerializer(UserSerializer::class))
+        ->hasMany('trustLevels', TrustLevelSerializer::class),
+
+    (new Extend\ApiController(ShowUserController::class))
+        ->addInclude('trustLevels'),
+
+    (new Extend\ApiController(ListUsersController::class))
+        ->addInclude('trustLevels'),
 
     new Extend\Locales(__DIR__ . '/resources/locale')
 ];
