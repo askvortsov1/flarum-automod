@@ -38,7 +38,7 @@ class TrustLevel extends AbstractModel
         $tag = new static;
 
         $tag->name = $name;
-        $tag->group = $group;
+        $tag->group()->associate($group);
 
         return $tag;
     }
