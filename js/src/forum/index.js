@@ -1,3 +1,5 @@
+const { default: registerModels } = require("../common/registerModels");
+
 app.initializers.add('askvortsov/flarum-trust-levels', () => {
-  console.log('[askvortsov/flarum-trust-levels] Hello, forum!');
+  registerModels();
 });
