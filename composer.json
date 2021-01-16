@@ -1,13 +1,13 @@
 {
   "name": "askvortsov/flarum-trust-levels",
-  "description": "Automatically assign groups based on activity",
+  "description": "Automatically assign groups based on activity.",
   "keywords": [
     "flarum"
   ],
   "type": "flarum-extension",
   "license": "MIT",
   "require": {
-    "flarum/core": "^0.1.0-beta.8"
+    "flarum/core": "^0.1.0-beta.15"
   },
   "authors": [
     {
@@ -24,14 +24,12 @@
   "extra": {
     "flarum-extension": {
       "title": "Trust Levels",
+      "category": "moderation",
       "icon": {
-        "name": "",
-        "backgroundColor": "",
-        "color": ""
+        "name": "fas fa-shield-alt",
+        "backgroundColor": "#6932D1",
+        "color": "#fff"
       }
-    },
-    "flagrow": {
-      "discuss": ""
     }
   }
 }
