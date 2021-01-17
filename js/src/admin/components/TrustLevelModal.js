@@ -20,14 +20,20 @@ export default class TrustLevelModal extends Modal {
     this.groupId = Stream(currGroup ? currGroup.id() : null);
 
     this.name = Stream(this.trustLevel.name() || '');
-    this.minDiscussionsEntered = Stream(this.trustLevel.minDiscussionsEntered() || -1);
-    this.maxDiscussionsEntered = Stream(this.trustLevel.maxDiscussionsEntered() || -1);
-    this.minDiscussionsParticipated = Stream(this.trustLevel.minDiscussionsParticipated() || -1);
-    this.maxDiscussionsParticipated = Stream(this.trustLevel.maxDiscussionsParticipated() || -1);
-    this.minDiscussionsStarted = Stream(this.trustLevel.minDiscussionsStarted() || -1);
-    this.maxDiscussionsStarted = Stream(this.trustLevel.maxDiscussionsStarted() || -1);
-    this.minPostsMade = Stream(this.trustLevel.minPostsMade() || -1);
-    this.maxPostsMade = Stream(this.trustLevel.maxPostsMade() || -1);
+
+    this.rangeTranslations = {
+      'DiscussionsEntered': 'askvortsov-trust-levels.admin.trust_level_modal.ranges.discussions_entered_label',
+      'DiscussionsParticipated': 'askvortsov-trust-levels.admin.trust_level_modal.ranges.discussions_participated_label',
+      'DiscussionsStarted': 'askvortsov-trust-levels.admin.trust_level_modal.ranges.discussions_started_label',
+      'PostsMade': 'askvortsov-trust-levels.admin.trust_level_modal.ranges.posts_made_label'
+    };
+
+    this.ranges = Object.keys(this.rangeTranslations);
+
+    this.ranges.forEach((range) => {
+      this[`min${range}`] = Stream(this.trustLevel[`min${range}`]() || -1);
+      this[`max${range}`] = Stream(this.trustLevel[`max${range}`]() || -1);
+    });
   }
 
   className() {
@@ -66,36 +72,15 @@ export default class TrustLevelModal extends Modal {
       ></GroupSelector>
     </div>, 50);
 
-    items.add('discussionsEntered',
-      <MinMaxSelector
-        label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.discussions_entered_label')}
-        min={this.minDiscussionsEntered}
-        max={this.maxDiscussionsEntered}
-      ></MinMaxSelector>, 40);
-
-    items.add('discussionsParticipated',
-      <MinMaxSelector
-        label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.discussions_participated_label')}
-        min={this.minDiscussionsParticipated}
-        max={this.maxDiscussionsParticipated}
-      ></MinMaxSelector>
-      , 30);
-
-    items.add('discussionsStarted',
-      <MinMaxSelector
-        label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.discussions_started_label')}
-        min={this.minDiscussionsStarted}
-        max={this.maxDiscussionsStarted}
-      ></MinMaxSelector>
-      , 30);
-
-    items.add('postsMade',
-      <MinMaxSelector
-        label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.posts_made_label')}
-        min={this.minPostsMade}
-        max={this.maxPostsMade}
-      ></MinMaxSelector>
-      , 30);
+    this.ranges.forEach((range) => {
+      items.add(range,
+        <MinMaxSelector
+          label={app.translator.trans(this.rangeTranslations[range])}
+          min={this[`min${range}`]}
+          max={this[`max${range}`]}
+        ></MinMaxSelector>
+        , 40);
+    })
 
     items.add('submit', <div className="Form-group">
       {Button.component({
@@ -116,7 +101,7 @@ export default class TrustLevelModal extends Modal {
   submitData() {
     const group = app.store.getById('groups', this.groupId());
 
-    return {
+    const data = {
       name: this.name(),
 
       minDiscussionsEntered: this.minDiscussionsEntered(),
@@ -131,6 +116,11 @@ export default class TrustLevelModal extends Modal {
 
       relationships: { group }
     };
+
+    this.ranges.forEach(() => {
+      data[`min${range}`] = this[`min${range}`]();
+      data[`max${range}`] = this[`max${range}`]();
+    });
   }
 
   onsubmit(e) {
