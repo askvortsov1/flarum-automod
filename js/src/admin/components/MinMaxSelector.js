@@ -1,15 +1,90 @@
 import Component from 'flarum/Component';
+import Button from 'flarum/components/Button';
+import Stream from 'flarum/utils/Stream';
 
-export default class MinMaxSelector extends Component
+class MinMaxSelector extends Component
 {
+    oninit(vnode) {
+        super.oninit(vnode);
+
+        this.state = MinMaxSelector.State.DISABLED;
+        if (this.attrs.min() !== -1) this.state += 1;
+        if (this.attrs.max() !== -1) this.state += 2;
+
+        this.min = Stream(this.attrs.min());
+        this.max = Stream(this.attrs.max());
+    }
+
     view() {
         return (
-            <div className="Form-group">
-                <p>MIN:</p>
-                <input className="FormControl" type="number" placeholder="min" bidi={this.attrs.min}></input>
-                <p>MAX:</p>
-                <input className="FormControl" type="number" placeholder="max" bidi={this.attrs.max}></input>
+            <div className="Form-group MinMaxSelector">
+                <label>{this.attrs.label}</label>
+                <div className="MinMaxSelector--inputs">
+                    {
+                        this.showMin() ? [
+                            <input className="FormControl" type="number" min="0" placeholder="min" bidi={this.attrs.min}></input>,
+                            <Button className="Button" onclick={this.cycle.bind(this)} icon="fas fa-greater-than-equal"></Button>
+                        ] : ''
+                    }
+                    {
+                        this.state === MinMaxSelector.State.DISABLED ?
+                            <Button className="Button" onclick={this.cycle.bind(this)} icon="fas fa-power-off"></Button>
+                            : <input className="FormControl MinMaxSelector--placeholder" disabled value="x"></input>
+                    }
+                    {
+                        this.showMax() ? [
+                            <Button className="Button" onclick={this.cycle.bind(this)} icon="fas fa-less-than-equal"></Button>,
+                            <input className="FormControl" type="number" min="0" placeholder="max" bidi={this.attrs.max}></input>
+                        ] : ''
+                    }
+                </div>
             </div>
         );
     }
+
+    cycle() {
+        this.state++;
+        this.state %= 4;
+
+        if (this.attrs.min() !== -1) this.min(-1);
+        if (this.attrs.max() !== -1) this.max(-1);
+
+        switch (this.state) {
+            case 0:
+                this.attrs.min(-1);
+                this.attrs.max(-1);
+                break;
+            case 1:
+                this.attrs.min(-1);
+                this.attrs.max(this.max());
+                break;
+            case 2:
+                this.attrs.min(this.min());
+                this.attrs.max(-1);
+                break;
+            case 3:
+                this.attrs.min(this.min());
+                this.attrs.max(this.max());
+                break;
+        }
+    }
+
+    showMin() {
+        return this.state === MinMaxSelector.State.lTE || this.state === MinMaxSelector.State.BETWEEN;
+    }
+
+    showMax() {
+        return this.state === MinMaxSelector.State.GTE || this.state === MinMaxSelector.State.BETWEEN;
+    }
+
+
 }
+
+MinMaxSelector.State = {
+    DISABLED: 0,
+    lTE: 1,
+    GTE: 2,
+    BETWEEN: 3
+}
+
+export default MinMaxSelector;
