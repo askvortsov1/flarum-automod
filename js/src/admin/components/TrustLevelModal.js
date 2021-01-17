@@ -19,8 +19,6 @@ export default class TrustLevelModal extends Modal {
     const currGroup = this.trustLevel.group();
     this.groupId = Stream(currGroup ? currGroup.id() : null);
 
-    console.log(this.trustLevel, currGroup)
-
     this.name = Stream(this.trustLevel.name() || '');
     this.minDiscussionsEntered = Stream(this.trustLevel.minDiscussionsEntered() || -1);
     this.maxDiscussionsEntered = Stream(this.trustLevel.maxDiscussionsEntered() || -1);
