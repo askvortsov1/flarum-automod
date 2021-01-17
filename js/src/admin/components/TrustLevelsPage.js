@@ -1,6 +1,5 @@
 import ExtensionPage from 'flarum/components/ExtensionPage';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
-import Button from 'flarum/components/Button';
 import icon from 'flarum/helpers/icon';
 import TrustLevelModal from './TrustLevelModal';
 
