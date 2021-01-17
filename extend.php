@@ -33,10 +33,11 @@ return [
         ->css(__DIR__ . '/resources/less/admin.less'),
 
     (new Extend\Routes('api'))
-        ->get('/trust_levels', 'tags.index', Controller\ListTrustLevelsController::class)
-        ->post('/trust_levels', 'tags.create', Controller\CreateTrustLevelController::class)
-        ->patch('/trust_levels/{id}', 'tags.update', Controller\UpdateTrustLevelController::class)
-        ->delete('/trust_levels/{id}', 'tags.delete', Controller\DeleteTrustLevelController::class),
+        ->get('/trust_levels', 'trust_levels.index', Controller\ListTrustLevelsController::class)
+        ->post('/trust_levels', 'trust_levels.create', Controller\CreateTrustLevelController::class)
+        ->patch('/trust_levels/{id}', 'trust_levels.update', Controller\UpdateTrustLevelController::class)
+        ->delete('/trust_levels/{id}', 'trust_levels.delete', Controller\DeleteTrustLevelController::class)
+        ->get('/trust_level_drivers', 'trust_level_drivers.index', Controller\ShowTrustLevelRangeDriversController::class),
 
     (new Extend\Model(Group::class))
         ->hasMany('trustLevels', TrustLevel::class),

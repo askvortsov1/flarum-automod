@@ -1,5 +1,6 @@
 import Modal from 'flarum/components/Modal';
 import Button from 'flarum/components/Button';
+import LoadingIndicator from 'flarum/components/LoadingIndicator';
 import ItemList from 'flarum/utils/ItemList';
 import Stream from 'flarum/utils/Stream';
 
@@ -21,19 +22,29 @@ export default class TrustLevelModal extends Modal {
 
     this.name = Stream(this.trustLevel.name() || '');
 
-    this.rangeTranslations = {
-      'DiscussionsEntered': 'askvortsov-trust-levels.admin.trust_level_modal.ranges.discussions_entered_label',
-      'DiscussionsParticipated': 'askvortsov-trust-levels.admin.trust_level_modal.ranges.discussions_participated_label',
-      'DiscussionsStarted': 'askvortsov-trust-levels.admin.trust_level_modal.ranges.discussions_started_label',
-      'PostsMade': 'askvortsov-trust-levels.admin.trust_level_modal.ranges.posts_made_label'
-    };
+    this.loading = true;
 
-    this.ranges = Object.keys(this.rangeTranslations);
+    app
+      .request({
+        method: 'GET',
+        url: app.forum.attribute('apiUrl') + '/trust_level_drivers',
+      })
+      .then((response) => {
+        this.rangeTranslations = response['data']['attributes']['drivers'];
 
-    this.ranges.forEach((range) => {
-      this[`min${range}`] = Stream(this.trustLevel[`min${range}`]() || -1);
-      this[`max${range}`] = Stream(this.trustLevel[`max${range}`]() || -1);
-    });
+        this.ranges = Object.keys(this.rangeTranslations);
+
+        this.ranges.forEach((rangeName) => {
+          const ranges = this.trustLevel.ranges() || [];
+          const min = ranges[`min${rangeName}`];
+          const max = ranges[`max${rangeName}`];
+          this[`min${rangeName}`] = Stream(min ? min : -1);
+          this[`max${rangeName}`] = Stream(max ? max : -1);
+        });
+
+        this.loading = false;
+        m.redraw();
+      });
   }
 
   className() {
@@ -47,6 +58,18 @@ export default class TrustLevelModal extends Modal {
   }
 
   content() {
+    if (this.loading) {
+      return (
+        <div className="Modal-body">
+          <div className="Form">
+            <div className="container">
+              <LoadingIndicator />
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="Modal-body">
         <div className="Form">
@@ -87,6 +110,7 @@ export default class TrustLevelModal extends Modal {
         type: 'submit',
         className: 'Button Button--primary EditTrustLevelModal-save',
         loading: this.loading,
+        disabled: this.name().length === 0 || !this.groupId()
       }, app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.submit_button'))}
       {this.trustLevel.exists ? (
         <button type="button" className="Button EditTrustLevelModal-delete" onclick={this.delete.bind(this)}>
@@ -103,24 +127,15 @@ export default class TrustLevelModal extends Modal {
 
     const data = {
       name: this.name(),
-
-      minDiscussionsEntered: this.minDiscussionsEntered(),
-      maxDiscussionsEntered: this.maxDiscussionsEntered(),
-
-      minDiscussionsParticipated: this.minDiscussionsParticipated(),
-      maxDiscussionsParticipated: this.maxDiscussionsParticipated(),
-      minDiscussionsStarted: this.minDiscussionsStarted(),
-      maxDiscussionsStarted: this.maxDiscussionsStarted(),
-      minPostsMade: this.minPostsMade(),
-      maxPostsMade: this.maxPostsMade(),
-
       relationships: { group }
     };
 
-    this.ranges.forEach(() => {
-      data[`min${range}`] = this[`min${range}`]();
-      data[`max${range}`] = this[`max${range}`]();
+    this.ranges.forEach((rangeName) => {
+      data[`min${rangeName}`] = this[`min${rangeName}`]();
+      data[`max${rangeName}`] = this[`max${rangeName}`]();
     });
+
+    return data;
   }
 
   onsubmit(e) {
@@ -137,7 +152,7 @@ export default class TrustLevelModal extends Modal {
   }
 
   delete() {
-    if (confirm(app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.delete_trustlevel_confirmation'))) {
+    if (confirm(app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.delete_confirmation'))) {
 
       this.trustLevel.delete().then(() => {
         m.redraw();

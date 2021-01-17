@@ -34,7 +34,7 @@ export default class TrustLevelsPage extends ExtensionPage {
       });
   }
   content() {
-    if (this.loading || this.saving) {
+    if (this.loading) {
       return (
         <div className="TrustLevels">
           <div className="container">
