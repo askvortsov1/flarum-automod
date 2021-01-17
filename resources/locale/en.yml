@@ -1,0 +1,22 @@
+askvortsov-trust-levels:
+  admin:
+    trust_level_modal:
+      title: Create Trust Level
+      name_label: Name
+      name_placeholder: Trust Level Name
+      group_label: Group
+      discussions_entered_label: Discussions Entered
+      discussions_participated_label: Discussions Participated
+      discussions_started_label: Discussions Started
+      posts_made_label: Posts Made
+      submit_button: => core.ref.save_changes
+      delete_button: Delete Trust Level
+      delete_confirmation: Are you sure you want to delete this trust level? The trust level's group will not be revoked from users who have received it.
+    trust_level_page:
+      create_trust_level_button: Create New Trust Level
+      about_trust_levels_text: |
+        Trust levels allow you to automatically manage group membership based on users' activity.<br></br>
+        Each trust level defines criteria that must be met (e.g. discussions started, posts made, etc), and a group.<br></br>
+        Users are automatically added to groups for all the trust levels that they qualify for when they log in.<br></br>
+        Since these groups are managed automatically, we highly discourage manually adding/removing users to/from groups
+        that are associated with trust levels.

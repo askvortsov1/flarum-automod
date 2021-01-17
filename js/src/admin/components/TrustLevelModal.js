@@ -22,14 +22,14 @@ export default class TrustLevelModal extends Modal {
     console.log(this.trustLevel, currGroup)
 
     this.name = Stream(this.trustLevel.name() || '');
-    this.minDiscussionsEntered = Stream(this.trustLevel.minDiscussionsEntered() || 0);
-    this.maxDiscussionsEntered = Stream(this.trustLevel.maxDiscussionsEntered() || 0);
-    this.minDiscussionsParticipated = Stream(this.trustLevel.minDiscussionsParticipated() || 0);
-    this.maxDiscussionsParticipated = Stream(this.trustLevel.maxDiscussionsParticipated() || 0);
-    this.minDiscussionsStarted = Stream(this.trustLevel.minDiscussionsStarted() || 0);
-    this.maxDiscussionsStarted = Stream(this.trustLevel.maxDiscussionsStarted() || 0);
-    this.minPostsMade = Stream(this.trustLevel.minPostsMade() || 0);
-    this.maxPostsMade = Stream(this.trustLevel.maxPostsMade() || 0);
+    this.minDiscussionsEntered = Stream(this.trustLevel.minDiscussionsEntered() || -1);
+    this.maxDiscussionsEntered = Stream(this.trustLevel.maxDiscussionsEntered() || -1);
+    this.minDiscussionsParticipated = Stream(this.trustLevel.minDiscussionsParticipated() || -1);
+    this.maxDiscussionsParticipated = Stream(this.trustLevel.maxDiscussionsParticipated() || -1);
+    this.minDiscussionsStarted = Stream(this.trustLevel.minDiscussionsStarted() || -1);
+    this.maxDiscussionsStarted = Stream(this.trustLevel.maxDiscussionsStarted() || -1);
+    this.minPostsMade = Stream(this.trustLevel.minPostsMade() || -1);
+    this.maxPostsMade = Stream(this.trustLevel.maxPostsMade() || -1);
   }
 
   className() {
@@ -39,7 +39,7 @@ export default class TrustLevelModal extends Modal {
   title() {
     return this.name()
       ? this.name()
-      : app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.title');
+      : app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.title');
   }
 
   content() {
@@ -56,27 +56,27 @@ export default class TrustLevelModal extends Modal {
     const items = new ItemList();
 
     items.add('name', <div className="Form-group">
-      <label>{app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.name_label')}</label>
-      <input className="FormControl" placeholder={app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.name_placeholder')} bidi={this.name} />
+      <label>{app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.name_label')}</label>
+      <input className="FormControl" placeholder={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.name_placeholder')} bidi={this.name} />
     </div>, 50);
 
     items.add('group', <div className="Form-group">
       <GroupSelector
-        label={app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.name_label')}
+        label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.group_label')}
         id={this.groupId}
       ></GroupSelector>
     </div>, 50);
 
     items.add('discussionsEntered',
       <MinMaxSelector
-        label={app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.slug_label')}
+        label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.discussions_entered_label')}
         min={this.minDiscussionsEntered}
         max={this.maxDiscussionsEntered}
       ></MinMaxSelector>, 40);
 
     items.add('discussionsParticipated',
       <MinMaxSelector
-        label={app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.slug_label')}
+        label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.discussions_participated_label')}
         min={this.minDiscussionsParticipated}
         max={this.maxDiscussionsParticipated}
       ></MinMaxSelector>
@@ -84,7 +84,7 @@ export default class TrustLevelModal extends Modal {
 
     items.add('discussionsStarted',
       <MinMaxSelector
-        label={app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.slug_label')}
+        label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.discussions_started_label')}
         min={this.minDiscussionsStarted}
         max={this.maxDiscussionsStarted}
       ></MinMaxSelector>
@@ -92,7 +92,7 @@ export default class TrustLevelModal extends Modal {
 
     items.add('postsMade',
       <MinMaxSelector
-        label={app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.slug_label')}
+        label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.posts_made_label')}
         min={this.minPostsMade}
         max={this.maxPostsMade}
       ></MinMaxSelector>
@@ -103,10 +103,10 @@ export default class TrustLevelModal extends Modal {
         type: 'submit',
         className: 'Button Button--primary EditTrustLevelModal-save',
         loading: this.loading,
-      }, app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.submit_button'))}
+      }, app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.submit_button'))}
       {this.trustLevel.exists ? (
         <button type="button" className="Button EditTrustLevelModal-delete" onclick={this.delete.bind(this)}>
-          {app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.delete_trustlevel_button')}
+          {app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.delete_button')}
         </button>
       ) : ''}
     </div>, -10);
@@ -148,7 +148,7 @@ export default class TrustLevelModal extends Modal {
   }
 
   delete() {
-    if (confirm(app.translator.trans('flarum-trustlevels.admin.edit_trustlevel.delete_trustlevel_confirmation'))) {
+    if (confirm(app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.delete_trustlevel_confirmation'))) {
 
       this.trustLevel.delete().then(() => {
         m.redraw();

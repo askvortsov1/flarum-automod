@@ -48,7 +48,6 @@ export default class TrustLevelsPage extends ExtensionPage {
           <div className="container">
             <div className="SettingsGroups">
               <div className="TrustLevelGroup">
-                <label>{app.translator.trans('flarum-trustLevels.admin.trustLevels.primary_heading')}</label>
                 <ol className="TrustLevelList TrustLevelList--primary">
                   {app.store.all('trust_levels')
                     .map(trustLevelItem)}
@@ -59,12 +58,12 @@ export default class TrustLevelsPage extends ExtensionPage {
                     icon: 'fas fa-plus',
                     onclick: () => app.modal.show(TrustLevelModal),
                   },
-                  app.translator.trans('flarum-trustLevels.admin.trustLevels.create_primary_trustLevel_button')
+                  app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.create_trust_level_button')
                 )}
               </div>
             </div>
             <div className="TrustLevelsContent-footer">
-              <p>{app.translator.trans('flarum-trustLevels.admin.trustLevels.about_trustLevels_text')}</p>
+              <p>{app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.about_trust_levels_text')}</p>
             </div>
           </div>
         </div>
