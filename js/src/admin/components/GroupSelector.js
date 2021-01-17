@@ -11,24 +11,26 @@ export default class GroupSelector extends Component {
             <div className="Form-group">
                 <label>{this.attrs.label}</label>
 
-                <Dropdown label={[icon(group.icon()), '\t', group.namePlural()]} buttonClassName="Button Button--danger">
-                    {app.store
-                        .all('groups')
-                        .filter((g) => ![Group.MEMBER_ID, Group.GUEST_ID].includes(g.id()))
-                        .map((g) =>
-                            Button.component(
-                                {
-                                    active: group.id() === g.id(),
-                                    disabled: group && group.id() === g.id(),
-                                    icon: g.icon() || icons[g.id()],
-                                    onclick: () => {
-                                        this.attrs.id(g.id());
+                {this.attrs.disabled ? <div className="Button Button--danger">{[icon(group.icon()), '\t', group.namePlural()]}</div>
+                :
+                    <Dropdown label={[icon(group.icon()), '\t', group.namePlural()]} disabled={this.attrs.disabled} buttonClassName="Button Button--danger">
+                        {app.store
+                            .all('groups')
+                            .filter((g) => ![Group.MEMBER_ID, Group.GUEST_ID].includes(g.id()))
+                            .map((g) =>
+                                Button.component(
+                                    {
+                                        active: group.id() === g.id(),
+                                        disabled: group && group.id() === g.id(),
+                                        icon: g.icon() || icons[g.id()],
+                                        onclick: () => {
+                                            this.attrs.id(g.id());
+                                        },
                                     },
-                                },
-                                g.namePlural()
-                            )
-                        )}
-                </Dropdown>
+                                    g.namePlural()
+                                )
+                            )}
+                    </Dropdown>}
             </div>
         );
     }

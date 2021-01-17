@@ -64,6 +64,7 @@ export default class TrustLevelModal extends Modal {
       <GroupSelector
         label={app.translator.trans('askvortsov-trust-levels.admin.trust_level_modal.group_label')}
         id={this.groupId}
+        disabled={this.trustLevel.exists}
       ></GroupSelector>
     </div>, 50);
 

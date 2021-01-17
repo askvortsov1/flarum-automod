@@ -56,7 +56,8 @@ export default class TrustLevelsPage extends ExtensionPage {
             </div>
           </div>
           <div className="TrustLevels-footer">
-            <p>{app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.about_trust_levels_text')}</p>
+            <p>{app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.instructions_header')}</p>
+            <ul>{app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.instructions_text')}</ul>
           </div>
         </div>
       </div>

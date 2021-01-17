@@ -15,9 +15,11 @@ askvortsov-trust-levels:
     trust_level_page:
       list_heading: Trust Levels
       create_trust_level_button: Create New Trust Level
-      about_trust_levels_text: |
-        Trust levels allow you to automatically manage group membership based on users' activity.<br></br>
-        Each trust level defines criteria that must be met (e.g. discussions started, posts made, etc), and a group.<br></br>
-        Users are automatically added to groups for all the trust levels that they qualify for when they log in.<br></br>
-        Since these groups are managed automatically, we recommend maintaining a separate set of groups for trust levels.
-        If you delete a trust level, you should also delete the associated group.
+      instructions_header: Instructions
+      instructions_text: |
+        <li>Trust levels allow you to automatically manage group membership based on users' activity.</li>
+        <li>Each trust level defines criteria that must be met (e.g. discussions started, posts made, etc), and a group.</li>
+        <li>Users are automatically added to groups for all the trust levels that they qualify for when they log in.</li>
+        <li>Since these groups are managed automatically, we recommend maintaining a separate set of groups for trust levels.</li>
+        <li>If you delete a trust level, you should also delete the associated group.</li>
+        <li>To prevent errors, you cannot update a trust level's group after it has been created.</li>

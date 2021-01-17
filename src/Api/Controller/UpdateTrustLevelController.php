@@ -88,12 +88,6 @@ class UpdateTrustLevelController extends AbstractShowController
             $trustLevel->max_posts_made = $attributes['maxPostsMade'];
         }
 
-        $groupId = Arr::get($data, 'relationships.group.data.id');
-
-        if (isset($groupId)) {
-            $trustLevel->group_id = $groupId;
-        }
-
         $this->validator->assertValid($trustLevel->getDirty());
 
         $trustLevel->save();
