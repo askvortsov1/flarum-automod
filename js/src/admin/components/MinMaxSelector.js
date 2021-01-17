@@ -46,8 +46,8 @@ class MinMaxSelector extends Component
         this.state++;
         this.state %= 4;
 
-        if (this.attrs.min() !== -1) this.min(-1);
-        if (this.attrs.max() !== -1) this.max(-1);
+        if (this.attrs.min() !== -1) this.min(this.attrs.min());
+        if (this.attrs.max() !== -1) this.max(this.attrs.max());
 
         switch (this.state) {
             case 0:
