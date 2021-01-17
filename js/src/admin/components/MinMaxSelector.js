@@ -22,7 +22,13 @@ class MinMaxSelector extends Component
                 <div className="MinMaxSelector--inputs">
                     {
                         this.showMin() ? [
-                            <input className="FormControl" type="number" min="0" placeholder="min" bidi={this.attrs.min}></input>,
+                            <input
+                                className="FormControl"
+                                type="number"
+                                min="0"
+                                max={this.state === MinMaxSelector.State.BETWEEN ? (this.attrs.max() !== -1 ? this.attrs.max() : this.max()) : 0}
+                                placeholder="min" bidi={this.attrs.min}
+                            ></input>,
                             <Button className="Button" onclick={this.cycle.bind(this)} icon="fas fa-less-than-equal"></Button>
                         ] : ''
                     }
@@ -34,7 +40,13 @@ class MinMaxSelector extends Component
                     {
                         this.showMax() ? [
                             <Button className="Button" onclick={this.cycle.bind(this)} icon="fas fa-less-than-equal"></Button>,
-                            <input className="FormControl" type="number" min="0" placeholder="max" bidi={this.attrs.max}></input>
+                            <input
+                                className="FormControl"
+                                type="number"
+                                min={this.state === MinMaxSelector.State.BETWEEN ? Math.max(0, this.attrs.max() !== -1 ? this.attrs.max() : this.min()) : 0}
+                                placeholder="max"
+                                bidi={this.attrs.max}
+                            ></input>
                         ] : ''
                     }
                 </div>
@@ -55,12 +67,12 @@ class MinMaxSelector extends Component
                 this.attrs.max(-1);
                 break;
             case 1:
-                this.attrs.min(-1);
-                this.attrs.max(this.max());
-                break;
-            case 2:
                 this.attrs.min(this.min());
                 this.attrs.max(-1);
+                break;
+            case 2:
+                this.attrs.min(-1);
+                this.attrs.max(this.max());
                 break;
             case 3:
                 this.attrs.min(this.min());
