@@ -1,20 +1,23 @@
 import ExtensionPage from 'flarum/components/ExtensionPage';
 import LoadingIndicator from 'flarum/components/LoadingIndicator';
 import Button from 'flarum/components/Button';
+import icon from 'flarum/helpers/icon';
 import TrustLevelModal from './TrustLevelModal';
 
 function trustLevelItem(trustLevel) {
+  const name = trustLevel ? trustLevel.name() : app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.create_trust_level_button');
+  const iconName = trustLevel ? trustLevel.group().icon() : 'fas fa-plus';
+  const style = trustLevel ? { 'background-color': trustLevel.group().color(), color: 'white' } : '';
   return (
-    <li data-id={trustLevel.id()}>
-      <div className="TrustLevelListItem-info">
-        <span className="TrustLevelListItem-name">{trustLevel.name()}</span>
-        {Button.component({
-          className: 'Button Button--link',
-          icon: 'fas fa-pencil-alt',
-          onclick: () => app.modal.show(TrustLevelModal, { model: trustLevel })
-        })}
-      </div>
-    </li>
+    <div
+      className="ExtensionListItem"
+      onclick={() => app.modal.show(TrustLevelModal, { model: trustLevel })}
+    >
+      <span className="ExtensionListItem-icon ExtensionIcon" style={style}>
+        {icon(iconName)}
+      </span>
+      <span className="ExtensionListItem-title">{name}</span>
+    </div>
   );
 }
 
@@ -34,7 +37,7 @@ export default class TrustLevelsPage extends ExtensionPage {
   content() {
     if (this.loading || this.saving) {
       return (
-        <div className="TrustLevelsContent">
+        <div className="TrustLevels">
           <div className="container">
             <LoadingIndicator />
           </div>
@@ -43,28 +46,17 @@ export default class TrustLevelsPage extends ExtensionPage {
     }
 
     return (
-      <div className="TrustLevelsContent">
-        <div className="TrustLevelsContent-list">
-          <div className="container">
-            <div className="SettingsGroups">
-              <div className="TrustLevelGroup">
-                <ol className="TrustLevelList TrustLevelList--primary">
-                  {app.store.all('trust_levels')
-                    .map(trustLevelItem)}
-                </ol>
-                {Button.component(
-                  {
-                    className: 'Button TrustLevelList-button',
-                    icon: 'fas fa-plus',
-                    onclick: () => app.modal.show(TrustLevelModal),
-                  },
-                  app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.create_trust_level_button')
-                )}
-              </div>
+      <div className="TrustLevels">
+        <div className="container">
+          <div className="ExtensionsWidget-list TrustLevels-list">
+            <p className="TrustLevels-list-heading">{app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.list_heading')}</p>
+            <div className="ExtensionList">
+              {[...app.store.all('trust_levels')
+                .map(trustLevelItem), trustLevelItem()]}
             </div>
-            <div className="TrustLevelsContent-footer">
-              <p>{app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.about_trust_levels_text')}</p>
-            </div>
+          </div>
+          <div className="TrustLevels-footer">
+            <p>{app.translator.trans('askvortsov-trust-levels.admin.trust_level_page.about_trust_levels_text')}</p>
           </div>
         </div>
       </div>

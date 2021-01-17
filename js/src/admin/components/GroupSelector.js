@@ -9,7 +9,7 @@ export default class GroupSelector extends Component {
         const group = app.store.getById('groups', this.attrs.id()) || app.store.getById('groups', Group.MEMBER_ID);
         return (
             <div className="Form-group">
-                <p>{app.translator.transChoice('fof-default-group.admin.settings.info')}</p>
+                <label>{this.attrs.label}</label>
 
                 <Dropdown label={[icon(group.icon()), '\t', group.namePlural()]} buttonClassName="Button Button--danger">
                     {app.store
