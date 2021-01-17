@@ -19,5 +19,5 @@ askvortsov-trust-levels:
         Trust levels allow you to automatically manage group membership based on users' activity.<br></br>
         Each trust level defines criteria that must be met (e.g. discussions started, posts made, etc), and a group.<br></br>
         Users are automatically added to groups for all the trust levels that they qualify for when they log in.<br></br>
-        Since these groups are managed automatically, we highly discourage manually adding/removing users to/from groups
-        that are associated with trust levels.
+        Since these groups are managed automatically, we recommend maintaining a separate set of groups for trust levels.
+        If you delete a trust level, you should also delete the associated group.
