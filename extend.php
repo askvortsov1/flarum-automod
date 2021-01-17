@@ -18,6 +18,7 @@ use Flarum\Api\Controller\ShowUserController;
 use Flarum\Api\Serializer\UserSerializer;
 use Flarum\Extend;
 use Flarum\Group\Group;
+use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
 
 return [
@@ -49,6 +50,9 @@ return [
 
     (new Extend\ApiController(ListUsersController::class))
         ->addInclude('trustLevels'),
+
+    (new Extend\Event)
+        ->listen(LoggedIn::class, Listener\UpdateTrustLevelsOnLogin::class),
 
     new Extend\Locales(__DIR__ . '/resources/locale')
 ];
