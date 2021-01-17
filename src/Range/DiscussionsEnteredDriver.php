@@ -8,7 +8,7 @@ class DiscussionsEnteredDriver implements RangeDriverInterface
 {
 
     public function translationKey(): string {
-        return 'askvortsov-trust-levels.admin.trust_level_modal.ranges.discussions_entered_label';
+        return 'askvortsov-trust-levels.admin.range_drivers.discussions_entered';
     }
 
     public function extensionDependencies(): array {

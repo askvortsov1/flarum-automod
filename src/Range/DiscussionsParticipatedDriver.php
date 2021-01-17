@@ -8,7 +8,7 @@ class DiscussionsParticipatedDriver implements RangeDriverInterface
 {
 
     public function translationKey(): string {
-        return 'askvortsov-trust-levels.admin.trust_level_modal.ranges.discussions_participated_label';
+        return 'askvortsov-trust-levels.admin.range_drivers.discussions_participated';
     }
 
     public function extensionDependencies(): array {

@@ -1,5 +1,11 @@
 askvortsov-trust-levels:
   admin:
+    range_drivers:
+      discussions_entered: Discussions Entered
+      discussions_participated: Discussions Participated
+      discussions_started: Discussions Started
+      posts_made: Posts Made
+      likes_given: Likes Given
     group_selector:
       placeholder: Select a group
     trust_level_modal:
@@ -7,11 +13,6 @@ askvortsov-trust-levels:
       name_label: Name
       name_placeholder: Trust Level Name
       group_label: Group
-      ranges:
-        discussions_entered_label: Discussions Entered
-        discussions_participated_label: Discussions Participated
-        discussions_started_label: Discussions Started
-        posts_made_label: Posts Made
       submit_button: => core.ref.save_changes
       delete_button: Delete Trust Level
       delete_confirmation: Are you sure you want to delete this trust level? The trust level's group will not be revoked from users who have received it.

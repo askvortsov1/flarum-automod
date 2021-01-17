@@ -7,7 +7,7 @@ use Flarum\User\User;
 class PostsMadeDriver implements RangeDriverInterface
 {
     public function translationKey(): string {
-        return 'askvortsov-trust-levels.admin.trust_level_modal.ranges.posts_made_label';
+        return 'askvortsov-trust-levels.admin.range_drivers.posts_made';
     }
 
     public function extensionDependencies(): array {

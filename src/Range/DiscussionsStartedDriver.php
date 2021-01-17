@@ -8,7 +8,7 @@ class DiscussionsStartedDriver implements RangeDriverInterface
 {
 
     public function translationKey(): string {
-        return 'askvortsov-trust-levels.admin.trust_level_modal.ranges.discussions_started_label';
+        return 'askvortsov-trust-levels.admin.range_drivers.discussions_started';
     }
 
     public function extensionDependencies(): array {
