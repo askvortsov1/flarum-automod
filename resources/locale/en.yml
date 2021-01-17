@@ -27,3 +27,8 @@ askvortsov-trust-levels:
         <li>If you delete a trust level, you should also delete the associated group; otherwise, users in that trust level will remain in that group.</li>
         <li>To prevent errors, you cannot update a trust level's group after it has been created.</li>
         <li>Any ranges left disabled will not be counted. If all ranges are disabled for a given trust level, ALL users will receive that level.</li>
+  forum:
+    edit_user:
+      trust_levels_heading: Trust Levels
+      trust_level_item: "<badge></badge> {level} (Manages group: {groupName})"
+      trust_levels_not_editable: Trust levels, and groups managed by trust levels, cannot be edited manually to prevent inconsistencies.
