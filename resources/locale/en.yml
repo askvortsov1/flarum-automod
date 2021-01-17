@@ -1,5 +1,7 @@
 askvortsov-trust-levels:
   admin:
+    group_selector:
+      placeholder: Select a group
     trust_level_modal:
       title: Create Trust Level
       name_label: Name
@@ -21,5 +23,5 @@ askvortsov-trust-levels:
         <li>Each trust level defines criteria that must be met (e.g. discussions started, posts made, etc), and a group.</li>
         <li>Users are automatically added to groups for all the trust levels that they qualify for when they log in.</li>
         <li>Since these groups are managed automatically, we recommend maintaining a separate set of groups for trust levels.</li>
-        <li>If you delete a trust level, you should also delete the associated group.</li>
+        <li>If you delete a trust level, you should also delete the associated group; otherwise, users in that trust level will remain in that group.</li>
         <li>To prevent errors, you cannot update a trust level's group after it has been created.</li>
