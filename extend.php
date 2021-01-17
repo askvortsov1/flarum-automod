@@ -63,5 +63,6 @@ return [
         ->driver('discussions_entered', Range\DiscussionsEnteredDriver::class)
         ->driver('discussions_started', Range\DiscussionsStartedDriver::class)
         ->driver('discussions_participated', Range\DiscussionsParticipatedDriver::class)
-        ->driver('posts_made', Range\PostsMadeDriver::class),
+        ->driver('posts_made', Range\PostsMadeDriver::class)
+        ->driver('likes_given', Range\LikesGivenDriver::class),
 ];

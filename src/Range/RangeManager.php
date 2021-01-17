@@ -25,6 +25,14 @@ class RangeManager
 
     public function getDrivers()
     {
-        return $this->drivers;
+        return array_filter($this->drivers, function (RangeDriverInterface $driver) {
+            foreach ($driver->extensionDependencies() as $extensionId) {
+                if (!$this->extensions->isEnabled($extensionId)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
     }
 }
