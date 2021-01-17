@@ -6,25 +6,21 @@ use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
 use Flarum\Group\Group;
 use Flarum\User\User;
+use Illuminate\Support\Arr;
 
 /**
  * @property int $id
  * @property int $group_id
  * @property string $name
- * @property int $min_discussions_entered
- * @property int $max_discussions_entered
- * @property int $min_discussions_started
- * @property int $max_discussions_started
- * @property int $min_posts_made
- * @property int $max_posts_made
- * @property int $min_discussions_participated
- * @property int $max_discussions_participated
+ * @property array $ranges
  */
 class TrustLevel extends AbstractModel
 {
     use ScopeVisibilityTrait;
 
     protected $table = 'trust_levels';
+
+    protected $jsonRanges;
 
     /**
      * Create a new trust level.
@@ -39,8 +35,52 @@ class TrustLevel extends AbstractModel
 
         $tag->name = $name;
         $tag->group()->associate($group);
+        $tag->jsonRanges = [];
 
         return $tag;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function save(array $options = [])
+    {
+        if ($this->jsonRanges) {
+            $this->ranges = json_encode($this->jsonRanges);
+        }
+
+        parent::save($options);
+    }
+
+    public function getRanges()
+    {
+        if (!$this->jsonRanges) {
+            $this->jsonRanges = json_decode($this->ranges, true);
+        }
+
+        return $this->jsonRanges;
+    }
+
+    public function getRangeMin($rangeName)
+    {
+        $this->getRanges();
+
+        return Arr::get($this->jsonRanges, "min$rangeName", -1);
+    }
+
+    public function getRangeMax($rangeName)
+    {
+        $this->getRanges();
+
+        return Arr::get($this->jsonRanges, "max$rangeName", -1);
+    }
+
+    public function setRange($rangeName, $min, $max)
+    {
+        $this->getRanges();
+
+        $this->jsonRanges["min$rangeName"] = (int) $min;
+        $this->jsonRanges["max$rangeName"] = (int) $max;
     }
 
     public function group()

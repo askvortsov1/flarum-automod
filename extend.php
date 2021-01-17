@@ -11,8 +11,10 @@
 
 namespace Askvortsov\TrustLevels;
 
+use Askvortsov\TrustLevels\Extend\TrustLevel as TrustLevelExtender;
 use Askvortsov\TrustLevels\Api\Controller;
 use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
+use Askvortsov\TrustLevels\Range;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowUserController;
 use Flarum\Api\Serializer\UserSerializer;
@@ -54,5 +56,11 @@ return [
     (new Extend\Event)
         ->listen(LoggedIn::class, Listener\UpdateTrustLevelsOnLogin::class),
 
-    new Extend\Locales(__DIR__ . '/resources/locale')
+    new Extend\Locales(__DIR__ . '/resources/locale'),
+
+    (new TrustLevelExtender)
+        ->driver('discussions_entered', Range\DiscussionsEnteredDriver::class)
+        ->driver('discussions_started', Range\DiscussionsStartedDriver::class)
+        ->driver('discussions_participated', Range\DiscussionsParticipatedDriver::class)
+        ->driver('posts_made', Range\PostsMadeDriver::class),
 ];

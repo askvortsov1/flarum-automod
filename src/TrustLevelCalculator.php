@@ -2,11 +2,22 @@
 
 namespace Askvortsov\TrustLevels;
 
+use Askvortsov\TrustLevels\Range\RangeManager;
 use Flarum\User\User;
 use Illuminate\Support\Arr;
 
 class TrustLevelCalculator
 {
+    /**
+     * @var RangeManager
+     */
+    protected $ranges;
+
+    public function __construct(RangeManager $ranges)
+    {
+        $this->ranges = $ranges;
+    }
+
     public function recalculate(User $user)
     {
         $stats = $this->getUserStats($user);
@@ -21,24 +32,21 @@ class TrustLevelCalculator
 
     protected function getUserStats(User $user)
     {
-        return [
-            'discussions_entered'        => $user->read()->count(),
-            'discussions_started'        => $user->discussion_count,
-            'discussions_participated'   => $user->posts()
-                                                ->where('type', 'comment')
-                                                ->where('is_private', false)
-                                                ->select('discussion_id')
-                                                ->distinct()->count(),
-            'posts_made'                 => $user->comment_count,
-        ];
+        $stats = [];
+
+        foreach ($this->ranges->getDrivers() as $name => $driver) {
+            $stats[$name] = $driver->getValue($user);
+        };
+
+        return $stats;
     }
 
     protected function getTrustLevelsForStats($stats)
     {
-        return TrustLevel::all()->filter(function($level) use ($stats) {
+        return TrustLevel::all()->filter(function(TrustLevel $level) use ($stats) {
             foreach ($stats as $stat => $val) {
-                $min = $level->{"min_$stat"};
-                $max = $level->{"min_$stat"};
+                $min = $level->getRangeMin($stat);
+                $max = $level->getRangeMax($stat);
                 $withinRange = ($min === -1 || $val >= $min) && ($max === -1 || $val <= $max);
 
                 if (!$withinRange) {

@@ -26,15 +26,8 @@ class TrustLevelSerializer extends AbstractSerializer
     protected function getDefaultAttributes($trustLevel)
     {
         $attributes = [
-            'name'                              => $trustLevel->name,
-            'minDiscussionsEntered'             => $trustLevel->min_discussions_entered,
-            'maxDiscussionsEntered'             => $trustLevel->max_discussions_entered,
-            'minDiscussionsParticipated'        => $trustLevel->min_discussions_participated,
-            'maxDiscussionsParticipated'        => $trustLevel->max_discussions_participated,
-            'minDiscussionsStarted'             => $trustLevel->min_discussions_started,
-            'maxDiscussionsStarted'             => $trustLevel->max_discussions_started,
-            'minPostsMade'                      => $trustLevel->min_posts_made,
-            'maxPostsMade'                      => $trustLevel->max_posts_made,
+            'name'   => $trustLevel->name,
+            'ranges' => $trustLevel->getRanges(),
         ];
 
         return $attributes;

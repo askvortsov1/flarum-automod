@@ -10,6 +10,7 @@
 namespace Askvortsov\TrustLevels\Api\Controller;
 
 use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
+use Askvortsov\TrustLevels\Range\RangeManager;
 use Askvortsov\TrustLevels\TrustLevel;
 use Askvortsov\TrustLevels\TrustLevelValidator;
 use Flarum\Api\Controller\AbstractShowController;
@@ -25,16 +26,23 @@ class UpdateTrustLevelController extends AbstractShowController
     public $serializer = TrustLevelSerializer::class;
 
     /**
+     * @var RangeManager
+     */
+    protected $ranges;
+
+    /**
      * @var TrustLevelValidator
      */
     protected $validator;
 
     /**
+     * @param RangeManager $ranges
      * @param TrustLevelValidator $validator
      * @return void
      */
-    public function __construct(TrustLevelValidator $validator)
+    public function __construct(RangeManager $ranges, TrustLevelValidator $validator)
     {
+        $this->ranges = $ranges;
         $this->validator = $validator;
     }
 
@@ -56,36 +64,8 @@ class UpdateTrustLevelController extends AbstractShowController
             $trustLevel->name = $attributes['name'];
         }
 
-        if (isset($attributes['minDiscussionsEntered'])) {
-            $trustLevel->min_discussions_entered = $attributes['minDiscussionsEntered'];
-        }
-
-        if (isset($attributes['maxDiscussionsEntered'])) {
-            $trustLevel->max_discussions_entered = $attributes['maxDiscussionsEntered'];
-        }
-
-        if (isset($attributes['minDiscussionsParticipated'])) {
-            $trustLevel->min_discussions_participated = $attributes['minDiscussionsParticipated'];
-        }
-
-        if (isset($attributes['maxDiscussionsParticipated'])) {
-            $trustLevel->max_discussions_participated = $attributes['maxDiscussionsParticipated'];
-        }
-
-        if (isset($attributes['minDiscussionsStarted'])) {
-            $trustLevel->min_discussions_started = $attributes['minDiscussionsStarted'];
-        }
-
-        if (isset($attributes['maxDiscussionsStarted'])) {
-            $trustLevel->max_discussions_started = $attributes['maxDiscussionsStarted'];
-        }
-
-        if (isset($attributes['minPostsMade'])) {
-            $trustLevel->min_posts_made = $attributes['minPostsMade'];
-        }
-
-        if (isset($attributes['maxPostsMade'])) {
-            $trustLevel->max_posts_made = $attributes['maxPostsMade'];
+        foreach ($this->ranges->getDrivers() as $name => $driver) {
+            $trustLevel->setRange($name, Arr::get($data, "attributes.min$name"), Arr::get($data, "attributes.max$name"));
         }
 
         $this->validator->assertValid($trustLevel->getDirty());

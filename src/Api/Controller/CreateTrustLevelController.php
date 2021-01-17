@@ -10,6 +10,7 @@
 namespace Askvortsov\TrustLevels\Api\Controller;
 
 use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
+use Askvortsov\TrustLevels\Range\RangeManager;
 use Askvortsov\TrustLevels\TrustLevel;
 use Askvortsov\TrustLevels\TrustLevelValidator;
 use Flarum\Api\Controller\AbstractCreateController;
@@ -31,16 +32,23 @@ class CreateTrustLevelController extends AbstractCreateController
     public $include = ['group'];
 
     /**
+     * @var RangeManager
+     */
+    protected $ranges;
+
+    /**
      * @var TrustLevelValidator
      */
     protected $validator;
 
     /**
+     * @param RangeManager $ranges
      * @param TrustLevelValidator $validator
      * @return void
      */
-    public function __construct(TrustLevelValidator $validator)
+    public function __construct(RangeManager $ranges, TrustLevelValidator $validator)
     {
+        $this->ranges = $ranges;
         $this->validator = $validator;
     }
 
@@ -60,14 +68,9 @@ class CreateTrustLevelController extends AbstractCreateController
             Group::find($groupId)
         );
 
-        $trustLevel->min_discussions_entered = (int) Arr::get($data, 'attributes.minDiscussionsEntered');
-        $trustLevel->max_discussions_entered = (int) Arr::get($data, 'attributes.maxDiscussionsEntered');
-        $trustLevel->min_discussions_participated = (int) Arr::get($data, 'attributes.minDiscussionsParticipated');
-        $trustLevel->max_discussions_participated = (int) Arr::get($data, 'attributes.maxDiscussionsParticipated');
-        $trustLevel->min_discussions_started = (int) Arr::get($data, 'attributes.minDiscussionsStarted');
-        $trustLevel->max_discussions_started = (int) Arr::get($data, 'attributes.maxDiscussionsStarted');
-        $trustLevel->min_posts_made = (int) Arr::get($data, 'attributes.minPostsMade');
-        $trustLevel->max_posts_made = (int) Arr::get($data, 'attributes.maxPostsMade');
+        foreach ($this->ranges->getDrivers() as $name => $driver) {
+            $trustLevel->setRange($name, Arr::get($data, "attributes.min$name"), Arr::get($data, "attributes.max$name"));
+        }
 
         $this->validator->assertValid($trustLevel->getAttributes());
 
