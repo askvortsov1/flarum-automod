@@ -23,13 +23,13 @@ class MinMaxSelector extends Component
                     {
                         this.showMin() ? [
                             <input className="FormControl" type="number" min="0" placeholder="min" bidi={this.attrs.min}></input>,
-                            <Button className="Button" onclick={this.cycle.bind(this)} icon="fas fa-greater-than-equal"></Button>
+                            <Button className="Button" onclick={this.cycle.bind(this)} icon="fas fa-less-than-equal"></Button>
                         ] : ''
                     }
                     {
                         this.state === MinMaxSelector.State.DISABLED ?
                             <Button className="Button" onclick={this.cycle.bind(this)} icon="fas fa-power-off"></Button>
-                            : <input className="FormControl MinMaxSelector--placeholder" disabled value="x"></input>
+                            : <input className="FormControl MinMaxSelector--placeholder" disabled value="X"></input>
                     }
                     {
                         this.showMax() ? [
