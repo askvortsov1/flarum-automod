@@ -1,6 +1,6 @@
 # Trust Levels
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/askvortsov/flarum-trust-levels.svg)](https://packagist.org/packages/askvortsov/flarum-trust-levels)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/askvortsov1/flarum-trust-levels.svg)](https://packagist.org/packages/askvortsov/flarum-trust-levels)
 
 A [Flarum](http://flarum.org) extension.
 
@@ -35,6 +35,13 @@ This extension is extremely flexible, and can be extended to add custom range dr
 - Add support for dated ranges (discussions created in the past X days)
 - Develop a data collection extension, which could cache things such as like counts, to improve performance on large forums
 
+### Screenshots
+
+![Admin](https://i.imgur.com/nISg5ex.png)
+![Set Ranges](https://i.imgur.com/80r0Mr7.png)
+![Edit User](https://i.imgur.com/T8sqsor.png)
+
+
 ### Installation
 
 ```sh
@@ -51,3 +58,4 @@ composer update askvortsov/flarum-trust-levels
 
 - [Packagist](https://packagist.org/packages/askvortsov/flarum-trust-levels)
 - [Github](https://github.com/askvortsov1/flarum-trust-levels)
+- [Discuss](https://discuss.flarum.org/d/25977-trust-levels-automatic-group-assignment)

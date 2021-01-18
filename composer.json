@@ -6,6 +6,11 @@
   ],
   "type": "flarum-extension",
   "license": "MIT",
+  "support": {
+    "issues": "https://github.com/askvortsov1/flarum-trust-levels/issues",
+    "source": "https://github.com/askvortsov1/flarum-trust-levels",
+    "forum": "https://discuss.flarum.org/d/25977-trust-levels-automatic-group-assignment"
+  },
   "require": {
     "flarum/core": "^0.1.0-beta.15"
   },
