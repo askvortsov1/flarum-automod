@@ -22,8 +22,8 @@ class TrustLevelCalculator
     {
         $stats = $this->getUserStats($user);
 
-        $prevLevels = $user->trustLevels->toArray();
-        $currLevels = $this->getTrustLevelsForStats($stats);
+        $prevLevels = $this->toAssoc($user->trustLevels->toArray());
+        $currLevels = $this->toAssoc($this->getTrustLevelsForStats($stats));
 
         $user->trustLevels()->sync(Arr::pluck($currLevels, 'id'));
 
@@ -60,10 +60,10 @@ class TrustLevelCalculator
 
     protected function adjustUserGroups($user, $prevLevels, $currLevels)
     {
-        $removedLevels = array_diff($prevLevels, $currLevels);
+        $removedLevels = array_diff_key($prevLevels, $currLevels);
         $removedGroupIds = Arr::pluck($removedLevels, 'group_id');
 
-        $newLevels = array_diff($currLevels, $prevLevels);
+        $newLevels = array_diff_key($currLevels, $prevLevels);
         $newGroupIds = Arr::pluck($newLevels, 'group_id');
 
         $allGroupIds = Arr::pluck($user->groups()->select('id')->get()->toArray(), 'id');
@@ -71,5 +71,18 @@ class TrustLevelCalculator
         $allGroupIds = array_unique(array_merge($allGroupIds, $newGroupIds));
 
         $user->groups()->sync($allGroupIds);
+    }
+
+    /**
+     * Converts model query results into an associative array with the ID as the key.
+     */
+    protected function toAssoc($arr) {
+        $newArr = [];
+
+        foreach ($arr as $model) {
+            $newArr[$model['id']] = $model;
+        }
+
+        return $newArr;
     }
 }
