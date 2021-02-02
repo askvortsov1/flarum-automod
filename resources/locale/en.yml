@@ -6,6 +6,7 @@ askvortsov-trust-levels:
       discussions_started: Discussions Started
       posts_made: Posts Made
       likes_given: Likes Given
+      likes_received: Likes Received
     group_selector:
       placeholder: Select a group
     trust_level_modal:

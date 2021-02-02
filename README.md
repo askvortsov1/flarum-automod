@@ -26,7 +26,6 @@ This extension is extremely flexible, and can be extended to add custom range dr
 ### TODO:
 
 - Add support for more ranges:
-  - Likes received
   - Posts read
   - Time spent on forum
   - Days visited
