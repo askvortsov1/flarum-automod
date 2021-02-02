@@ -20,7 +20,7 @@ return [
             $table->string('name', 100);
             $table->integer('group_id')->unsigned();
 
-            $table->text('ranges')->default('[]');
+            $table->text('ranges');
 
             $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
         });
