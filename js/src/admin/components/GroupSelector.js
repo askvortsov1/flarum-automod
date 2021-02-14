@@ -34,7 +34,7 @@ export default class GroupSelector extends Component {
                   {
                     active: group && group.id() === g.id(),
                     disabled: group && group.id() === g.id(),
-                    icon: g.icon() || icons[g.id()],
+                    icon: g.icon(),
                     onclick: () => {
                       this.attrs.id(g.id());
                     },
