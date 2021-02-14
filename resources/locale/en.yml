@@ -7,6 +7,7 @@ askvortsov-trust-levels:
       posts_made: Posts Made
       likes_given: Likes Given
       likes_received: Likes Received
+      best_answers: Best Answers
     group_selector:
       placeholder: Select a group
     trust_level_modal:
