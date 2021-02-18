@@ -19,7 +19,6 @@ class DiscussionsParticipatedDriver implements RangeDriverInterface
         return $user->posts()
                     ->where('type', 'comment')
                     ->where('is_private', false)
-                    ->select('discussion_id')
-                    ->distinct()->count();
+                    ->distinct()->count('discussion_id');
     }
 }
