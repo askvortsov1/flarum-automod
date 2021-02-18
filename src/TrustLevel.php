@@ -45,10 +45,6 @@ class TrustLevel extends AbstractModel
      */
     public function save(array $options = [])
     {
-        if ($this->jsonRanges) {
-            $this->ranges = json_encode($this->jsonRanges);
-        }
-
         parent::save($options);
     }
 
@@ -81,6 +77,15 @@ class TrustLevel extends AbstractModel
 
         $this->jsonRanges["min$rangeName"] = (int) $min;
         $this->jsonRanges["max$rangeName"] = (int) $max;
+    }
+
+    public function calcRanges()
+    {
+        if ($this->jsonRanges) {
+            $this->ranges = json_encode($this->jsonRanges);
+        }
+
+        return $this->ranges;
     }
 
     public function group()

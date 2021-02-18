@@ -14,6 +14,11 @@
   "require": {
     "flarum/core": "^0.1.0-beta.15"
   },
+  "require-dev": {
+    "flarum/testing": "dev-main",
+    "flarum/likes": "^0.1.0",
+    "fof/best-answer": "dev-master"
+  },
   "authors": [
     {
       "name": "Alexander Skvortsov",
@@ -26,6 +31,12 @@
       "Askvortsov\\TrustLevels\\": "src/"
     }
   },
+  "autoload-dev": {
+    "psr-4": {
+      "Askvortsov\\TrustLevels\\Tests\\": "tests/"
+    }
+  },
+  "minimum-stability": "dev",
   "extra": {
     "flarum-extension": {
       "title": "Trust Levels",
@@ -36,5 +47,17 @@
         "color": "#fff"
       }
     }
+  },
+  "scripts": {
+    "test": [
+      "@test:integration"
+    ],
+    "test:integration": "phpunit -c tests/phpunit.integration.xml",
+    "test:setup": "@php tests/integration/setup.php"
+  },
+  "scripts-descriptions": {
+    "test": "Runs all tests.",
+    "test:integration": "Runs all integration tests.",
+    "test:setup": "Sets up a database for use with integration tests. Execute this only once."
   }
 }
