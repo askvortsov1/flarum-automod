@@ -15,6 +15,7 @@ use Askvortsov\TrustLevels\Extend\TrustLevel as TrustLevelExtender;
 use Askvortsov\TrustLevels\Api\Controller;
 use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
 use Askvortsov\TrustLevels\Range;
+use Askvortsov\TrustLevels\Console\RecalculateLevels;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowUserController;
 use Flarum\Api\Serializer\UserSerializer;
@@ -58,6 +59,9 @@ return [
         ->listen(LoggedIn::class, Listener\UpdateTrustLevelsOnLogin::class),
 
     new Extend\Locales(__DIR__ . '/resources/locale'),
+
+    (new Extend\Console())
+        ->command(RecalculateLevels::class),
 
     (new TrustLevelExtender)
         ->driver('discussions_entered', Range\DiscussionsEnteredDriver::class)
