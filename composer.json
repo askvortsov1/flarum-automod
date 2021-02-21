@@ -12,7 +12,8 @@
     "forum": "https://discuss.flarum.org/d/25977-trust-levels-automatic-group-assignment"
   },
   "require": {
-    "flarum/core": "^0.1.0-beta.15"
+    "flarum/core": "^0.1.0-beta.15",
+    "illuminate/console": "*"
   },
   "require-dev": {
     "flarum/testing": "dev-main",
