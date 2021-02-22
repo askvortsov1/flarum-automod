@@ -45,6 +45,8 @@ class TrustLevel extends AbstractModel
      */
     public function save(array $options = [])
     {
+        $this->calcMetrics();
+
         parent::save($options);
     }
 
