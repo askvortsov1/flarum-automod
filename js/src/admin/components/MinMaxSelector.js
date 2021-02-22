@@ -81,9 +81,9 @@ class MinMaxSelector extends Component {
       case MinMaxSelector.State.DISABLED:
         return button("fas fa-power-off");
       case MinMaxSelector.State.LTE:
-        return [placeholder(), button("fas fa-less-than-equal"), minInput()];
+        return [placeholder(), button("fas fa-less-than-equal"), maxInput()];
       case MinMaxSelector.State.GTE:
-        return [placeholder(), button("fas fa-greater-than-equal"), maxInput()];
+        return [placeholder(), button("fas fa-greater-than-equal"), minInput()];
       case MinMaxSelector.State.BETWEEN:
         return [
           minInput(),
@@ -103,44 +103,30 @@ class MinMaxSelector extends Component {
     if (this.attrs.max() !== -1) this.max(this.attrs.max());
 
     switch (this.state) {
-      case 0:
+      case MinMaxSelector.State.DISABLED:
         this.attrs.min(-1);
         this.attrs.max(-1);
         break;
-      case 1:
+      case MinMaxSelector.State.GTE:
         this.attrs.min(this.min());
         this.attrs.max(-1);
         break;
-      case 2:
+      case MinMaxSelector.State.LTE:
         this.attrs.min(-1);
         this.attrs.max(this.max());
         break;
-      case 3:
+      case MinMaxSelector.State.BETWEEN:
         this.attrs.min(this.min());
         this.attrs.max(this.max());
         break;
     }
   }
-
-  showMin() {
-    return (
-      this.state === MinMaxSelector.State.LTE ||
-      this.state === MinMaxSelector.State.BETWEEN
-    );
-  }
-
-  showMax() {
-    return (
-      this.state === MinMaxSelector.State.GTE ||
-      this.state === MinMaxSelector.State.BETWEEN
-    );
-  }
 }
 
 MinMaxSelector.State = {
   DISABLED: 0,
-  LTE: 1,
-  GTE: 2,
+  GTE: 1,
+  LTE: 2,
   BETWEEN: 3,
 };
 
