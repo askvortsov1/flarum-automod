@@ -12,7 +12,7 @@ use Illuminate\Support\Arr;
  * @property int $id
  * @property int $group_id
  * @property string $name
- * @property array $ranges
+ * @property array $metrics
  */
 class TrustLevel extends AbstractModel
 {
@@ -20,7 +20,7 @@ class TrustLevel extends AbstractModel
 
     protected $table = 'trust_levels';
 
-    protected $jsonRanges;
+    protected $jsonMetrics;
 
     /**
      * Create a new trust level.
@@ -35,7 +35,7 @@ class TrustLevel extends AbstractModel
 
         $tag->name = $name;
         $tag->group()->associate($group);
-        $tag->jsonRanges = [];
+        $tag->jsonMetrics = [];
 
         return $tag;
     }
@@ -48,44 +48,44 @@ class TrustLevel extends AbstractModel
         parent::save($options);
     }
 
-    public function getRanges()
+    public function getMetrics()
     {
-        if (!$this->jsonRanges) {
-            $this->jsonRanges = json_decode($this->ranges, true);
+        if (!$this->jsonMetrics) {
+            $this->jsonMetrics = json_decode($this->metrics, true);
         }
 
-        return $this->jsonRanges;
+        return $this->jsonMetrics;
     }
 
-    public function getRangeMin($rangeName)
+    public function getMetricMin($metricName)
     {
-        $this->getRanges();
+        $this->getMetrics();
 
-        return Arr::get($this->jsonRanges, "min$rangeName", -1);
+        return Arr::get($this->jsonMetrics, "min$metricName", -1);
     }
 
-    public function getRangeMax($rangeName)
+    public function getMetricMax($metricName)
     {
-        $this->getRanges();
+        $this->getMetrics();
 
-        return Arr::get($this->jsonRanges, "max$rangeName", -1);
+        return Arr::get($this->jsonMetrics, "max$metricName", -1);
     }
 
-    public function setRange($rangeName, $min, $max)
+    public function setMetric($metricName, $min, $max)
     {
-        $this->getRanges();
+        $this->getMetrics();
 
-        $this->jsonRanges["min$rangeName"] = (int) $min;
-        $this->jsonRanges["max$rangeName"] = (int) $max;
+        $this->jsonMetrics["min$metricName"] = (int) $min;
+        $this->jsonMetrics["max$metricName"] = (int) $max;
     }
 
-    public function calcRanges()
+    public function calcMetrics()
     {
-        if ($this->jsonRanges) {
-            $this->ranges = json_encode($this->jsonRanges);
+        if ($this->jsonMetrics) {
+            $this->metrics = json_encode($this->jsonMetrics);
         }
 
-        return $this->ranges;
+        return $this->metrics;
     }
 
     public function group()

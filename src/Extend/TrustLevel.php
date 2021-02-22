@@ -9,7 +9,7 @@
 
 namespace Askvortsov\TrustLevels\Extend;
 
-use Askvortsov\TrustLevels\Range\RangeManager;
+use Askvortsov\TrustLevels\Metric\MetricManager;
 use Flarum\Extend\ExtenderInterface;
 use Flarum\Extension\Extension;
 use Illuminate\Contracts\Container\Container;
@@ -19,26 +19,38 @@ class TrustLevel implements ExtenderInterface
     protected $drivers = [];
 
     /**
-     * Define a new range type driver.
+     * Define a new metric type driver.
      *
      * @param string $name
      * @param string $driver
      */
-    public function driver(string $name, string $driver)
+    public function metricDriver(string $name, string $driver)
     {
         $this->drivers[$name] = $driver;
 
         return $this;
     }
 
+    /**
+     * @deprecated use $this->metricDriver
+     * Define a new metric type driver.
+     *
+     * @param string $name
+     * @param string $driver
+     */
+    public function driver(string $name, string $driver)
+    {
+        return $this->metricDriver($name, $driver);
+    }
+
     public function extend(Container $container, Extension $extension = null)
     {
-        $container->resolving(RangeManager::class, function ($ranges) use ($container) {
+        $container->resolving(MetricManager::class, function ($metrics) use ($container) {
             foreach ($this->drivers as $name => $driver) {
-                $ranges->addDriver($name, $container->make($driver));
+                $metrics->addDriver($name, $container->make($driver));
             }
 
-            return $ranges;
+            return $metrics;
         });
     }
 }

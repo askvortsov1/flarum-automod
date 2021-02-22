@@ -10,7 +10,7 @@
 namespace Askvortsov\TrustLevels\Api\Controller;
 
 use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
-use Askvortsov\TrustLevels\Range\RangeManager;
+use Askvortsov\TrustLevels\Metric\MetricManager;
 use Askvortsov\TrustLevels\TrustLevel;
 use Askvortsov\TrustLevels\TrustLevelValidator;
 use Flarum\Api\Controller\AbstractShowController;
@@ -26,9 +26,9 @@ class UpdateTrustLevelController extends AbstractShowController
     public $serializer = TrustLevelSerializer::class;
 
     /**
-     * @var RangeManager
+     * @var MetricManager
      */
-    protected $ranges;
+    protected $metrics;
 
     /**
      * @var TrustLevelValidator
@@ -36,13 +36,13 @@ class UpdateTrustLevelController extends AbstractShowController
     protected $validator;
 
     /**
-     * @param RangeManager $ranges
+     * @param MetricManager $metrics
      * @param TrustLevelValidator $validator
      * @return void
      */
-    public function __construct(RangeManager $ranges, TrustLevelValidator $validator)
+    public function __construct(MetricManager $metrics, TrustLevelValidator $validator)
     {
-        $this->ranges = $ranges;
+        $this->metrics = $metrics;
         $this->validator = $validator;
     }
 
@@ -64,8 +64,8 @@ class UpdateTrustLevelController extends AbstractShowController
             $trustLevel->name = $attributes['name'];
         }
 
-        foreach ($this->ranges->getDrivers() as $name => $driver) {
-            $trustLevel->setRange($name, Arr::get($data, "attributes.min$name"), Arr::get($data, "attributes.max$name"));
+        foreach ($this->metrics->getDrivers() as $name => $driver) {
+            $trustLevel->setMetric($name, Arr::get($data, "attributes.min$name"), Arr::get($data, "attributes.max$name"));
         }
 
         $this->validator->assertValid($trustLevel->getDirty());

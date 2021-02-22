@@ -31,16 +31,16 @@ export default class TrustLevelModal extends Modal {
         url: app.forum.attribute("apiUrl") + "/trust_level_drivers",
       })
       .then((response) => {
-        this.rangeTranslations = response["data"]["attributes"]["drivers"];
+        this.metricTranslations = response["data"]["attributes"]["drivers"];
 
-        this.ranges = Object.keys(this.rangeTranslations);
+        this.metrics = Object.keys(this.metricTranslations);
 
-        this.ranges.forEach((rangeName) => {
-          const ranges = this.trustLevel.ranges() || [];
-          const min = ranges[`min${rangeName}`];
-          const max = ranges[`max${rangeName}`];
-          this[`min${rangeName}`] = Stream(min ? min : -1);
-          this[`max${rangeName}`] = Stream(max ? max : -1);
+        this.metrics.forEach((metricName) => {
+          const metrics = this.trustLevel.metrics() || [];
+          const min = metrics[`min${metricName}`];
+          const max = metrics[`max${metricName}`];
+          this[`min${metricName}`] = Stream(min ? min : -1);
+          this[`max${metricName}`] = Stream(max ? max : -1);
         });
 
         this.loading = false;
@@ -116,13 +116,13 @@ export default class TrustLevelModal extends Modal {
       50
     );
 
-    this.ranges.forEach((range) => {
+    this.metrics.forEach((metric) => {
       items.add(
-        range,
+        metric,
         <MinMaxSelector
-          label={app.translator.trans(this.rangeTranslations[range])}
-          min={this[`min${range}`]}
-          max={this[`max${range}`]}
+          label={app.translator.trans(this.metricTranslations[metric])}
+          min={this[`min${metric}`]}
+          max={this[`max${metric}`]}
         ></MinMaxSelector>,
         40
       );
@@ -170,9 +170,9 @@ export default class TrustLevelModal extends Modal {
       relationships: { group },
     };
 
-    this.ranges.forEach((rangeName) => {
-      data[`min${rangeName}`] = this[`min${rangeName}`]();
-      data[`max${rangeName}`] = this[`max${rangeName}`]();
+    this.metrics.forEach((metricName) => {
+      data[`min${metricName}`] = this[`min${metricName}`]();
+      data[`max${metricName}`] = this[`max${metricName}`]();
     });
 
     return data;

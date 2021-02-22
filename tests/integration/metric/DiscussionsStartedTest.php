@@ -1,6 +1,6 @@
 <?php
 
-namespace Askvortsov\TrustLevels\Tests\integration\range;
+namespace Askvortsov\TrustLevels\Tests\integration\metric;
 
 use Carbon\Carbon;
 use Flarum\Http\AccessToken;
@@ -12,7 +12,7 @@ use Flarum\User\User;
 class DiscussionsStartedTest extends TestCase
 {
     use RetrievesAuthorizedUsers;
-    use UsesRange;
+    use UsesMetric;
 
     /**
      * @inheritDoc

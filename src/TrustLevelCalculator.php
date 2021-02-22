@@ -2,20 +2,20 @@
 
 namespace Askvortsov\TrustLevels;
 
-use Askvortsov\TrustLevels\Range\RangeManager;
+use Askvortsov\TrustLevels\Metric\MetricManager;
 use Flarum\User\User;
 use Illuminate\Support\Arr;
 
 class TrustLevelCalculator
 {
     /**
-     * @var RangeManager
+     * @var MetricManager
      */
-    protected $ranges;
+    protected $metrics;
 
-    public function __construct(RangeManager $ranges)
+    public function __construct(MetricManager $metrics)
     {
-        $this->ranges = $ranges;
+        $this->metrics = $metrics;
     }
 
     public function recalculate(User $user)
@@ -34,7 +34,7 @@ class TrustLevelCalculator
     {
         $stats = [];
 
-        foreach ($this->ranges->getDrivers() as $name => $driver) {
+        foreach ($this->metrics->getDrivers() as $name => $driver) {
             $stats[$name] = $driver->getValue($user);
         };
 
@@ -45,11 +45,11 @@ class TrustLevelCalculator
     {
         return TrustLevel::all()->filter(function(TrustLevel $level) use ($stats) {
             foreach ($stats as $stat => $val) {
-                $min = $level->getRangeMin($stat);
-                $max = $level->getRangeMax($stat);
-                $withinRange = ($min === -1 || $val >= $min) && ($max === -1 || $val <= $max);
+                $min = $level->getMetricMin($stat);
+                $max = $level->getMetricMax($stat);
+                $withinMetric = ($min === -1 || $val >= $min) && ($max === -1 || $val <= $max);
 
-                if (!$withinRange) {
+                if (!$withinMetric) {
                     return false;
                 }
             }

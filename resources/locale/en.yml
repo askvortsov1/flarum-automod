@@ -1,6 +1,6 @@
 askvortsov-trust-levels:
   admin:
-    range_drivers:
+    metric_drivers:
       discussions_entered: Discussions Entered
       discussions_participated: Discussions Participated
       discussions_started: Discussions Started
@@ -29,7 +29,7 @@ askvortsov-trust-levels:
         <li>Since these groups are managed automatically, we recommend maintaining a separate set of groups for trust levels.</li>
         <li>If you delete a trust level, you should also delete the associated group; otherwise, users in that trust level will remain in that group.</li>
         <li>To prevent errors, you cannot update a trust level's group after it has been created.</li>
-        <li>Any ranges left disabled will not be counted. If all ranges are disabled for a given trust level, ALL users will receive that level.</li>
+        <li>Any metrics left disabled will not be counted. If all metrics are disabled for a given trust level, ALL users will receive that level.</li>
         <li>If a group is managed by multiple trust levels, the user will be added to the group as long as they are in at least one of the trust levels.</li>
   forum:
     edit_user:

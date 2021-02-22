@@ -1,6 +1,6 @@
 <?php
 
-namespace Askvortsov\TrustLevels\Tests\integration\range;
+namespace Askvortsov\TrustLevels\Tests\integration\metric;
 
 use Carbon\Carbon;
 use Flarum\Http\AccessToken;
@@ -9,10 +9,10 @@ use Flarum\Testing\integration\TestCase;
 use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
 
-class DiscussionsEnteredTest extends TestCase
+class PostsMadeTest extends TestCase
 {
     use RetrievesAuthorizedUsers;
-    use UsesRange;
+    use UsesMetric;
 
     /**
      * @inheritDoc
@@ -21,6 +21,7 @@ class DiscussionsEnteredTest extends TestCase
     {
         parent::setUp();
 
+        $this->extension('fof-best-answer');
         $this->extension('askvortsov-trust-levels');
 
         $this->prepareDatabase([
@@ -31,14 +32,16 @@ class DiscussionsEnteredTest extends TestCase
                 ['id' => 1, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
                 ['id' => 2, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
                 ['id' => 3, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
+                ['id' => 4, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
+                ['id' => 5, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
+            ],
+            'discussion_user' => [
+                ['discussion_id' => 1, 'user_id' => 2, 'last_read_at' => Carbon::now()->toDateTimeString()],
+                ['discussion_id' => 2, 'user_id' => 2, 'last_read_at' => Carbon::now()->toDateTimeString()],
+                ['discussion_id' => 3, 'user_id' => 2, 'last_read_at' => Carbon::now()->toDateTimeString()],
             ],
             'posts' => [
-                ['id' => 1, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-
-                ['id' => 2, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-                ['id' => 3, 'discussion_id' => 2, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-                ['id' => 4, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-                ['id' => 5, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>']
+                ['id' => 1, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>']
             ],
         ]);
     }
@@ -59,8 +62,8 @@ class DiscussionsEnteredTest extends TestCase
     public function added_to_group_properly()
     {
         $this->prepareDatabase(['trust_levels' => [
-            $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [2, 10]
+            $this->genTrustLevel('discussions entered', 4, [
+                'discussions_entered' => [2, 10]
             ])
         ]]);
 
@@ -77,17 +80,17 @@ class DiscussionsEnteredTest extends TestCase
     public function not_added_to_group_if_doesnt_apply()
     {
         $this->prepareDatabase(['trust_levels' => [
-            $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [-1, 4]
+            $this->genTrustLevel('discussions entered', 4, [
+                'discussions_entered' => [-1, 2]
             ]),
-            $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [1, 4]
+            $this->genTrustLevel('discussions entered', 4, [
+                'discussions_entered' => [1, 2]
             ]),
-            $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [6, 100]
+            $this->genTrustLevel('discussions entered', 4, [
+                'discussions_entered' => [4, 100]
             ]),
-            $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [6, -1]
+            $this->genTrustLevel('discussions entered', 4, [
+                'discussions_entered' => [4, -1]
             ])
         ]]);
 

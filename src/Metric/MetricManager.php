@@ -1,10 +1,10 @@
 <?php
 
-namespace Askvortsov\TrustLevels\Range;
+namespace Askvortsov\TrustLevels\Metric;
 
 use Flarum\Extension\ExtensionManager;
 
-class RangeManager
+class MetricManager
 {
     /**
      * @var ExtensionManager
@@ -18,14 +18,14 @@ class RangeManager
 
     protected $drivers = [];
 
-    public function addDriver(string $name, RangeDriverInterface $driver)
+    public function addDriver(string $name, MetricDriverInterface $driver)
     {
         $this->drivers[$name] = $driver;
     }
 
     public function getDrivers()
     {
-        return array_filter($this->drivers, function (RangeDriverInterface $driver) {
+        return array_filter($this->drivers, function (MetricDriverInterface $driver) {
             foreach ($driver->extensionDependencies() as $extensionId) {
                 if (!$this->extensions->isEnabled($extensionId)) {
                     return false;

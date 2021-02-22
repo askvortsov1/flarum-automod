@@ -9,29 +9,29 @@
 
 namespace Askvortsov\TrustLevels\Api\Controller;
 
-use Askvortsov\TrustLevels\Api\Serializer\TrustLevelRangeDriverSerializer;
-use Askvortsov\TrustLevels\Range\RangeManager;
+use Askvortsov\TrustLevels\Api\Serializer\TrustLevelMetricDriverSerializer;
+use Askvortsov\TrustLevels\Metric\MetricManager;
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Settings\SettingsRepositoryInterface;
 use Illuminate\Contracts\Validation\Factory;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 
-class ShowTrustLevelRangeDriversController extends AbstractShowController
+class ShowTrustLevelMetricDriversController extends AbstractShowController
 {
     /**
      * {@inheritdoc}
      */
-    public $serializer = TrustLevelRangeDriverSerializer::class;
+    public $serializer = TrustLevelMetricDriverSerializer::class;
 
     /**
-     * @var RangeManager
+     * @var MetricManager
      */
-    protected $ranges;
+    protected $metrics;
 
-    public function __construct(RangeManager $ranges)
+    public function __construct(MetricManager $metrics)
     {
-        $this->ranges = $ranges;
+        $this->metrics = $metrics;
     }
 
     /**
@@ -41,7 +41,7 @@ class ShowTrustLevelRangeDriversController extends AbstractShowController
     {
         $request->getAttribute('actor')->assertAdmin();
 
-        $drivers = $this->ranges->getDrivers();
+        $drivers = $this->metrics->getDrivers();
 
         return $drivers;
     }

@@ -1,14 +1,14 @@
 <?php
 
-namespace Askvortsov\TrustLevels\Range;
+namespace Askvortsov\TrustLevels\Metric;
 
 use Flarum\User\User;
 
-class DiscussionsStartedDriver implements RangeDriverInterface
+class DiscussionsStartedDriver implements MetricDriverInterface
 {
 
     public function translationKey(): string {
-        return 'askvortsov-trust-levels.admin.range_drivers.discussions_started';
+        return 'askvortsov-trust-levels.admin.metric_drivers.discussions_started';
     }
 
     public function extensionDependencies(): array {

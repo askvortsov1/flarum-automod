@@ -1,15 +1,15 @@
 <?php
 
-namespace Askvortsov\TrustLevels\Range;
+namespace Askvortsov\TrustLevels\Metric;
 
 use Flarum\Discussion\Discussion;
 use Flarum\User\User;
 
-class BestAnswersDriver implements RangeDriverInterface
+class BestAnswersDriver implements MetricDriverInterface
 {
     public function translationKey(): string
     {
-        return 'askvortsov-trust-levels.admin.range_drivers.best_answers';
+        return 'askvortsov-trust-levels.admin.metric_drivers.best_answers';
     }
 
     public function extensionDependencies(): array

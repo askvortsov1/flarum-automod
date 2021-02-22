@@ -14,7 +14,7 @@ namespace Askvortsov\TrustLevels;
 use Askvortsov\TrustLevels\Extend\TrustLevel as TrustLevelExtender;
 use Askvortsov\TrustLevels\Api\Controller;
 use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
-use Askvortsov\TrustLevels\Range;
+use Askvortsov\TrustLevels\Metric;
 use Askvortsov\TrustLevels\Console\RecalculateLevels;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowUserController;
@@ -38,7 +38,7 @@ return [
         ->post('/trust_levels', 'trust_levels.create', Controller\CreateTrustLevelController::class)
         ->patch('/trust_levels/{id}', 'trust_levels.update', Controller\UpdateTrustLevelController::class)
         ->delete('/trust_levels/{id}', 'trust_levels.delete', Controller\DeleteTrustLevelController::class)
-        ->get('/trust_level_drivers', 'trust_level_drivers.index', Controller\ShowTrustLevelRangeDriversController::class),
+        ->get('/trust_level_drivers', 'trust_level_drivers.index', Controller\ShowTrustLevelMetricDriversController::class),
 
     (new Extend\Model(Group::class))
         ->hasMany('trustLevels', TrustLevel::class),
@@ -64,11 +64,11 @@ return [
         ->command(RecalculateLevels::class),
 
     (new TrustLevelExtender)
-        ->driver('discussions_entered', Range\DiscussionsEnteredDriver::class)
-        ->driver('discussions_started', Range\DiscussionsStartedDriver::class)
-        ->driver('discussions_participated', Range\DiscussionsParticipatedDriver::class)
-        ->driver('posts_made', Range\PostsMadeDriver::class)
-        ->driver('likes_given', Range\LikesGivenDriver::class)
-        ->driver('likes_received', Range\LikesReceivedDriver::class)
-        ->driver('best_answers', Range\BestAnswersDriver::class),
+        ->metricDriver('discussions_entered', Metric\DiscussionsEnteredDriver::class)
+        ->metricDriver('discussions_started', Metric\DiscussionsStartedDriver::class)
+        ->metricDriver('discussions_participated', Metric\DiscussionsParticipatedDriver::class)
+        ->metricDriver('posts_made', Metric\PostsMadeDriver::class)
+        ->metricDriver('likes_given', Metric\LikesGivenDriver::class)
+        ->metricDriver('likes_received', Metric\LikesReceivedDriver::class)
+        ->metricDriver('best_answers', Metric\BestAnswersDriver::class),
 ];

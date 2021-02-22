@@ -9,17 +9,17 @@
 
 namespace Askvortsov\TrustLevels\Api\Serializer;
 
-use Askvortsov\TrustLevels\Range\RangeDriverInterface;
+use Askvortsov\TrustLevels\Metric\MetricDriverInterface;
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Mail\DriverInterface;
 use InvalidArgumentException;
 
-class TrustLevelRangeDriverSerializer extends AbstractSerializer
+class TrustLevelMetricDriverSerializer extends AbstractSerializer
 {
     /**
      * {@inheritdoc}
      */
-    protected $type = 'range-drivers';
+    protected $type = 'metric-drivers';
 
     /**
      * {@inheritdoc}

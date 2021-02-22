@@ -27,7 +27,7 @@ class TrustLevelSerializer extends AbstractSerializer
     {
         $attributes = [
             'name'   => $trustLevel->name,
-            'ranges' => $trustLevel->getRanges(),
+            'metrics' => $trustLevel->getMetrics(),
         ];
 
         return $attributes;
