@@ -77,8 +77,6 @@ class MinMaxSelector extends Component {
       ></Button>
     );
 
-    console.log(this.state);
-
     switch (this.state) {
       case MinMaxSelector.State.DISABLED:
         return button("fas fa-power-off");
