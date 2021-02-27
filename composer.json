@@ -43,7 +43,7 @@
       "title": "Trust Levels",
       "category": "moderation",
       "icon": {
-        "name": "fas fa-arrow-double-up",
+        "name": "fas fa-angle-double-up",
         "backgroundColor": "#6932D1",
         "color": "#fff"
       }
