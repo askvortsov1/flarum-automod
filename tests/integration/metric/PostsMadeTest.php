@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of askvortsov/flarum-trust-levels
+ *
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
+ */
+
 namespace Askvortsov\TrustLevels\Tests\integration\metric;
 
 use Carbon\Carbon;
@@ -41,7 +50,7 @@ class PostsMadeTest extends TestCase
                 ['discussion_id' => 3, 'user_id' => 2, 'last_read_at' => Carbon::now()->toDateTimeString()],
             ],
             'posts' => [
-                ['id' => 1, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>']
+                ['id' => 1, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
             ],
         ]);
     }
@@ -63,8 +72,8 @@ class PostsMadeTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('discussions entered', 4, [
-                'discussions_entered' => [2, 10]
-            ])
+                'discussions_entered' => [2, 10],
+            ]),
         ]]);
 
         $this->app();
@@ -81,17 +90,17 @@ class PostsMadeTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('discussions entered', 4, [
-                'discussions_entered' => [-1, 2]
+                'discussions_entered' => [-1, 2],
             ]),
             $this->genTrustLevel('discussions entered', 4, [
-                'discussions_entered' => [1, 2]
+                'discussions_entered' => [1, 2],
             ]),
             $this->genTrustLevel('discussions entered', 4, [
-                'discussions_entered' => [4, 100]
+                'discussions_entered' => [4, 100],
             ]),
             $this->genTrustLevel('discussions entered', 4, [
-                'discussions_entered' => [4, -1]
-            ])
+                'discussions_entered' => [4, -1],
+            ]),
         ]]);
 
         $this->app();

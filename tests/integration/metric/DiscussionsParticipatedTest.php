@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of askvortsov/flarum-trust-levels
+ *
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
+ */
+
 namespace Askvortsov\TrustLevels\Tests\integration\metric;
 
 use Carbon\Carbon;
@@ -40,7 +49,7 @@ class DiscussionsParticipatedTest extends TestCase
                 ['id' => 2, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
                 ['id' => 3, 'discussion_id' => 2, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
                 ['id' => 4, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-                ['id' => 5, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>']
+                ['id' => 5, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
             ],
         ]);
     }
@@ -62,8 +71,8 @@ class DiscussionsParticipatedTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('discussions participated', 4, [
-                'discussions_participated' => [2, 10]
-            ])
+                'discussions_participated' => [2, 10],
+            ]),
         ]]);
 
         $this->app();
@@ -80,17 +89,17 @@ class DiscussionsParticipatedTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('discussions participated', 4, [
-                'discussions_participated' => [-1, 2]
+                'discussions_participated' => [-1, 2],
             ]),
             $this->genTrustLevel('discussions participated', 4, [
-                'discussions_participated' => [1, 2]
+                'discussions_participated' => [1, 2],
             ]),
             $this->genTrustLevel('discussions participated', 4, [
-                'discussions_participated' => [4, 100]
+                'discussions_participated' => [4, 100],
             ]),
             $this->genTrustLevel('discussions participated', 4, [
-                'discussions_participated' => [4, -1]
-            ])
+                'discussions_participated' => [4, -1],
+            ]),
         ]]);
 
         $this->app();

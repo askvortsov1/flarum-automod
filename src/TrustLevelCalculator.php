@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of askvortsov/flarum-trust-levels
+ *
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
+ */
+
 namespace Askvortsov\TrustLevels;
 
 use Askvortsov\TrustLevels\Metric\MetricManager;
@@ -36,14 +45,14 @@ class TrustLevelCalculator
 
         foreach ($this->metrics->getDrivers() as $name => $driver) {
             $stats[$name] = $driver->getValue($user);
-        };
+        }
 
         return $stats;
     }
 
     protected function getTrustLevelsForStats($stats)
     {
-        return TrustLevel::all()->filter(function(TrustLevel $level) use ($stats) {
+        return TrustLevel::all()->filter(function (TrustLevel $level) use ($stats) {
             foreach ($stats as $stat => $val) {
                 $min = $level->getMetricMin($stat);
                 $max = $level->getMetricMax($stat);
@@ -76,7 +85,8 @@ class TrustLevelCalculator
     /**
      * Converts model query results into an associative array with the ID as the key.
      */
-    protected function toAssoc($arr) {
+    protected function toAssoc($arr)
+    {
         $newArr = [];
 
         foreach ($arr as $model) {

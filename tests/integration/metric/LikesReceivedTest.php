@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of askvortsov/flarum-trust-levels
+ *
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
+ */
+
 namespace Askvortsov\TrustLevels\Tests\integration\metric;
 
 use Carbon\Carbon;
@@ -39,7 +48,7 @@ class LikesReceivedTest extends TestCase
                 ['id' => 2, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
                 ['id' => 3, 'discussion_id' => 2, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 1, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
                 ['id' => 4, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 1, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-                ['id' => 5, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>']
+                ['id' => 5, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
             ],
             'post_likes' => [
                 ['post_id' => 1, 'user_id' => 1],
@@ -49,7 +58,7 @@ class LikesReceivedTest extends TestCase
                 ['post_id' => 4, 'user_id' => 1],
                 ['post_id' => 5, 'user_id' => 1],
                 ['post_id' => 5, 'user_id' => 2],
-            ]
+            ],
         ]);
     }
 
@@ -70,8 +79,8 @@ class LikesReceivedTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('likes received', 4, [
-                'likes_received' => [2, 10]
-            ])
+                'likes_received' => [2, 10],
+            ]),
         ]]);
 
         $this->app();
@@ -88,17 +97,17 @@ class LikesReceivedTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('likes received', 4, [
-                'likes_received' => [-1, 3]
+                'likes_received' => [-1, 3],
             ]),
             $this->genTrustLevel('likes received', 4, [
-                'likes_received' => [1, 3]
+                'likes_received' => [1, 3],
             ]),
             $this->genTrustLevel('likes received', 4, [
-                'likes_received' => [5, 100]
+                'likes_received' => [5, 100],
             ]),
             $this->genTrustLevel('likes received', 4, [
-                'likes_received' => [5, -1]
-            ])
+                'likes_received' => [5, -1],
+            ]),
         ]]);
 
         $this->app();

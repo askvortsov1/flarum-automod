@@ -1,10 +1,12 @@
 <?php
 
 /*
- * This file is part of Flarum.
+ * This file is part of askvortsov/flarum-trust-levels
  *
- * For detailed copyright and license information, please view the
- * LICENSE file that was distributed with this source code.
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
  */
 
 namespace Askvortsov\TrustLevels\Api\Serializer;
@@ -26,7 +28,7 @@ class TrustLevelSerializer extends AbstractSerializer
     protected function getDefaultAttributes($trustLevel)
     {
         $attributes = [
-            'name'   => $trustLevel->name,
+            'name'    => $trustLevel->name,
             'metrics' => $trustLevel->getMetrics(),
         ];
 

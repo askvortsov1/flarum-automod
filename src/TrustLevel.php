@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of askvortsov/flarum-trust-levels
+ *
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
+ */
+
 namespace Askvortsov\TrustLevels;
 
 use Flarum\Database\AbstractModel;
@@ -9,10 +18,10 @@ use Flarum\User\User;
 use Illuminate\Support\Arr;
 
 /**
- * @property int $id
- * @property int $group_id
+ * @property int    $id
+ * @property int    $group_id
  * @property string $name
- * @property array $metrics
+ * @property array  $metrics
  */
 class TrustLevel extends AbstractModel
 {
@@ -27,11 +36,12 @@ class TrustLevel extends AbstractModel
      *
      * @param string $name
      * @param string $group
+     *
      * @return static
      */
     public static function build($name, $group)
     {
-        $tag = new static;
+        $tag = new static();
 
         $tag->name = $name;
         $tag->group()->associate($group);
@@ -100,4 +110,3 @@ class TrustLevel extends AbstractModel
         return $this->belongsToMany(User::class, 'trust_level_user');
     }
 }
-

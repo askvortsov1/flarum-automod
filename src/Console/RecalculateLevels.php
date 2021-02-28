@@ -1,11 +1,20 @@
 <?php
 
+/*
+ * This file is part of askvortsov/flarum-trust-levels
+ *
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
+ */
+
 namespace Askvortsov\TrustLevels\Console;
 
+use Askvortsov\TrustLevels\TrustLevelCalculator;
 use Flarum\User\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\ConnectionInterface;
-use Askvortsov\TrustLevels\TrustLevelCalculator;
 
 class RecalculateLevels extends Command
 {
@@ -45,8 +54,9 @@ class RecalculateLevels extends Command
     public function handle()
     {
         // Amount is not numeric
-        if(!is_numeric($this->option('amount'))) {
+        if (!is_numeric($this->option('amount'))) {
             $this->error('Amount should be numeric.');
+
             return;
         }
 
@@ -55,29 +65,30 @@ class RecalculateLevels extends Command
         $currentBatch = 0;
         $userCount = User::count();
         $expectedBatches = ceil($userCount / $amount);
-        
+
         // Info
         $this->info('Recalculating levels');
         $this->line("There are currently {$userCount} users. Expect {$expectedBatches} batche(s) with a maximum of {$amount} users at a time");
 
         // Loop through all batches
-        for($currentBatch = 1; $currentBatch <= $expectedBatches; $currentBatch++) {
+        for ($currentBatch = 1; $currentBatch <= $expectedBatches; $currentBatch++) {
             $this->comment("Starting batch {$currentBatch} from {$expectedBatches}");
 
             $this->batch($currentBatch, $amount);
         }
 
         // Finished
-        $this->info('Finished - Executed '. $expectedBatches . ' batches');
+        $this->info('Finished - Executed '.$expectedBatches.' batches');
     }
 
     /**
-     * @var int $batchNumber Current batch number
-     * @var int $maxRows Max amount of rows to load each batch
+     * @var int Current batch number
+     * @var int Max amount of rows to load each batch
      */
-    private function batch($batchNumber, $maxRows) {
+    private function batch($batchNumber, $maxRows)
+    {
         $timeStarted = microtime(true);
-        
+
         // Calculate startpoint
         $startFrom = ($batchNumber - 1) * $maxRows;
 

@@ -1,21 +1,20 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels.
+ * This file is part of askvortsov/flarum-trust-levels
  *
- * Copyright (c) 2021 Alexander Skvortsov.
+ *  Copyright (c) 2021 Alexander Skvortsov.
  *
- * For the full copyright and license information, please view the LICENSE.md
- * file that was distributed with this source code.
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
  */
 
 namespace Askvortsov\TrustLevels;
 
-use Askvortsov\TrustLevels\Extend\TrustLevel as TrustLevelExtender;
 use Askvortsov\TrustLevels\Api\Controller;
 use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
-use Askvortsov\TrustLevels\Metric;
 use Askvortsov\TrustLevels\Console\RecalculateLevels;
+use Askvortsov\TrustLevels\Extend\TrustLevel as TrustLevelExtender;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowUserController;
 use Flarum\Api\Serializer\UserSerializer;
@@ -26,12 +25,12 @@ use Flarum\User\User;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__ . '/js/dist/forum.js')
-        ->css(__DIR__ . '/resources/less/forum.less'),
+        ->js(__DIR__.'/js/dist/forum.js')
+        ->css(__DIR__.'/resources/less/forum.less'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__ . '/js/dist/admin.js')
-        ->css(__DIR__ . '/resources/less/admin.less'),
+        ->js(__DIR__.'/js/dist/admin.js')
+        ->css(__DIR__.'/resources/less/admin.less'),
 
     (new Extend\Routes('api'))
         ->get('/trust_levels', 'trust_levels.index', Controller\ListTrustLevelsController::class)
@@ -55,15 +54,15 @@ return [
     (new Extend\ApiController(ListUsersController::class))
         ->addInclude('trustLevels'),
 
-    (new Extend\Event)
+    (new Extend\Event())
         ->listen(LoggedIn::class, Listener\UpdateTrustLevelsOnLogin::class),
 
-    new Extend\Locales(__DIR__ . '/resources/locale'),
+    new Extend\Locales(__DIR__.'/resources/locale'),
 
     (new Extend\Console())
         ->command(RecalculateLevels::class),
 
-    (new TrustLevelExtender)
+    (new TrustLevelExtender())
         ->metricDriver('discussions_entered', Metric\DiscussionsEnteredDriver::class)
         ->metricDriver('discussions_started', Metric\DiscussionsStartedDriver::class)
         ->metricDriver('discussions_participated', Metric\DiscussionsParticipatedDriver::class)

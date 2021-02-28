@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of askvortsov/flarum-trust-levels
+ *
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
+ */
+
 namespace Askvortsov\TrustLevels\Metric;
 
 use Flarum\User\User as User;
@@ -7,7 +16,7 @@ use Flarum\User\User as User;
 interface MetricDriverInterface
 {
     /**
-     * A translation key for a human-readable name for this metric driver
+     * A translation key for a human-readable name for this metric driver.
      */
     public function translationKey(): string;
 

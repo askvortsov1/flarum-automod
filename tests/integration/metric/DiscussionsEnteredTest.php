@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of askvortsov/flarum-trust-levels
+ *
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
+ */
+
 namespace Askvortsov\TrustLevels\Tests\integration\metric;
 
 use Carbon\Carbon;
@@ -38,7 +47,7 @@ class DiscussionsEnteredTest extends TestCase
                 ['id' => 2, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
                 ['id' => 3, 'discussion_id' => 2, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
                 ['id' => 4, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-                ['id' => 5, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>']
+                ['id' => 5, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
             ],
         ]);
     }
@@ -60,8 +69,8 @@ class DiscussionsEnteredTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [2, 10]
-            ])
+                'posts_made' => [2, 10],
+            ]),
         ]]);
 
         $this->app();
@@ -78,17 +87,17 @@ class DiscussionsEnteredTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [-1, 4]
+                'posts_made' => [-1, 4],
             ]),
             $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [1, 4]
+                'posts_made' => [1, 4],
             ]),
             $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [6, 100]
+                'posts_made' => [6, 100],
             ]),
             $this->genTrustLevel('posts made', 4, [
-                'posts_made' => [6, -1]
-            ])
+                'posts_made' => [6, -1],
+            ]),
         ]]);
 
         $this->app();

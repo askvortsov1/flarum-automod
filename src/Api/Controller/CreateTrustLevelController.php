@@ -1,10 +1,12 @@
 <?php
 
 /*
- * This file is part of Flarum.
+ * This file is part of askvortsov/flarum-trust-levels
  *
- * For detailed copyright and license information, please view the
- * LICENSE file that was distributed with this source code.
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
  */
 
 namespace Askvortsov\TrustLevels\Api\Controller;
@@ -42,8 +44,9 @@ class CreateTrustLevelController extends AbstractCreateController
     protected $validator;
 
     /**
-     * @param MetricManager $metrics
+     * @param MetricManager       $metrics
      * @param TrustLevelValidator $validator
+     *
      * @return void
      */
     public function __construct(MetricManager $metrics, TrustLevelValidator $validator)

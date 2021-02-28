@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of askvortsov/flarum-trust-levels
+ *
+ *  Copyright (c) 2021 Alexander Skvortsov.
+ *
+ *  For detailed copyright and license information, please view the
+ *  LICENSE file that was distributed with this source code.
+ */
+
 namespace Askvortsov\TrustLevels\Tests\integration\metric;
 
 use Carbon\Carbon;
@@ -35,7 +44,7 @@ class DiscussionsStartedTest extends TestCase
                 ['id' => 5, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
             ],
             'posts' => [
-                ['id' => 1, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>']
+                ['id' => 1, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
             ],
         ]);
     }
@@ -57,8 +66,8 @@ class DiscussionsStartedTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('discussions started', 4, [
-                'discussions_started' => [2, 10]
-            ])
+                'discussions_started' => [2, 10],
+            ]),
         ]]);
 
         $this->app();
@@ -75,17 +84,17 @@ class DiscussionsStartedTest extends TestCase
     {
         $this->prepareDatabase(['trust_levels' => [
             $this->genTrustLevel('discussions started', 4, [
-                'discussions_started' => [-1, 4]
+                'discussions_started' => [-1, 4],
             ]),
             $this->genTrustLevel('discussions started', 4, [
-                'discussions_started' => [1, 4]
+                'discussions_started' => [1, 4],
             ]),
             $this->genTrustLevel('discussions started', 4, [
-                'discussions_started' => [6, 8]
+                'discussions_started' => [6, 8],
             ]),
             $this->genTrustLevel('discussions started', 4, [
-                'discussions_started' => [6, -1]
-            ])
+                'discussions_started' => [6, -1],
+            ]),
         ]]);
 
         $this->app();
