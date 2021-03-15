@@ -1,64 +1,64 @@
 {
-  "name": "askvortsov/flarum-trust-levels",
-  "description": "Automatically assign groups based on activity.",
-  "keywords": [
-    "flarum"
-  ],
-  "type": "flarum-extension",
-  "license": "MIT",
-  "support": {
-    "issues": "https://github.com/askvortsov1/flarum-trust-levels/issues",
-    "source": "https://github.com/askvortsov1/flarum-trust-levels",
-    "forum": "https://discuss.flarum.org/d/25977-trust-levels-automatic-group-assignment"
-  },
-  "require": {
-    "flarum/core": "^0.1.0-beta.15",
-    "illuminate/console": "*"
-  },
-  "require-dev": {
-    "flarum/testing": "dev-main",
-    "flarum/likes": "^0.1.0",
-    "fof/best-answer": "dev-master"
-  },
-  "authors": [
-    {
-      "name": "Alexander Skvortsov",
-      "email": "askvortsov@flarum.org",
-      "role": "Developer"
-    }
-  ],
-  "autoload": {
-    "psr-4": {
-      "Askvortsov\\TrustLevels\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Askvortsov\\TrustLevels\\Tests\\": "tests/"
-    }
-  },
-  "minimum-stability": "dev",
-  "extra": {
-    "flarum-extension": {
-      "title": "Trust Levels",
-      "category": "moderation",
-      "icon": {
-        "name": "fas fa-angle-double-up",
-        "backgroundColor": "#6932D1",
-        "color": "#fff"
-      }
-    }
-  },
-  "scripts": {
-    "test": [
-      "@test:integration"
+    "name": "askvortsov/flarum-trust-levels",
+    "description": "Automatically assign groups based on activity.",
+    "keywords": [
+        "flarum"
     ],
-    "test:integration": "phpunit -c tests/phpunit.integration.xml",
-    "test:setup": "@php tests/integration/setup.php"
-  },
-  "scripts-descriptions": {
-    "test": "Runs all tests.",
-    "test:integration": "Runs all integration tests.",
-    "test:setup": "Sets up a database for use with integration tests. Execute this only once."
-  }
+    "type": "flarum-extension",
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/askvortsov1/flarum-trust-levels/issues",
+        "source": "https://github.com/askvortsov1/flarum-trust-levels",
+        "forum": "https://discuss.flarum.org/d/25977-trust-levels-automatic-group-assignment"
+    },
+    "require": {
+        "flarum/core": "^0.1.0-beta.16",
+        "illuminate/console": "*"
+    },
+    "require-dev": {
+        "flarum/testing": "^0.1.0",
+        "flarum/likes": "^0.1.0",
+        "fof/best-answers": "*"
+    },
+    "authors": [
+        {
+            "name": "Alexander Skvortsov",
+            "email": "askvortsov@flarum.org",
+            "role": "Developer"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Askvortsov\\TrustLevels\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Askvortsov\\TrustLevels\\Tests\\": "tests/"
+        }
+    },
+    "minimum-stability": "beta",
+    "extra": {
+        "flarum-extension": {
+            "title": "Trust Levels",
+            "category": "feature",
+            "icon": {
+                "name": "fas fa-angle-double-up",
+                "backgroundColor": "#6932D1",
+                "color": "#fff"
+            }
+        }
+    },
+    "scripts": {
+        "test": [
+            "@test:integration"
+        ],
+        "test:integration": "phpunit -c tests/phpunit.integration.xml",
+        "test:setup": "@php tests/integration/setup.php"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all tests.",
+        "test:integration": "Runs all integration tests.",
+        "test:setup": "Sets up a database for use with integration tests. Execute this only once."
+    }
 }
