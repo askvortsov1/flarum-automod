@@ -26,7 +26,7 @@ class DiscussionsEnteredTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,9 +37,9 @@ class DiscussionsEnteredTest extends TestCase
                 $this->normalUser(),
             ],
             'discussions' => [
-                ['id' => 1, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
-                ['id' => 2, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
-                ['id' => 3, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
+                ['id' => 1, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1],
+                ['id' => 2, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1],
+                ['id' => 3, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1],
             ],
             'posts' => [
                 ['id' => 1, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
@@ -59,7 +59,7 @@ class DiscussionsEnteredTest extends TestCase
     {
         $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
 
-        $this->assertNotContains('4', User::find(2)->groups->pluck('id')->all());
+        $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
     }
 
     /**
@@ -77,7 +77,7 @@ class DiscussionsEnteredTest extends TestCase
         User::find(2)->refreshCommentCount()->save();
         $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
 
-        $this->assertContains('4', User::find(2)->groups->pluck('id')->all());
+        $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
     }
 
     /**
@@ -104,6 +104,6 @@ class DiscussionsEnteredTest extends TestCase
         User::find(2)->refreshCommentCount()->save();
         $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
 
-        $this->assertNotContains('4', User::find(2)->groups->pluck('id')->all());
+        $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
     }
 }
