@@ -14,6 +14,7 @@ namespace Askvortsov\TrustLevels\Api\Controller;
 use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
 use Askvortsov\TrustLevels\TrustLevel;
 use Flarum\Api\Controller\AbstractListController;
+use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
 
@@ -43,7 +44,7 @@ class ListTrustLevelsController extends AbstractListController
      */
     protected function data(ServerRequestInterface $request, Document $document)
     {
-        $actor = $request->getAttribute('actor');
+        $actor = RequestUtil::getActor($request);
         $include = $this->extractInclude($request);
 
         $actor->assertCan('administrate');

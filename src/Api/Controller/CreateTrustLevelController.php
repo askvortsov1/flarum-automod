@@ -17,6 +17,7 @@ use Askvortsov\TrustLevels\TrustLevel;
 use Askvortsov\TrustLevels\TrustLevelValidator;
 use Flarum\Api\Controller\AbstractCreateController;
 use Flarum\Group\Group;
+use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 use Tobscure\JsonApi\Document;
@@ -60,7 +61,7 @@ class CreateTrustLevelController extends AbstractCreateController
      */
     protected function data(ServerRequestInterface $request, Document $document)
     {
-        $request->getAttribute('actor')->assertCan('administrate');
+        RequestUtil::getActor($request)->assertCan('administrate');
 
         $data = Arr::get($request->getParsedBody(), 'data', []);
 

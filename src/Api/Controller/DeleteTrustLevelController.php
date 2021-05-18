@@ -13,6 +13,7 @@ namespace Askvortsov\TrustLevels\Api\Controller;
 
 use Askvortsov\TrustLevels\TrustLevel;
 use Flarum\Api\Controller\AbstractDeleteController;
+use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -24,7 +25,7 @@ class DeleteTrustLevelController extends AbstractDeleteController
     protected function delete(ServerRequestInterface $request)
     {
         $id = Arr::get($request->getQueryParams(), 'id');
-        $request->getAttribute('actor')->assertCan('administrate');
+        RequestUtil::getActor($request)->assertCan('administrate');
 
         $trustLevel = TrustLevel::find($id);
 
