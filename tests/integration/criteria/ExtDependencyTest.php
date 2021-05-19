@@ -13,16 +13,17 @@ namespace Askvortsov\AutoModerator\Tests\integration\criteria;
 
 use Askvortsov\AutoModerator\CriteriaCalculator;
 use Askvortsov\AutoModerator\Extend\AutoModerator;
-use Askvortsov\AutoModerator\Tests\integration\criteria\Drivers\BooleanRequirement;
+use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
 use Askvortsov\AutoModerator\Tests\integration\CriteriaUtils;
-use Flarum\Group\Group;
+use Askvortsov\AutoModerator\Tests\integration\metric\UsesMetric;
+use Carbon\Carbon;
 use Flarum\Http\AccessToken;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
 
-class SettingsInvalidTest extends TestCase
+class ExtDependencyTest extends TestCase
 {
     use RetrievesAuthorizedUsers;
 
@@ -38,17 +39,24 @@ class SettingsInvalidTest extends TestCase
         $this->prepareDatabase([
             'users' => [
                 $this->normalUser(),
-            ]
+            ],
         ]);
     }
 
     /**
      * @test
      */
-    public function not_added_to_group_if_settings_invalid()
+    public function not_added_to_group_if_in_range_but_ext_missing()
     {
+        $this->extend(
+            (new AutoModerator())
+                ->metricDriver('ext-dependent', MetricDependentOnExt::class)
+        );
+    
         $this->prepareDatabase(['criteria' => [
-            CriteriaUtils::genCriterionGroupManagement('invalid group ID', 'hello there!')
+            CriteriaUtils::genCriterionGroupManagement('dependent on missing ext', 4, [
+                ['type' => 'ext-dependent', 'min' => 2, 'max' => 100]
+            ])
         ]]);
 
         $this->app()->getContainer()->make(CriteriaCalculator::class)->recalculate(User::find(2), LoggedIn::class);
@@ -59,27 +67,47 @@ class SettingsInvalidTest extends TestCase
     /**
      * @test
      */
-    public function not_removed_from_group_if_settings_invalid()
+    public function added_to_group_if_in_range_and_ext_enabled()
     {
+        $this->extension('flarum-likes');
+
         $this->extend(
             (new AutoModerator())
-                ->requirementDriver('always_true', BooleanRequirement::class),
+                ->metricDriver('ext-dependent', MetricDependentOnExt::class)
         );
-        
-        $this->prepareDatabase([
-            'criteria' => [
-                CriteriaUtils::genCriterionGroupManagement('invalid group ID', 'hello there!', [], [['type' => 'always_true', 'negated' => true]], 1)
-            ],
-            'criterion_user' => [
-                ['criterion_id' => 1, 'user_id' => 1]
-            ],
-            'group_user' => [
-                ['group_id' => Group::MODERATOR_ID, 'user_id' => 2]
-            ]
-        ]);
+
+        $this->prepareDatabase(['criteria' => [
+            CriteriaUtils::genCriterionGroupManagement('dependent on ext', 4, [
+                ['type' => 'ext-dependent', 'min' => 2, 'max' => 100]
+            ])
+        ]]);
 
         $this->app()->getContainer()->make(CriteriaCalculator::class)->recalculate(User::find(2), LoggedIn::class);
 
         $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
+    }
+}
+
+class MetricDependentOnExt implements MetricDriverInterface
+{
+
+    public function translationKey(): string
+    {
+        return '';
+    }
+
+    public function extensionDependencies(): array
+    {
+        return ['flarum-likes'];
+    }
+
+    public function eventTriggers(): array
+    {
+        return [];
+    }
+
+    public function getValue(User $user): int
+    {
+        return 15;
     }
 }

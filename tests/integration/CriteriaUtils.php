@@ -9,14 +9,13 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\AutoModerator\Tests\integration\metric;
+namespace Askvortsov\AutoModerator\Tests\integration;
 
 use Askvortsov\AutoModerator\Criterion;
 
-trait UsesMetric
+class CriteriaUtils
 {
-    public function genCriterion($name, $groupId, $rawMetrics = [], $rawRequirements = [])
-    {
+    public static function genCriterionGroupManagement($name, $groupId, $metrics = [], $requirements = [], $id = null) {
         $actions = [
             [
                 'type' => 'add_to_group',
@@ -34,25 +33,11 @@ trait UsesMetric
             ]
         ];
 
-        $metrics = collect($rawMetrics)
-            ->map(function (array $range, string $key) {
-                return [
-                    'type' => $key,
-                    'min' => $range[0],
-                    'max' => $range[1]
-                ];
-            })
-            ->toArray();
+        return CriteriaUtils::genCriterion($name, $actions, $metrics, $requirements, $id);
+    }
 
-        $requirements = collect($rawRequirements)
-            ->map(function (array $def, string $key) {
-                return [
-                    'type' => $key,
-                    'negated' => $def['negated']
-                ];
-            })
-            ->toArray();
-
+    public static function genCriterion($name, $actions= [], $metrics = [], $requirements= [], $id = null)
+    {
         $criterion = Criterion::build(
             $name,
             '',
@@ -61,6 +46,10 @@ trait UsesMetric
             $requirements,
         );
 
-        return $criterion->getAttributes();
+        $attributes = $criterion->getAttributes();
+
+        if ($id !== null) $attributes['id'] = $id;
+
+        return $attributes;
     }
 }

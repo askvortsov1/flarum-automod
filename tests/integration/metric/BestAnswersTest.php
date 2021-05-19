@@ -11,17 +11,18 @@
 
 namespace Askvortsov\AutoModerator\Tests\integration\metric;
 
+use Askvortsov\AutoModerator\Metric\BestAnswers;
+use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
 use Carbon\Carbon;
-use Flarum\Http\AccessToken;
+use Flarum\Discussion\Discussion;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
-use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
+use FoF\BestAnswer\Events\BestAnswerSet;
 
 class BestAnswersTest extends TestCase
 {
     use RetrievesAuthorizedUsers;
-    use UsesMetric;
 
     /**
      * @inheritDoc
@@ -38,14 +39,14 @@ class BestAnswersTest extends TestCase
                 $this->normalUser(),
             ],
             'discussions' => [
-                ['id' => 1, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
-                ['id' => 2, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
-                ['id' => 3, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
-                ['id' => 4, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
-                ['id' => 5, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
+                ['id' => 1, 'title' => __CLASS__,  'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
+                ['id' => 2, 'title' => __CLASS__,  'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
+                ['id' => 3, 'title' => __CLASS__,  'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
+                ['id' => 4, 'title' => __CLASS__,  'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
+                ['id' => 5, 'title' => __CLASS__,  'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1, 'best_answer_user_id' => 2],
             ],
             'posts' => [
-                ['id' => 1, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
+                ['id' => 1, 'discussion_id' => 1,  'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
             ],
         ]);
     }
@@ -53,50 +54,29 @@ class BestAnswersTest extends TestCase
     /**
      * @test
      */
-    public function not_added_to_group_by_default()
+    public function gets_user_properly_from_best_answer_set_event()
     {
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
+        /** @var MetricDriverInterface */
+        $driver = $this->app()->getContainer()->make(BestAnswers::class);
 
-        $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
+        $event = new BestAnswerSet(Discussion::find(1), User::find(2));
+        $user = $driver->eventTriggers()[BestAnswerSet::class]($event);
+
+        $this->assertEquals(2, $user->id);
     }
 
     /**
      * @test
      */
-    public function added_to_group_properly()
+    public function returns_correct_value()
     {
-        $this->prepareDatabase(['criteria' => [
-            $this->genCriterion('best answer', 4, [
-                'best_answers' => [2, 10],
-            ]),
-        ]]);
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
+        /** @var MetricDriverInterface */
+        $driver = $this->app()->getContainer()->make(BestAnswers::class);
 
-        $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
-    }
+        $value = $driver->getValue(User::find(1));
+        $this->assertEquals(0, $value);
 
-    /**
-     * @test
-     */
-    public function not_added_to_group_if_doesnt_apply()
-    {
-        $this->prepareDatabase(['criteria' => [
-            $this->genCriterion('best answer', 4, [
-                'best_answers' => [-1, 4],
-            ]),
-            $this->genCriterion('best answer', 4, [
-                'best_answers' => [1, 4],
-            ]),
-            $this->genCriterion('best answer', 4, [
-                'best_answers' => [6, 8],
-            ]),
-            $this->genCriterion('best answer', 4, [
-                'best_answers' => [6, -1],
-            ]),
-        ]]);
-
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
-
-        $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
+        $value = $driver->getValue(User::find(2));
+        $this->assertEquals(5, $value);
     }
 }

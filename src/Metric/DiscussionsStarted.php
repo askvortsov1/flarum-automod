@@ -30,7 +30,7 @@ class DiscussionsStarted implements MetricDriverInterface
     {
         return [
             Posted::class => function (Posted $event) {
-                return $event->actor;
+                return $event->post->user;
             }
         ];
     }

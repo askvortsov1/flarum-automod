@@ -51,7 +51,7 @@ class CriteriaCalculator
         $metrics = $this->calcMetrics($user);
         $requirements = $this->calcRequirements($user);
 
-        $prevCriteria = CriteriaCalculator::toAssoc($user->criteria->toArray());
+        $prevCriteria = CriteriaCalculator::toAssoc($user->criteria->all());
         $currCriteria = CriteriaCalculator::toAssoc($this->getCriteriaForStats($metrics, $requirements));
 
         $lostCriteria = array_diff_key($prevCriteria, $currCriteria);

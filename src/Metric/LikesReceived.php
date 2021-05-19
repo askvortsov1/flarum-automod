@@ -34,7 +34,7 @@ class LikesReceived implements MetricDriverInterface
             PostWasLiked::class => function (PostWasLiked $event) {
                 return $event->post->user;
             },
-            PostWasUnliked::class => function (PostWasLiked $event) {
+            PostWasUnliked::class => function (PostWasUnliked $event) {
                 return $event->post->user;
             },
         ];

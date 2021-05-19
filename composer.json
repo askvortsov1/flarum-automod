@@ -17,6 +17,7 @@
     "require-dev": {
         "flarum/testing": "*@dev",
         "flarum/likes": "*@dev",
+        "flarum/suspend": "*@dev",
         "fof/best-answer": "*@dev"
     },
     "authors": [

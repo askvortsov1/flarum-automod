@@ -11,17 +11,17 @@
 
 namespace Askvortsov\AutoModerator\Tests\integration\metric;
 
+use Askvortsov\AutoModerator\Metric\DiscussionsEntered;
 use Carbon\Carbon;
-use Flarum\Http\AccessToken;
+use Flarum\Discussion\Event\UserRead;
+use Flarum\Discussion\UserState;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
-use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
 
 class DiscussionsEnteredTest extends TestCase
 {
     use RetrievesAuthorizedUsers;
-    use UsesMetric;
 
     /**
      * @inheritDoc
@@ -37,17 +37,13 @@ class DiscussionsEnteredTest extends TestCase
                 $this->normalUser(),
             ],
             'discussions' => [
-                ['id' => 1, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1],
-                ['id' => 2, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1],
-                ['id' => 3, 'title' => __CLASS__, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1],
+                ['id' => 1, 'title' => __CLASS__,  'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1],
+                ['id' => 2, 'title' => __CLASS__,  'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1],
+                ['id' => 3, 'title' => __CLASS__,  'user_id' => 2, 'first_post_id' => 1, 'comment_count' => 1],
             ],
-            'posts' => [
-                ['id' => 1, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-
-                ['id' => 2, 'discussion_id' => 1, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-                ['id' => 3, 'discussion_id' => 2, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-                ['id' => 4, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
-                ['id' => 5, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
+            'discussion_user' => [
+                ['discussion_id' => 1, 'user_id' => 2],
+                ['discussion_id' => 2, 'user_id' => 2]
             ],
         ]);
     }
@@ -55,55 +51,31 @@ class DiscussionsEnteredTest extends TestCase
     /**
      * @test
      */
-    public function not_added_to_group_by_default()
+    public function gets_user_properly_from_user_read_event()
     {
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
+        /** @var MetricDriverInterface */
+        $driver = $this->app()->getContainer()->make(DiscussionsEntered::class);
 
-        $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
+        $state = new UserState();
+        $state->user = User::find(2);
+        $event = new UserRead($state);
+        $user = $driver->eventTriggers()[UserRead::class]($event);
+
+        $this->assertEquals(2, $user->id);
     }
 
     /**
      * @test
      */
-    public function added_to_group_properly()
+    public function returns_correct_value()
     {
-        $this->prepareDatabase(['criteria' => [
-            $this->genCriterion('posts made', 4, [
-                'posts_made' => [2, 10],
-            ]),
-        ]]);
+        /** @var MetricDriverInterface */
+        $driver = $this->app()->getContainer()->make(DiscussionsEntered::class);
 
-        $this->app();
-        User::find(2)->refreshCommentCount()->save();
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
+        $value = $driver->getValue(User::find(1));
+        $this->assertEquals(0, $value);
 
-        $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
-    }
-
-    /**
-     * @test
-     */
-    public function not_added_to_group_if_doesnt_apply()
-    {
-        $this->prepareDatabase(['criteria' => [
-            $this->genCriterion('posts made', 4, [
-                'posts_made' => [-1, 4],
-            ]),
-            $this->genCriterion('posts made', 4, [
-                'posts_made' => [1, 4],
-            ]),
-            $this->genCriterion('posts made', 4, [
-                'posts_made' => [6, 100],
-            ]),
-            $this->genCriterion('posts made', 4, [
-                'posts_made' => [6, -1],
-            ]),
-        ]]);
-
-        $this->app();
-        User::find(2)->refreshCommentCount()->save();
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
-
-        $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
+        $value = $driver->getValue(User::find(2));
+        $this->assertEquals(2, $value);
     }
 }

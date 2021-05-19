@@ -9,16 +9,19 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\AutoModerator\Metric;
+namespace Askvortsov\AutoModerator\Tests\integration\criteria\Drivers;
 
-use Flarum\Post\Event\Posted;
+use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
+use Flarum\User\Event\Activated;
+use Flarum\User\Event\LoggedOut;
 use Flarum\User\User;
 
-class PostsMade implements MetricDriverInterface
+class MetricReturn27 implements MetricDriverInterface
 {
+
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.posts_made';
+        return '';
     }
 
     public function extensionDependencies(): array
@@ -29,14 +32,17 @@ class PostsMade implements MetricDriverInterface
     public function eventTriggers(): array
     {
         return [
-            Posted::class => function (Posted $event) {
-                return $event->post->user;
-            }
+            LoggedOut::class => function (LoggedOut $event) {
+                return $event->user;
+            },
+            Activated::class => function (Activated $event) {
+                return $event->user;
+            },
         ];
     }
 
     public function getValue(User $user): int
     {
-        return $user->comment_count;
+        return 27;
     }
 }

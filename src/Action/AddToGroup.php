@@ -31,7 +31,7 @@ class AddToGroup implements ActionDriverInterface
     }
 
     public function execute(User $user, array $settings) {
-        $user->groups()->attach($settings['group_id']);
+        $user->groups()->syncWithoutDetaching([$settings['group_id']]);
     }
 
 }

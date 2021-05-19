@@ -33,7 +33,7 @@ class LikesGiven implements MetricDriverInterface
             PostWasLiked::class => function (PostWasLiked $event) {
                 return $event->user;
             },
-            PostWasUnliked::class => function (PostWasLiked $event) {
+            PostWasUnliked::class => function (PostWasUnliked $event) {
                 return $event->user;
             },
         ];
@@ -41,6 +41,6 @@ class LikesGiven implements MetricDriverInterface
 
     public function getValue(User $user): int
     {
-        return $user->join('post_likes', 'users.id', '=', 'post_likes.user_id')->count();
+        return $user->join('post_likes', 'users.id', '=', 'post_likes.user_id')->where('users.id', $user->id)->count();
     }
 }
