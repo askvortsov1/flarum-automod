@@ -14,7 +14,7 @@ namespace Askvortsov\AutoModerator\Metric;
 use Flarum\Post\Event\Posted;
 use Flarum\User\User;
 
-class PostsMadeDriver implements MetricDriverInterface
+class PostsMade implements MetricDriverInterface
 {
     public function translationKey(): string
     {

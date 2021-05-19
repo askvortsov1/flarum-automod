@@ -11,35 +11,35 @@
 
 namespace Askvortsov\AutoModerator\Metric;
 
-use Flarum\Discussion\Discussion;
+use Flarum\Post\Event\Posted;
 use Flarum\User\User;
-use FoF\BestAnswer\Events\BestAnswerSet;
-use FoF\BestAnswer\Events\BestAnswerUnset;
 
-class BestAnswersDriver implements MetricDriverInterface
+class DiscussionsParticipated implements MetricDriverInterface
 {
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.best_answers';
+        return 'askvortsov-auto-moderator.admin.metric_drivers.discussions_participated';
     }
 
     public function extensionDependencies(): array
     {
-        return ['fof-best-answer'];
+        return [];
     }
 
     public function eventTriggers(): array
     {
-        // Best answer unset isn't included because it doesn't contain the best answer uset.
         return [
-            BestAnswerSet::class => function (BestAnswerSet $event) {
-                return $event->discussion->bestAnswerUser;
+            Posted::class => function (Posted $event) {
+                return $event->actor;
             }
         ];
     }
 
     public function getValue(User $user): int
     {
-        return Discussion::where('best_answer_user_id', $user->id)->count();
+        return $user->posts()
+                    ->where('type', 'comment')
+                    ->where('is_private', false)
+                    ->distinct()->count('discussion_id');
     }
 }

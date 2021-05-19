@@ -11,32 +11,36 @@
 
 namespace Askvortsov\AutoModerator\Metric;
 
-use Flarum\Discussion\Event\UserRead;
+use Flarum\Likes\Event\PostWasLiked;
+use Flarum\Likes\Event\PostWasUnliked;
 use Flarum\User\User;
 
-class DiscussionsEnteredDriver implements MetricDriverInterface
+class LikesGiven implements MetricDriverInterface
 {
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.discussions_entered';
+        return 'askvortsov-auto-moderator.admin.metric_drivers.likes_given';
     }
 
     public function extensionDependencies(): array
     {
-        return [];
+        return ['flarum-likes'];
     }
 
     public function eventTriggers(): array
     {
         return [
-            UserRead::class => function (UserRead $event) {
-                return $event->state->user;
-            }
+            PostWasLiked::class => function (PostWasLiked $event) {
+                return $event->user;
+            },
+            PostWasUnliked::class => function (PostWasLiked $event) {
+                return $event->user;
+            },
         ];
     }
 
     public function getValue(User $user): int
     {
-        return $user->read()->count();
+        return $user->join('post_likes', 'users.id', '=', 'post_likes.user_id')->count();
     }
 }

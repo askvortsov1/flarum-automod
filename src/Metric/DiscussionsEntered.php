@@ -11,14 +11,14 @@
 
 namespace Askvortsov\AutoModerator\Metric;
 
-use Flarum\Post\Event\Posted;
+use Flarum\Discussion\Event\UserRead;
 use Flarum\User\User;
 
-class DiscussionsStartedDriver implements MetricDriverInterface
+class DiscussionsEntered implements MetricDriverInterface
 {
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.discussions_started';
+        return 'askvortsov-auto-moderator.admin.metric_drivers.discussions_entered';
     }
 
     public function extensionDependencies(): array
@@ -29,14 +29,14 @@ class DiscussionsStartedDriver implements MetricDriverInterface
     public function eventTriggers(): array
     {
         return [
-            Posted::class => function (Posted $event) {
-                return $event->actor;
+            UserRead::class => function (UserRead $event) {
+                return $event->state->user;
             }
         ];
     }
 
     public function getValue(User $user): int
     {
-        return $user->discussion_count;
+        return $user->read()->count();
     }
 }

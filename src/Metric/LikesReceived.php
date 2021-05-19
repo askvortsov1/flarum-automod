@@ -13,13 +13,14 @@ namespace Askvortsov\AutoModerator\Metric;
 
 use Flarum\Likes\Event\PostWasLiked;
 use Flarum\Likes\Event\PostWasUnliked;
+use Flarum\Post\Post;
 use Flarum\User\User;
 
-class LikesGivenDriver implements MetricDriverInterface
+class LikesReceived implements MetricDriverInterface
 {
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.likes_given';
+        return 'askvortsov-auto-moderator.admin.metric_drivers.likes_received';
     }
 
     public function extensionDependencies(): array
@@ -31,16 +32,20 @@ class LikesGivenDriver implements MetricDriverInterface
     {
         return [
             PostWasLiked::class => function (PostWasLiked $event) {
-                return $event->user;
+                return $event->post->user;
             },
             PostWasUnliked::class => function (PostWasLiked $event) {
-                return $event->user;
+                return $event->post->user;
             },
         ];
     }
 
     public function getValue(User $user): int
     {
-        return $user->join('post_likes', 'users.id', '=', 'post_likes.user_id')->count();
+        if (property_exists($user, 'clarkwinkelmann_likes_received_count')) {
+            return $user->clarkwinkelmann_likes_received_count;
+        }
+
+        return Post::where('user_id', $user->id)->select('id')->withCount('likes')->get()->sum('likes_count');
     }
 }
