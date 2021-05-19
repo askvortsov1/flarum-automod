@@ -52,25 +52,28 @@ export default class CriterionPage extends AdminPage {
     this.loadingCriterion = true;
 
     app.store.find("criteria", this.id).then((criterion) => {
-      this.criterion = criterion;
-      this.name(criterion.name());
-      this.description(criterion.description());
-      this.metrics(
-        criterion.metrics().map((m) => {
-          return { type: m.type, min: Stream(m.min), max: Stream(m.max) };
-        })
-      );
-      this.actionsOnGain(criterion.actions().filter((a) => a.gain));
-      this.actionsOnLoss(criterion.actions().filter((a) => !a.gain));
-      this.requirements(
-        criterion.requirements().map((r) => {
-          return { type: r.type, negated: Stream(r.negated) };
-        })
-      );
-
+      this.loadCriterion(criterion);
       this.loadingCriterion = false;
       m.redraw();
     });
+  }
+
+  loadCriterion(criterion) {
+    this.criterion = criterion;
+    this.name(criterion.name());
+    this.description(criterion.description());
+    this.metrics(
+      criterion.metrics().map((m) => {
+        return { type: m.type, min: Stream(m.min), max: Stream(m.max) };
+      })
+    );
+    this.actionsOnGain(criterion.actions().filter((a) => a.gain));
+    this.actionsOnLoss(criterion.actions().filter((a) => !a.gain));
+    this.requirements(
+      criterion.requirements().map((r) => {
+        return { type: r.type, negated: Stream(r.negated) };
+      })
+    );
   }
 
   headerInfo() {
@@ -449,9 +452,14 @@ export default class CriterionPage extends AdminPage {
 
     const criterion = this.criterion || app.store.createRecord("criteria");
 
-    criterion.save(this.data()).then(() => {
-      this.saving = false;
-      m.redraw();
+    criterion.save(this.data()).then((newCriterion) => {
+      if (this.id === "new") {
+        m.route.set(app.route.criterion(newCriterion));
+      } else {
+        this.loadCriterion(criterion);
+        this.saving = false;
+        m.redraw();
+      }
     });
   }
 }
