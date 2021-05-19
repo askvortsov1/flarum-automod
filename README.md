@@ -13,11 +13,11 @@ When a user meets criteria X, do Y. When a user no longer meets criteria X, do Z
 Let's define some key terms:
 
 - **Criteria Group:** The set of all criteria that a user meets.
-- **Criteria (singular Criterion):** An arbitrary set of requirements. Criteria are paired with triggers and actions, and are composed of:
-  - **Metrics:** A numerical requirement. For example, post count or number of likes received. A criterion could require a range/minimum/maximum of metrics.
-  - **Condition:** An abstract boolean requirement. For example, not being suspended, or having an email that matches a certain regex.
+- **Criteria (singular Criterion):** An arbitrary set of conditions. Criteria are paired with triggers and actions, and are composed of:
+  - **Metrics:** A numerical condition. For example, post count or number of likes received. A criterion could require a range/minimum/maximum of metrics.
+  - **Requirement:** An abstract boolean condition. For example, not being suspended, or having an email that matches a certain regex.
 - **Action:** Something that happens automatically when a criteria is met or lost. This could include anything from adding/removing a group to sending an email to suspending a user.
-- **Triggers:** A set of events that would cause a user's criteria groups to be reevaluated. These are associated with metrics and conditions. `LoggedIn` is automatically a trigger for all criteria.
+- **Triggers:** A set of events that would cause a user's criteria groups to be reevaluated. These are associated with metrics and Requirements. `LoggedIn` is automatically a trigger for all criteria.
 
 ## Evaluation
 
@@ -52,9 +52,9 @@ The actions are:
 - When the criteria is met, suspend them
 - When the criteria is lost, unsuspend them
 
-## Metrics vs Conditions
+## Metrics vs Requirements
 
-It's clear to see that any metric could be represented as a condition. However, metrics are highly preferable if possible:
+It's clear to see that any metric could be represented as a Requirement. However, metrics are highly preferable if possible:
 
 - A requirement must be specific. "More than 50 received likes" could be a requirement. However, metrics can allow for any range of values.
 - Metrics can be stored and used for other purposes. For example, a planned feature is combining all metrics to provide a "reputation" score.
@@ -67,25 +67,19 @@ When you add metrics to a criterion, you indicate a range of values.
 
 Actions can define their own settings. So when you add an action to a criterion, you might be prompted to fill in some settings. This allows creating generic actions, such as adding a user to an arbitrary group.
 
-## Challenges
-
-Keep in mind that criteria are generally "If and only if" relations. Going back to example 1, users will be placed in the 'active' group if and only if they have received 50+ likes and have started 10+ discussions. If an admin then removes that user from the 'active' group, the user will be re-added the next time a trigger is run if they meet the needed criteria.
-
 ## Extensibility
 
 
+This extension is extremely flexible. It can be considered a framework for automoderation actions.
 
-### Please Note
+Extensions can use the `Askvortsov\AutoModerator\Extend\AutoModerator` extender to add:
 
-- Since these groups are managed automatically, we recommend maintaining a separate set of groups for trust levels.
-- If you delete a trust level, you should also delete the associated group; otherwise, users in that trust level will remain in that group.
-- To prevent errors, you cannot update a trust level's group after it has been created.
-- Any metrics left disabled will not be counted. If all metrics are disabled for a given trust level, ALL users will receive that level.
-- If a group is managed by multiple trust levels, the user will be added to the group as long as they are in at least one of the trust levels.
+- Action drivers
+- Metric drivers
+- Requirement drivers
 
-### Extensibility
-
-This extension is extremely flexible, and can be extended to add custom metric drivers! If your extension or community has some custom metrics that are important for automatically managing groups, you can make a custom metric driver by implementing `Askvortsov\AutoModerator\Metric\MetricDriverInterface`, and registering that driver via the `Askvortsov\AutoModerator\Extend\Criterion` extender.
+If your extension is adding actions that have settings, you might also want to introduce a custom action setting component.
+See [this extension's group settings components](https://github.com/askvortsov1/flarum-auto-moderator/blob/b0f194acd7f360f01ec0b2588ddf9efe019894d1/js/src/admin/index.js#L13-L18) for an example. Essentially, you'll need to add an entry to `app["askvortsov-auto-moderator"].actionDriverSettingsComponents` where the key is the action's type string (provided via the extender), and the value is a component class. The component class should take an action item (an object with a `settings` property; the settings item is a map of setting keys to values), and is responsible for updating the `settings` property in that action item.
 
 ### TODO:
 
@@ -96,19 +90,20 @@ This extension is extremely flexible, and can be extended to add custom metric d
   - Days since account creation
   - Etc
 - Add support for dated metrics (discussions created in the past X days)
+- Introduce metric "weights", sum together to calculate a reputation. Make that reputation available as a metric.
 - Develop a data collection extension, which could cache things such as like counts, to improve performance on large forums
 
 ### Screenshots
 
-![Admin](https://i.imgur.com/nISg5ex.png)
-![Set Metrics](https://i.imgur.com/80r0Mr7.png)
+![Admin](https://i.imgur.com/k9zfwd9.png)
+![Criterion Edit](https://i.imgur.com/AkEYxRs.png)
 ![Edit User](https://i.imgur.com/T8sqsor.png)
 
 
 ### Installation
 
 ```sh
-composer require askvortsov/flarum-auto-moderator
+composer require askvortsov/flarum-auto-moderator:*
 ```
 
 ### Updating
