@@ -1,5 +1,4 @@
 import AdminPage from "flarum/admin/components/AdminPage";
-import Alert from "flarum/common/components/Alert";
 import Button from "flarum/common/components/Button";
 import LinkButton from "flarum/common/components/LinkButton";
 import Select from "flarum/common/components/Select";
@@ -8,6 +7,7 @@ import Stream from "flarum/common/utils/Stream";
 import ActionItem from "./ActionItem";
 import MetricItem from "./MetricItem";
 import RequirementItem from "./RequirementItem";
+import CriterionStatus from "./CriterionStatus";
 
 let actionDefs;
 let metricDefs;
@@ -131,7 +131,7 @@ export default class CriterionPage extends AdminPage {
                 )}
               </LinkButton>
             </div>
-            <div className="Form-group">{this.errors()}</div>
+            <CriterionStatus criterion={this.criterion} />
             <div className="Form-group">
               <label>
                 {app.translator.trans(
@@ -177,43 +177,6 @@ export default class CriterionPage extends AdminPage {
         </div>
       </div>
     );
-  }
-
-  errors() {
-    if (!this.criterion) return;
-    const errors = [];
-
-    if (!this.criterion.isValid()) {
-      errors.push(
-        <Alert type="error" dismissible={false}>
-          {app.translator.trans(
-            "askvortsov-auto-moderator.admin.criterion_page.invalid"
-          )}
-        </Alert>
-      );
-    }
-
-    const validation = this.criterion.invalidActionSettings();
-    if (validation && Object.keys(validation).length) {
-      errors.push(
-        <Alert type="error" dismissible={false}>
-          {app.translator.trans(
-            "askvortsov-auto-moderator.admin.criterion_page.validation"
-          )}
-          <div>
-            <ol>
-              {Object.keys(validation).map((key) => (
-                <li>
-                  <strong>{key}:</strong> {validation[key].join("")}
-                </li>
-              ))}
-            </ol>
-          </div>
-        </Alert>
-      );
-    }
-
-    return <div className="StatusCheck">{errors}</div>;
   }
 
   metricsAndRequirementsForm() {

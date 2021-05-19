@@ -16,9 +16,14 @@ askvortsov-auto-moderator:
       suspended: Suspended
     group_selector:
       placeholder: Select a group
+    criterion_status:
+      heading: Status Check
+      invalid: The criterion is currently invalid. Please check the drivers below for errors.
+      no_actions: No actions are defined for this criterion. Nothing will happen when users gain or lose this criterion.
+      no_metrics_or_reqs: No metrics or requirements are defined for this criterion. This means that ALL users will qualify for this criterion.
+      valid: This criterion is valid!
+      validation_errors: "The following action driver validation errors were encountered:"
     criterion_page:
-      invalid: The criterion is currently invalid. Please check the drivers below for errors
-      validation: "The following action driver validation errors were encountered:"
       driver_missing_ext: This driver depends on extensions that aren't enabled.
       back: Back to Criteria List
       name_label: Name
@@ -37,6 +42,8 @@ askvortsov-auto-moderator:
       actions_on_gain_heading: Actions on Gain
       actions_on_loss_heading: Actions on Loss
       add_action: Add Action
+    undefined_driver_item:
+      text: "ERROR! The driver <strong>{driverName}</strong> is not defined. Most likely, it was added by an extension that isn't currently installed. You'll need to reenable the extension or remove this driver for the criterion to be valid again."
 
     automoderator_page:
       criterion_invalid: The criterion is currently invalid. Please check its settings for more information
