@@ -1,5 +1,5 @@
 {
-    "name": "askvortsov/flarum-trust-levels",
+    "name": "askvortsov/flarum-auto-moderator",
     "description": "Automatically assign groups based on activity.",
     "keywords": [
         "flarum"
@@ -7,8 +7,8 @@
     "type": "flarum-extension",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/askvortsov1/flarum-trust-levels/issues",
-        "source": "https://github.com/askvortsov1/flarum-trust-levels",
+        "issues": "https://github.com/askvortsov1/flarum-auto-moderator/issues",
+        "source": "https://github.com/askvortsov1/flarum-auto-moderator",
         "forum": "https://discuss.flarum.org/d/25977-trust-levels-automatic-group-assignment"
     },
     "require": {
@@ -28,18 +28,18 @@
     ],
     "autoload": {
         "psr-4": {
-            "Askvortsov\\TrustLevels\\": "src/"
+            "Askvortsov\\AutoModerator\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Askvortsov\\TrustLevels\\Tests\\": "tests/"
+            "Askvortsov\\AutoModerator\\Tests\\": "tests/"
         }
     },
     "minimum-stability": "beta",
     "extra": {
         "flarum-extension": {
-            "title": "Trust Levels",
+            "title": "Auto Moderator",
             "category": "feature",
             "icon": {
                 "name": "fas fa-angle-double-up",

@@ -18,7 +18,7 @@ use Flarum\Testing\integration\TestCase;
 use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
 
-class LikesReceivedTest extends TestCase
+class ExtMetricWithExtDisabledTest extends TestCase
 {
     use RetrievesAuthorizedUsers;
     use UsesMetric;
@@ -30,7 +30,7 @@ class LikesReceivedTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('flarum-likes');
+        // Note that we don't enable likes.
         $this->extension('askvortsov-auto-moderator');
 
         $this->prepareDatabase([
@@ -51,12 +51,10 @@ class LikesReceivedTest extends TestCase
                 ['id' => 5, 'discussion_id' => 3, 'created_at' => Carbon::now()->toDateTimeString(), 'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
             ],
             'post_likes' => [
-                ['post_id' => 1, 'user_id' => 1],
-                ['post_id' => 2, 'user_id' => 1],
+                ['post_id' => 1, 'user_id' => 2],
                 ['post_id' => 2, 'user_id' => 2],
-                ['post_id' => 3, 'user_id' => 1],
-                ['post_id' => 4, 'user_id' => 1],
-                ['post_id' => 5, 'user_id' => 1],
+                ['post_id' => 3, 'user_id' => 2],
+                ['post_id' => 4, 'user_id' => 2],
                 ['post_id' => 5, 'user_id' => 2],
             ],
         ]);
@@ -65,48 +63,11 @@ class LikesReceivedTest extends TestCase
     /**
      * @test
      */
-    public function not_added_to_group_by_default()
-    {
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
-
-        $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
-    }
-
-    /**
-     * @test
-     */
-    public function added_to_group_properly()
+    public function added_to_group_even_if_should()
     {
         $this->prepareDatabase(['criteria' => [
-            $this->genCriterion('likes received', 4, [
-                'likes_received' => [2, 10],
-            ]),
-        ]]);
-
-        $this->app();
-        User::find(2)->refreshCommentCount()->save();
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
-
-        $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
-    }
-
-    /**
-     * @test
-     */
-    public function not_added_to_group_if_doesnt_apply()
-    {
-        $this->prepareDatabase(['criteria' => [
-            $this->genCriterion('likes received', 4, [
-                'likes_received' => [-1, 3],
-            ]),
-            $this->genCriterion('likes received', 4, [
-                'likes_received' => [1, 3],
-            ]),
-            $this->genCriterion('likes received', 4, [
-                'likes_received' => [5, 100],
-            ]),
-            $this->genCriterion('likes received', 4, [
-                'likes_received' => [5, -1],
+            $this->genCriterion('likes given', 4, [
+                'likes_given' => [2, 10],
             ]),
         ]]);
 

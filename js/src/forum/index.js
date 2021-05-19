@@ -1,7 +1,7 @@
-const { default: registerModels } = require("../common/registerModels");
-const { default: augmentEditUserModal } = require("./augmentEditUserModal");
+import augmentEditUserModal from "../common/augmentEditUserModal";
+import registerModels from "../common/registerModels";
 
-app.initializers.add("askvortsov/flarum-trust-levels", () => {
+app.initializers.add("askvortsov/flarum-auto-moderator", () => {
   registerModels();
   augmentEditUserModal();
 });

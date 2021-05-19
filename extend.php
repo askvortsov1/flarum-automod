@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,18 +9,16 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels;
+namespace Askvortsov\AutoModerator;
 
-use Askvortsov\TrustLevels\Api\Controller;
-use Askvortsov\TrustLevels\Api\Serializer\TrustLevelSerializer;
-use Askvortsov\TrustLevels\Console\RecalculateLevels;
-use Askvortsov\TrustLevels\Extend\TrustLevel as TrustLevelExtender;
+use Askvortsov\AutoModerator\Api\Controller;
+use Askvortsov\AutoModerator\Api\Serializer\CriterionSerializer;
+use Askvortsov\AutoModerator\Extend\AutoModerator;
+use Askvortsov\AutoModerator\Provider\AutoModeratorProvider;
 use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowUserController;
 use Flarum\Api\Serializer\UserSerializer;
 use Flarum\Extend;
-use Flarum\Group\Group;
-use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
 
 return [
@@ -33,36 +31,36 @@ return [
         ->css(__DIR__.'/resources/less/admin.less'),
 
     (new Extend\Routes('api'))
-        ->get('/trust_levels', 'trust_levels.index', Controller\ListTrustLevelsController::class)
-        ->post('/trust_levels', 'trust_levels.create', Controller\CreateTrustLevelController::class)
-        ->patch('/trust_levels/{id}', 'trust_levels.update', Controller\UpdateTrustLevelController::class)
-        ->delete('/trust_levels/{id}', 'trust_levels.delete', Controller\DeleteTrustLevelController::class)
-        ->get('/trust_level_drivers', 'trust_level_drivers.index', Controller\ShowTrustLevelMetricDriversController::class),
-
-    (new Extend\Model(Group::class))
-        ->hasMany('trustLevels', TrustLevel::class),
+        ->get('/criteria', 'criteria.index', Controller\ListCriteriaController::class)
+        ->post('/criteria', 'criteria.create', Controller\CreateCriterionController::class)
+        ->get('/criteria/{id}', 'criteria.show', Controller\ShowCriterionController::class)
+        ->patch('/criteria/{id}', 'criteria.update', Controller\UpdateCriterionController::class)
+        ->delete('/criteria/{id}', 'criteria.delete', Controller\DeleteCriterionController::class)
+        ->get('/automod_drivers', 'automod_drivers.index', Controller\ShowAutomoderatorDriversController::class),
 
     (new Extend\Model(User::class))
-        ->belongsToMany('trustLevels', TrustLevel::class, 'trust_level_user'),
+        ->belongsToMany('criteria', Criterion::class, 'criterion_user'),
 
     (new Extend\ApiSerializer(UserSerializer::class))
-        ->hasMany('trustLevels', TrustLevelSerializer::class),
+        ->hasMany('criteria', CriterionSerializer::class),
 
     (new Extend\ApiController(ShowUserController::class))
-        ->addInclude('trustLevels'),
+        ->addInclude('criteria'),
 
     (new Extend\ApiController(ListUsersController::class))
-        ->addInclude('trustLevels'),
+        ->addInclude('criteria'),
 
-    (new Extend\Event())
-        ->listen(LoggedIn::class, Listener\UpdateTrustLevelsOnLogin::class),
+    (new Extend\ServiceProvider)
+        ->register(AutoModeratorProvider::class),
 
     new Extend\Locales(__DIR__.'/resources/locale'),
 
-    (new Extend\Console())
-        ->command(RecalculateLevels::class),
+    // (new Extend\Console())
+    //     ->command(RecalculateLevels::class),
 
-    (new TrustLevelExtender())
+    (new AutoModerator())
+        ->actionDriver('add_to_group', Action\AddToGroup::class)
+        ->actionDriver('remove_from_group', Action\RemoveFromGroup::class)
         ->metricDriver('discussions_entered', Metric\DiscussionsEnteredDriver::class)
         ->metricDriver('discussions_started', Metric\DiscussionsStartedDriver::class)
         ->metricDriver('discussions_participated', Metric\DiscussionsParticipatedDriver::class)

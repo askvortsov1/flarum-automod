@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,20 +9,30 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels\Metric;
+namespace Askvortsov\AutoModerator\Metric;
 
+use Flarum\Post\Event\Posted;
 use Flarum\User\User;
 
 class DiscussionsStartedDriver implements MetricDriverInterface
 {
     public function translationKey(): string
     {
-        return 'askvortsov-trust-levels.admin.metric_drivers.discussions_started';
+        return 'askvortsov-auto-moderator.admin.metric_drivers.discussions_started';
     }
 
     public function extensionDependencies(): array
     {
         return [];
+    }
+
+    public function eventTriggers(): array
+    {
+        return [
+            Posted::class => function (Posted $event) {
+                return $event->actor;
+            }
+        ];
     }
 
     public function getValue(User $user): int

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,24 +9,49 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels\Tests\integration\metric;
+namespace Askvortsov\AutoModerator\Tests\integration\metric;
 
-use Askvortsov\TrustLevels\TrustLevel;
+use Askvortsov\AutoModerator\Criterion;
 
 trait UsesMetric
 {
-    public function genTrustLevel($name, $groupId, $metrics)
+    public function genCriterion($name, $groupId, $rawMetrics)
     {
-        $trustLevel = new TrustLevel();
-        $trustLevel->name = $name;
-        $trustLevel->group_id = $groupId;
+        $actions = [
+            [
+                'type' => 'add_to_group',
+                'gain' => true,
+                'settings' => [
+                    'group_id' => $groupId
+                ]
+            ],
+            [
+                'type' => 'remove_from_group',
+                'gain' => false,
+                'settings' => [
+                    'group_id' => $groupId
+                ]
+            ]
+        ];
 
-        foreach ($metrics as $metricKey => $metric) {
-            $trustLevel->setMetric($metricKey, $metric[0], $metric[1]);
-        }
+        $metrics = collect($rawMetrics)
+            ->map(function (array $range, string $key) {
+                return [
+                    'type' => $key,
+                    'min' => $range[0],
+                    'max' => $range[1]
+                ];
+            })
+            ->toArray();
 
-        $trustLevel->calcMetrics();
+        $criterion = Criterion::build(
+            $name,
+            '',
+            $actions,
+            $metrics,
+            []
+        );
 
-        return $trustLevel->getAttributes();
+        return $criterion->getAttributes();
     }
 }

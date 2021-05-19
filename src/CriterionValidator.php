@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,16 +9,17 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels;
+namespace Askvortsov\AutoModerator;
 
 use Flarum\Foundation\AbstractValidator;
 
-class TrustLevelValidator extends AbstractValidator
+class CriterionValidator extends AbstractValidator
 {
     /**
      * {@inheritdoc}
      */
     protected $rules = [
         'name' => ['required'],
+        'type' => ['required'],
     ];
 }

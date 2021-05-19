@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,7 +9,7 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels\Tests\integration\metric;
+namespace Askvortsov\AutoModerator\Tests\integration\metric;
 
 use Carbon\Carbon;
 use Flarum\Http\AccessToken;
@@ -30,7 +30,7 @@ class DiscussionsEnteredTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('askvortsov-trust-levels');
+        $this->extension('askvortsov-auto-moderator');
 
         $this->prepareDatabase([
             'users' => [
@@ -67,8 +67,8 @@ class DiscussionsEnteredTest extends TestCase
      */
     public function added_to_group_properly()
     {
-        $this->prepareDatabase(['trust_levels' => [
-            $this->genTrustLevel('posts made', 4, [
+        $this->prepareDatabase(['criteria' => [
+            $this->genCriterion('posts made', 4, [
                 'posts_made' => [2, 10],
             ]),
         ]]);
@@ -85,17 +85,17 @@ class DiscussionsEnteredTest extends TestCase
      */
     public function not_added_to_group_if_doesnt_apply()
     {
-        $this->prepareDatabase(['trust_levels' => [
-            $this->genTrustLevel('posts made', 4, [
+        $this->prepareDatabase(['criteria' => [
+            $this->genCriterion('posts made', 4, [
                 'posts_made' => [-1, 4],
             ]),
-            $this->genTrustLevel('posts made', 4, [
+            $this->genCriterion('posts made', 4, [
                 'posts_made' => [1, 4],
             ]),
-            $this->genTrustLevel('posts made', 4, [
+            $this->genCriterion('posts made', 4, [
                 'posts_made' => [6, 100],
             ]),
-            $this->genTrustLevel('posts made', 4, [
+            $this->genCriterion('posts made', 4, [
                 'posts_made' => [6, -1],
             ]),
         ]]);

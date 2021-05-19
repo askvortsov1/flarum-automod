@@ -1,10 +1,30 @@
+import augmentEditUserModal from "../common/augmentEditUserModal";
 import registerModels from "../common/registerModels";
-import TrustLevelsPage from "./components/TrustLevelsPage";
+import AutoModeratorPage from "./components/AutoModeratorPage";
+import CriterionPage from "./components/CriterionPage";
+import GroupActionDriverSettings from "./components/GroupActionDriverSettings";
 
-app.initializers.add("askvortsov/flarum-trust-levels", () => {
+app.initializers.add("askvortsov/flarum-auto-moderator", () => {
+  app.routes.criterion = {
+    path: "/askvortsov-auto-moderator/criterion/:id",
+    component: CriterionPage,
+  };
+
+  app["askvortsov-auto-moderator"] = {
+    actionDriverSettingsComponents: {
+      add_to_group: GroupActionDriverSettings,
+      remove_from_group: GroupActionDriverSettings,
+    },
+  };
+
   app.extensionData
-    .for("askvortsov-trust-levels")
-    .registerPage(TrustLevelsPage);
+    .for("askvortsov-auto-moderator")
+    .registerPage(AutoModeratorPage);
 
+  app.route.criterion = (criterion) => {
+    return app.route("criterion", { id: criterion?.id() || "new" });
+  };
+
+  augmentEditUserModal();
   registerModels();
 });

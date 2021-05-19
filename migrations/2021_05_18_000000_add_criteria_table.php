@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -14,18 +14,18 @@ use Illuminate\Database\Schema\Builder;
 
 return [
     'up' => function (Builder $schema) {
-        $schema->create('trust_levels', function (Blueprint $table) {
+        $schema->create('criteria', function (Blueprint $table) {
             $table->increments('id');
 
-            $table->string('name', 100);
-            $table->integer('group_id')->unsigned();
+            $table->string('name', 200);
+            $table->text('description');
 
-            $table->text('ranges');
-
-            $table->foreign('group_id')->references('id')->on('groups')->onDelete('cascade');
+            $table->text('metrics');
+            $table->text('requirements');
+            $table->text('actions');
         });
     },
     'down' => function (Builder $schema) {
-        $schema->dropIfExists('trust_levels');
+        $schema->dropIfExists('criteria');
     },
 ];

@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,20 +9,34 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels\Metric;
+namespace Askvortsov\AutoModerator\Metric;
 
+use Flarum\Likes\Event\PostWasLiked;
+use Flarum\Likes\Event\PostWasUnliked;
 use Flarum\User\User;
 
 class LikesGivenDriver implements MetricDriverInterface
 {
     public function translationKey(): string
     {
-        return 'askvortsov-trust-levels.admin.metric_drivers.likes_given';
+        return 'askvortsov-auto-moderator.admin.metric_drivers.likes_given';
     }
 
     public function extensionDependencies(): array
     {
         return ['flarum-likes'];
+    }
+
+    public function eventTriggers(): array
+    {
+        return [
+            PostWasLiked::class => function (PostWasLiked $event) {
+                return $event->user;
+            },
+            PostWasUnliked::class => function (PostWasLiked $event) {
+                return $event->user;
+            },
+        ];
     }
 
     public function getValue(User $user): int

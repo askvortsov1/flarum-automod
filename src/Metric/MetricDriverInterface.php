@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,7 +9,7 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels\Metric;
+namespace Askvortsov\AutoModerator\Metric;
 
 use Flarum\User\User as User;
 
@@ -24,6 +24,13 @@ interface MetricDriverInterface
      * A list of Flarum extension IDs for extensions that should be enabled for this metric to be applied.
      */
     public function extensionDependencies(): array;
+
+    /**
+     * A list of events that cause criteria using this event to be reevaluated.
+     * 
+     * `LoggedIn` is automatically a trigger for all criteria.
+     */
+    public function eventTriggers(): array;
 
     /**
      * Get the current value of this metric for a given user.

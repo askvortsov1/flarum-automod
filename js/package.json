@@ -1,5 +1,5 @@
 {
-  "name": "@askvortsov/flarum-trust-levels",
+  "name": "@askvortsov/flarum-auto-moderator",
   "version": "0.0.0",
   "private": true,
   "dependencies": {

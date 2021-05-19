@@ -6,11 +6,11 @@ import Group from "flarum/models/Group";
 
 export default class GroupSelector extends Component {
   view() {
-    const group = app.store.getById("groups", this.attrs.id());
+    const group = app.store.getById("groups", this.attrs.value);
     const label = group
       ? [icon(group.icon()), "\t", group.namePlural()]
       : app.translator.trans(
-          "askvortsov-trust-levels.admin.group_selector.placeholder"
+          "askvortsov-auto-moderator.admin.group_selector.placeholder"
         );
     return (
       <div className="Form-group">
@@ -36,7 +36,7 @@ export default class GroupSelector extends Component {
                     disabled: group && group.id() === g.id(),
                     icon: g.icon(),
                     onclick: () => {
-                      this.attrs.id(g.id());
+                      this.attrs.onchange(g.id());
                     },
                   },
                   g.namePlural()

@@ -6,7 +6,7 @@ class MinMaxSelector extends Component {
   oninit(vnode) {
     super.oninit(vnode);
 
-    this.state = MinMaxSelector.State.DISABLED;
+    this.state = -1;
     if (this.attrs.min() !== -1) this.state += 1;
     if (this.attrs.max() !== -1) this.state += 2;
 
@@ -78,8 +78,6 @@ class MinMaxSelector extends Component {
     );
 
     switch (this.state) {
-      case MinMaxSelector.State.DISABLED:
-        return button("fas fa-power-off");
       case MinMaxSelector.State.LTE:
         return [placeholder(), button("fas fa-less-than-equal"), maxInput()];
       case MinMaxSelector.State.GTE:
@@ -97,16 +95,12 @@ class MinMaxSelector extends Component {
 
   cycle() {
     this.state++;
-    this.state %= 4;
+    this.state %= 3;
 
     if (this.attrs.min() !== -1) this.min(this.attrs.min());
     if (this.attrs.max() !== -1) this.max(this.attrs.max());
 
     switch (this.state) {
-      case MinMaxSelector.State.DISABLED:
-        this.attrs.min(-1);
-        this.attrs.max(-1);
-        break;
       case MinMaxSelector.State.GTE:
         this.attrs.min(this.min());
         this.attrs.max(-1);
@@ -124,10 +118,9 @@ class MinMaxSelector extends Component {
 }
 
 MinMaxSelector.State = {
-  DISABLED: 0,
-  GTE: 1,
-  LTE: 2,
-  BETWEEN: 3,
+  GTE: 0,
+  LTE: 1,
+  BETWEEN: 2,
 };
 
 export default MinMaxSelector;

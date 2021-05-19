@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,7 +9,7 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels\Tests\integration\metric;
+namespace Askvortsov\AutoModerator\Tests\integration\metric;
 
 use Carbon\Carbon;
 use Flarum\Http\AccessToken;
@@ -31,7 +31,7 @@ class LikesGivenTest extends TestCase
         parent::setUp();
 
         $this->extension('flarum-likes');
-        $this->extension('askvortsov-trust-levels');
+        $this->extension('askvortsov-auto-moderator');
 
         $this->prepareDatabase([
             'users' => [
@@ -75,8 +75,8 @@ class LikesGivenTest extends TestCase
      */
     public function added_to_group_properly()
     {
-        $this->prepareDatabase(['trust_levels' => [
-            $this->genTrustLevel('likes given', 4, [
+        $this->prepareDatabase(['criteria' => [
+            $this->genCriterion('likes given', 4, [
                 'likes_given' => [2, 10],
             ]),
         ]]);
@@ -93,17 +93,17 @@ class LikesGivenTest extends TestCase
      */
     public function not_added_to_group_if_doesnt_apply()
     {
-        $this->prepareDatabase(['trust_levels' => [
-            $this->genTrustLevel('likes given', 4, [
+        $this->prepareDatabase(['criteria' => [
+            $this->genCriterion('likes given', 4, [
                 'likes_given' => [-1, 4],
             ]),
-            $this->genTrustLevel('likes given', 4, [
+            $this->genCriterion('likes given', 4, [
                 'likes_given' => [1, 4],
             ]),
-            $this->genTrustLevel('likes given', 4, [
+            $this->genCriterion('likes given', 4, [
                 'likes_given' => [6, 100],
             ]),
-            $this->genTrustLevel('likes given', 4, [
+            $this->genCriterion('likes given', 4, [
                 'likes_given' => [6, -1],
             ]),
         ]]);

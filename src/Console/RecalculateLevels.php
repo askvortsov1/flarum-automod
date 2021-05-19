@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,9 +9,9 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels\Console;
+namespace Askvortsov\AutoModerator\Console;
 
-use Askvortsov\TrustLevels\TrustLevelCalculator;
+use Askvortsov\AutoModerator\CriterionCalculator;
 use Flarum\User\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\ConnectionInterface;
@@ -24,15 +24,15 @@ class RecalculateLevels extends Command
     protected $connection;
 
     /**
-     * @var TrustLevelCalculator
+     * @var CriterionCalculator
      */
     protected $calculator;
 
     /**
      * @var ConnectionInterface
-     * @var TrustLevelCalculator
+     * @var CriterionCalculator
      */
-    public function __construct(ConnectionInterface $connection, TrustLevelCalculator $calculator)
+    public function __construct(ConnectionInterface $connection, CriterionCalculator $calculator)
     {
         parent::__construct();
 
@@ -44,12 +44,12 @@ class RecalculateLevels extends Command
     /**
      * @var string
      */
-    protected $signature = 'trustlevels:recalculate {--amount=500}';
+    protected $signature = 'Criteria:recalculate {--amount=500}';
 
     /**
      * @var string
      */
-    protected $description = 'Recalculate trust levels of all users.';
+    protected $description = 'Recalculate criteria groups of all users.';
 
     public function handle()
     {

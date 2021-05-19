@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-trust-levels
+ * This file is part of askvortsov/flarum-auto-moderator
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -9,15 +9,15 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\TrustLevels\Api\Controller;
+namespace Askvortsov\AutoModerator\Api\Controller;
 
-use Askvortsov\TrustLevels\TrustLevel;
+use Askvortsov\AutoModerator\Criterion;
 use Flarum\Api\Controller\AbstractDeleteController;
 use Flarum\Http\RequestUtil;
 use Illuminate\Support\Arr;
 use Psr\Http\Message\ServerRequestInterface;
 
-class DeleteTrustLevelController extends AbstractDeleteController
+class DeleteCriterionController extends AbstractDeleteController
 {
     /**
      * {@inheritdoc}
@@ -27,10 +27,10 @@ class DeleteTrustLevelController extends AbstractDeleteController
         $id = Arr::get($request->getQueryParams(), 'id');
         RequestUtil::getActor($request)->assertCan('administrate');
 
-        $trustLevel = TrustLevel::find($id);
+        $criterion = Criterion::find($id);
 
-        $trustLevel->delete();
+        $criterion->delete();
 
-        return $trustLevel;
+        return $criterion;
     }
 }
