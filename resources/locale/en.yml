@@ -52,14 +52,18 @@ askvortsov-auto-moderator:
     automoderator_instructions:
       header: Extension Instructions
       text: |
-        <li>Trust levels allow you to automatically manage group membership based on users' activity.</li>
-        <li>Each trust level defines criteria that must be met (e.g. discussions started, posts made, etc), and a group.</li>
-        <li>Users are automatically added to groups for all the trust levels that they qualify for when they log in.</li>
-        <li>Since these groups are managed automatically, we recommend maintaining a separate set of groups for trust levels.</li>
-        <li>If you delete a trust level, you should also delete the associated group; otherwise, users in that trust level will remain in that group.</li>
-        <li>To prevent errors, you cannot update a trust level's group after it has been created.</li>
-        <li>Any metrics left disabled will not be counted. If all metrics are disabled for a given trust level, ALL users will receive that level.</li>
-        <li>If a group is managed by multiple trust levels, the user will be added to the group as long as they are in at least one of the trust levels.</li>
+        <li>Tl;dr: When a user meets criteria X, do Y. When a user no longer meets criteria X, do Z.</li>
+        <li><strong>Criteria:</strong> Criteria are the core of this extension. They are arbitrary sets of metrics and requirements. When a user meets a criterion, any "on gain" actions for the criterion will be executed. When a user loses a criterion, any "on loss" actions for the criterion will be executed.</li>
+        <ul>
+          <li><strong>Metric:</strong> A numerical condition. For example, post count or number of likes received. A criterion could require a range/minimum/maximum of metrics.</li>
+          <li><strong>Requirement:</strong> An abstract boolean condition. For example, not being suspended, or having an email that matches a certain regex.</li>
+        </ul>
+        <li><strong>Actions:</strong> Something that happens automatically when a criteria is met or lost. This could include anything from adding/removing a group to sending an email to suspending a user.</li>
+        <li><strong>Trigger:</strong> A set of events that would cause a user's criteria groups to be reevaluated. These are part of the definitions of metrics and requirements. All criteria will be evaluated on login: that is the "universal trigger".</li>
+        <li>"On loss" actions will always run before "on gain" actions. That way, actions will be taken as long as a user meets at least one of the criteria that do that action on gain.</li>
+        <li>Keep in mind that actions only run "on loss" and "on gain". Manual edits while a user qualifies for a criterion will not trigger the criterion's "on gain" actions to be reapplied.</li>
+        <li>If you delete a criterion, "on loss" actions will NOT be run for the users who currently qualify for the criterion.</li>
+        <li>If you are using criteria to manage groups, we recommend maintaining a separate set of groups to be managed by criteria. You will not be able to add/remove users to/from these groups manually.</li>
 
   forum:
     edit_user:
