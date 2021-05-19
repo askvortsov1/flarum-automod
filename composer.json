@@ -18,7 +18,8 @@
         "flarum/testing": "*@dev",
         "flarum/likes": "*@dev",
         "flarum/suspend": "*@dev",
-        "fof/best-answer": "*@dev"
+        "fof/best-answer": "*@dev",
+        "askvortsov/flarum-moderator-warnings": "*@dev"
     },
     "authors": [
         {

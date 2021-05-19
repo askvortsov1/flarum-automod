@@ -11,6 +11,7 @@ askvortsov-auto-moderator:
       likes_given: Likes Given
       likes_received: Likes Received
       best_answers: Best Answers
+      moderator_strikes: Moderator Warnings Strikes
     requirement_drivers:
       email_confirmed: Email Confirmed
       suspended: Suspended
