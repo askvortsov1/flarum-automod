@@ -4,11 +4,16 @@ import Tooltip from "flarum/common/components/Tooltip";
 import icon from "flarum/common/helpers/icon";
 import classList from "flarum/common/utils/classList";
 
+import UndefinedDriverItem from "./UndefinedDriverItem";
+
 export default class ActionItem extends Component {
   view() {
     const action = this.attrs.action;
     const actionDef = this.attrs.actionDef;
     const selected = this.attrs.selected;
+
+    if (!actionDef)
+      return <UndefinedDriverItem item={action} selected={selected} />;
 
     const forms =
       app["askvortsov-auto-moderator"].actionDriverSettingsComponents;

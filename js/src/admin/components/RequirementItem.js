@@ -5,11 +5,16 @@ import Tooltip from "flarum/common/components/Tooltip";
 import icon from "flarum/common/helpers/icon";
 import classList from "flarum/common/utils/classList";
 
+import UndefinedDriverItem from "./UndefinedDriverItem";
+
 export default class RequirementItem extends Component {
   view() {
     const requirement = this.attrs.requirement;
     const requirementDef = this.attrs.requirementDef;
     const selected = this.attrs.selected;
+
+    if (!requirementDef)
+      return <UndefinedDriverItem item={requirement} selected={selected} />;
 
     return (
       <li>

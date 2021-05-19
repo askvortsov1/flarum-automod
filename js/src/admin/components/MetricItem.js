@@ -5,11 +5,16 @@ import icon from "flarum/common/helpers/icon";
 import classList from "flarum/common/utils/classList";
 import MinMaxSelector from "./MinMaxSelector";
 
+import UndefinedDriverItem from "./UndefinedDriverItem";
+
 export default class MetricItem extends Component {
   view() {
     const metric = this.attrs.metric;
     const metricDef = this.attrs.metricDef;
     const selected = this.attrs.selected;
+
+    if (!metricDef)
+      return <UndefinedDriverItem item={metric} selected={selected} />;
 
     return (
       <li>
