@@ -64,7 +64,7 @@ class UpdateCriterionController extends AbstractShowController
 
         collect(['name', 'description', 'actions', 'metrics', 'requirements'])
             ->each(function (string $attribute) use ($criterion, $data) {
-                if (($val = Arr::get($data, "attributes.$attribute"))) {
+                if (($val = Arr::get($data, "attributes.$attribute")) !== null) {
                     $criterion->$attribute = $val;
                 }
             });
