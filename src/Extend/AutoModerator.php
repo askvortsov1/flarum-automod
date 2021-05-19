@@ -13,6 +13,7 @@ namespace Askvortsov\AutoModerator\Extend;
 
 use Askvortsov\AutoModerator\Action\ActionManager;
 use Askvortsov\AutoModerator\Metric\MetricManager;
+use Askvortsov\AutoModerator\Requirement\RequirementManager;
 use Flarum\Extend\ExtenderInterface;
 use Flarum\Extension\Extension;
 use Illuminate\Contracts\Container\Container;
@@ -21,9 +22,10 @@ class AutoModerator implements ExtenderInterface
 {
     protected $actionDrivers = [];
     protected $metricDrivers = [];
+    protected $requirementDrivers = [];
 
     /**
-     * Define a new action type driver.
+     * Define a new action driver.
      *
      * @param string $name
      * @param string $driver
@@ -36,7 +38,7 @@ class AutoModerator implements ExtenderInterface
     }
 
     /**
-     * Define a new metric type driver.
+     * Define a new metric driver.
      *
      * @param string $name
      * @param string $driver
@@ -44,6 +46,19 @@ class AutoModerator implements ExtenderInterface
     public function metricDriver(string $name, string $driver)
     {
         $this->metricDrivers[$name] = $driver;
+
+        return $this;
+    }
+
+    /**
+     * Define a new requirement driver.
+     *
+     * @param string $name
+     * @param string $driver
+     */
+    public function requirementDriver(string $name, string $driver)
+    {
+        $this->requirementDrivers[$name] = $driver;
 
         return $this;
     }
@@ -64,6 +79,14 @@ class AutoModerator implements ExtenderInterface
             }
 
             return $metrics;
+        });
+
+        $container->resolving(RequirementManager::class, function ($requirements) use ($container) {
+            foreach ($this->requirementDrivers as $name => $driver) {
+                $requirements->addDriver($name, $container->make($driver));
+            }
+
+            return $requirements;
         });
     }
 }

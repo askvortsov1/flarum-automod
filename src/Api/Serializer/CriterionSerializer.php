@@ -13,6 +13,7 @@ namespace Askvortsov\AutoModerator\Api\Serializer;
 
 use Askvortsov\AutoModerator\Action\ActionManager;
 use Askvortsov\AutoModerator\Metric\MetricManager;
+use Askvortsov\AutoModerator\Requirement\RequirementManager;
 use Flarum\Api\Serializer\AbstractSerializer;
 use Flarum\Api\Serializer\BasicUserSerializer;
 
@@ -34,7 +35,7 @@ class CriterionSerializer extends AbstractSerializer
             'actions'                      => $criterion->actions,
             'metrics'                      => $criterion->metrics,
             'requirements'                 => $criterion->requirements,
-            'isValid'                      => $criterion->isValid(resolve(ActionManager::class), resolve(MetricManager::class)),
+            'isValid'                      => $criterion->isValid(resolve(ActionManager::class), resolve(MetricManager::class), resolve(RequirementManager::class)),
             'invalidActionSettings'        => $criterion->invalidActionSettings(resolve(ActionManager::class))->messages()
         ];
 

@@ -14,6 +14,7 @@ namespace Askvortsov\AutoModerator;
 use Askvortsov\AutoModerator\Action\ActionDriverInterface;
 use Askvortsov\AutoModerator\Action\ActionManager;
 use Askvortsov\AutoModerator\Metric\MetricManager;
+use Askvortsov\AutoModerator\Requirement\RequirementManager;
 use Flarum\Database\AbstractModel;
 use Flarum\Database\ScopeVisibilityTrait;
 use Flarum\User\User;
@@ -53,7 +54,7 @@ class Criterion extends AbstractModel
         return $criterion;
     }
 
-    public function isValid(ActionManager $actions, MetricManager $metrics) {
+    public function isValid(ActionManager $actions, MetricManager $metrics, RequirementManager $requirements) {
         $actionDriversWithMissingExts = $actions->getDrivers(true);
         $hasActionsWithMissingExts = collect($this->actions)
             ->some(function ($action) use ($actionDriversWithMissingExts) {
@@ -66,7 +67,34 @@ class Criterion extends AbstractModel
                 return array_key_exists($metric['type'], $metricDriversWithMissingExts);
             });
 
-        if ($hasActionsWithMissingExts || $hasMetricsWithMissingExts) return false;
+        $requirementDriversWithMissingExts = $requirements->getDrivers(true);
+        $hasRequirementsWithMissingExts = collect($this->requirements)
+            ->some(function ($requirement) use ($requirementDriversWithMissingExts) {
+                return array_key_exists($requirement['type'], $requirementDriversWithMissingExts);
+            });
+
+        if ($hasActionsWithMissingExts || $hasMetricsWithMissingExts || $hasRequirementsWithMissingExts) return false;
+
+
+        $actionDriversMissing = $actions->getDrivers();
+        $hasActionsMissing = collect($this->actions)
+            ->some(function ($action) use ($actionDriversMissing) {
+                return !array_key_exists($action['type'], $actionDriversMissing);
+            });
+
+        $metricDriversMissing = $metrics->getDrivers();
+        $hasMetricsMissing = collect($this->metrics)
+            ->some(function ($metric) use ($metricDriversMissing) {
+                return !array_key_exists($metric['type'], $metricDriversMissing);
+            });
+
+        $requirementDriversMissing = $requirements->getDrivers();
+        $hasRequirementsMissing = collect($this->requirements)
+            ->some(function ($requirement) use ($requirementDriversMissing) {
+                return !array_key_exists($requirement['type'], $requirementDriversMissing);
+            });
+
+        if ($hasActionsMissing || $hasMetricsMissing || $hasRequirementsMissing) return false;
 
         if ($this->invalidActionSettings($actions)->isNotEmpty()) return false;
 

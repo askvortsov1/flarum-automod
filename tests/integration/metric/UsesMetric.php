@@ -15,7 +15,7 @@ use Askvortsov\AutoModerator\Criterion;
 
 trait UsesMetric
 {
-    public function genCriterion($name, $groupId, $rawMetrics)
+    public function genCriterion($name, $groupId, $rawMetrics = [], $rawRequirements = [])
     {
         $actions = [
             [
@@ -44,12 +44,21 @@ trait UsesMetric
             })
             ->toArray();
 
+        $requirements = collect($rawRequirements)
+            ->map(function (array $def, string $key) {
+                return [
+                    'type' => $key,
+                    'negated' => $def['negated']
+                ];
+            })
+            ->toArray();
+
         $criterion = Criterion::build(
             $name,
             '',
             $actions,
             $metrics,
-            []
+            $requirements,
         );
 
         return $criterion->getAttributes();

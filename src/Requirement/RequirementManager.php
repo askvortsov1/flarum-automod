@@ -9,12 +9,12 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\AutoModerator\Metric;
+namespace Askvortsov\AutoModerator\Requirement;
 
 use Askvortsov\AutoModerator\DriverManagerInterface;
 use Flarum\Extension\ExtensionManager;
 
-class MetricManager implements DriverManagerInterface
+class RequirementManager implements DriverManagerInterface
 {
     /**
      * @var ExtensionManager
@@ -28,14 +28,14 @@ class MetricManager implements DriverManagerInterface
 
     protected $drivers = [];
 
-    public function addDriver(string $name, MetricDriverInterface $driver)
+    public function addDriver(string $name, RequirementDriverInterface $driver)
     {
         $this->drivers[$name] = $driver;
     }
 
     public function getDrivers(bool $inverse = false)
     {
-        $filtered = array_filter($this->drivers, function (MetricDriverInterface $driver) {
+        $filtered = array_filter($this->drivers, function (RequirementDriverInterface $driver) {
             foreach ($driver->extensionDependencies() as $extensionId) {
                 if (!$this->extensions->isEnabled($extensionId)) {
                     return false;

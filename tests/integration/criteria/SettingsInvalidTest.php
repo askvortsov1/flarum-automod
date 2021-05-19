@@ -9,8 +9,9 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\AutoModerator\Tests\integration\metric;
+namespace Askvortsov\AutoModerator\Tests\integration\criteria;
 
+use Askvortsov\AutoModerator\Tests\integration\metric\UsesMetric;
 use Carbon\Carbon;
 use Flarum\Http\AccessToken;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
@@ -18,7 +19,7 @@ use Flarum\Testing\integration\TestCase;
 use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
 
-class PostsMadeTest extends TestCase
+class SettingsInvalidTest extends TestCase
 {
     use RetrievesAuthorizedUsers;
     use UsesMetric;
@@ -57,48 +58,11 @@ class PostsMadeTest extends TestCase
     /**
      * @test
      */
-    public function not_added_to_group_by_default()
-    {
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
-
-        $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
-    }
-
-    /**
-     * @test
-     */
-    public function added_to_group_properly()
+    public function not_added_to_group_if_settings_invalid()
     {
         $this->prepareDatabase(['criteria' => [
-            $this->genCriterion('discussions entered', 4, [
+            $this->genCriterion('discussions entered', '', [
                 'discussions_entered' => [2, 10],
-            ]),
-        ]]);
-
-        $this->app();
-        User::find(2)->refreshCommentCount()->save();
-        $this->app()->getContainer()->make('events')->dispatch(new LoggedIn(User::find(2), new AccessToken([])));
-
-        $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
-    }
-
-    /**
-     * @test
-     */
-    public function not_added_to_group_if_doesnt_apply()
-    {
-        $this->prepareDatabase(['criteria' => [
-            $this->genCriterion('discussions entered', 4, [
-                'discussions_entered' => [-1, 2],
-            ]),
-            $this->genCriterion('discussions entered', 4, [
-                'discussions_entered' => [1, 2],
-            ]),
-            $this->genCriterion('discussions entered', 4, [
-                'discussions_entered' => [4, 100],
-            ]),
-            $this->genCriterion('discussions entered', 4, [
-                'discussions_entered' => [4, -1],
             ]),
         ]]);
 

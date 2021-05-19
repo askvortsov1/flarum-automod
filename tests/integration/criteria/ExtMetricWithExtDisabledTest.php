@@ -9,8 +9,9 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\AutoModerator\Tests\integration\metric;
+namespace Askvortsov\AutoModerator\Tests\integration\criteria;
 
+use Askvortsov\AutoModerator\Tests\integration\metric\UsesMetric;
 use Carbon\Carbon;
 use Flarum\Http\AccessToken;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;

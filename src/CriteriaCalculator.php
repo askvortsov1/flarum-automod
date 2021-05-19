@@ -14,6 +14,8 @@ namespace Askvortsov\AutoModerator;
 use Askvortsov\AutoModerator\Action\ActionManager;
 use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
 use Askvortsov\AutoModerator\Metric\MetricManager;
+use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
+use Askvortsov\AutoModerator\Requirement\RequirementManager;
 use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
 use Illuminate\Support\Arr;
@@ -30,10 +32,16 @@ class CriteriaCalculator
      */
     protected $metrics;
 
-    public function __construct(ActionManager $actions, MetricManager $metrics)
+    /**
+     * @var RequirementManager
+     */
+    protected $requirements;
+
+    public function __construct(ActionManager $actions, MetricManager $metrics, RequirementManager $requirements)
     {
         $this->actions = $actions;
         $this->metrics = $metrics;
+        $this->requirements = $requirements;
     }
 
     protected $prevRuns = [];
@@ -41,9 +49,10 @@ class CriteriaCalculator
     public function recalculate(User $user, string $eventClass)
     {
         $metrics = $this->calcMetrics($user);
+        $requirements = $this->calcRequirements($user);
 
         $prevCriteria = CriteriaCalculator::toAssoc($user->criteria->toArray());
-        $currCriteria = CriteriaCalculator::toAssoc($this->getCriteriaForStats($metrics));
+        $currCriteria = CriteriaCalculator::toAssoc($this->getCriteriaForStats($metrics, $requirements));
 
         $lostCriteria = array_diff_key($prevCriteria, $currCriteria);
         $gainedCriteria = array_diff_key($currCriteria, $prevCriteria);
@@ -74,7 +83,18 @@ class CriteriaCalculator
         return $metrics;
     }
 
-    protected function getCriteriaForStats(array $metrics)
+    protected function calcRequirements(User $user)
+    {
+        $requirements = [];
+
+        foreach ($this->requirements->getDrivers() as $name => $driver) {
+            $requirements[$name] = $driver->userSatisfies($user);
+        }
+
+        return $requirements;
+    }
+
+    protected function getCriteriaForStats(array $metrics, array $requirements)
     {
         return $this->allCriteria()
             ->filter(function (Criterion $criterion) use ($metrics) {
@@ -94,6 +114,22 @@ class CriteriaCalculator
 
                 return true;
             })
+            ->filter(function (Criterion $criterion) use ($requirements) {
+                foreach ($criterion->requirements as $requirement) {
+                    $userSatisfies = Arr::get($requirements, $requirement['type']);
+
+                    // Happens when criteria invalid due to missing ext dependencies
+                    if ($userSatisfies === null) return false;
+                    $negated = Arr::get($requirement, "negated",  false);
+                    $qualifies = ($userSatisfies xor $negated);
+
+                    if (!$qualifies) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })
             ->all();
     }
 
@@ -101,7 +137,7 @@ class CriteriaCalculator
     {
         $validCriteria = $criteria
             ->filter(function (Criterion $criterion) {
-                return $criterion->isValid($this->actions, $this->metrics);
+                return $criterion->isValid($this->actions, $this->metrics, $this->requirements);
             });
 
         if ($eventClass === LoggedIn::class) {
@@ -109,14 +145,24 @@ class CriteriaCalculator
         }
 
         $triggeredMetrics = array_filter($this->metrics->getDrivers(), function (MetricDriverInterface $metric) use ($eventClass) {
-            return in_array($eventClass, $metric->eventTriggers());
-        }, ARRAY_FILTER_USE_KEY);
+            return array_key_exists($eventClass, $metric->eventTriggers());
+        });
+
+        $triggeredRequirements = array_filter($this->requirements->getDrivers(), function (RequirementDriverInterface $requirement) use ($eventClass) {
+            return array_key_exists($eventClass, $requirement->eventTriggers());
+        });
 
         return $validCriteria
-            ->filter(function (Criterion $criterion) use ($triggeredMetrics) {
-                return collect($criterion->metrics)->contains(function ($metric) use ($triggeredMetrics) {
-                    return in_array($metric['type'], $triggeredMetrics);
+            ->filter(function (Criterion $criterion) use ($triggeredMetrics, $triggeredRequirements) {
+                $hasTriggeredMetric = collect($criterion->metrics)->contains(function ($metric) use ($triggeredMetrics) {
+                    return array_key_exists($metric['type'], $triggeredMetrics);
                 });
+
+                $hasTriggeredRequirement = collect($criterion->requirements)->contains(function ($requirement) use ($triggeredRequirements) {
+                    return array_key_exists($requirement['type'], $triggeredRequirements);
+                });
+
+                return $hasTriggeredMetric || $hasTriggeredRequirement;
             });
             
     }
