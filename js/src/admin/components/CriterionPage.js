@@ -8,6 +8,7 @@ import ActionItem from "./ActionItem";
 import MetricItem from "./MetricItem";
 import RequirementItem from "./RequirementItem";
 import CriterionStatus from "./CriterionStatus";
+import AutoModeratorInstructions from "./AutoModeratorInstructions";
 
 let actionDefs;
 let metricDefs;
@@ -174,6 +175,8 @@ export default class CriterionPage extends AdminPage {
               </Button>
             )}
           </form>
+          <hr />
+          <AutoModeratorInstructions />
         </div>
       </div>
     );

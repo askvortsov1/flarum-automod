@@ -5,6 +5,8 @@ import Tooltip from "flarum/common/components/Tooltip";
 import icon from "flarum/common/helpers/icon";
 import classList from "flarum/common/utils/classList";
 import stringToColor from "flarum/common/utils/stringToColor";
+import ManagedGroups from "../../common/components/ManagedGroups";
+import AutoModeratorInstructions from "./AutoModeratorInstructions";
 
 function criterionItem(criterion) {
   const name = criterion
@@ -80,18 +82,9 @@ export default class AutoModeratorPage extends ExtensionPage {
               ]}
             </div>
           </div>
-          <div className="Criteria-footer">
-            <p>
-              {app.translator.trans(
-                "askvortsov-auto-moderator.admin.automoderator_page.instructions_header"
-              )}
-            </p>
-            <ul>
-              {app.translator.trans(
-                "askvortsov-auto-moderator.admin.automoderator_page.instructions_text"
-              )}
-            </ul>
-          </div>
+          <ManagedGroups criteria={app.store.all("criteria")} />
+          <hr />
+          <AutoModeratorInstructions />
         </div>
       </div>
     );

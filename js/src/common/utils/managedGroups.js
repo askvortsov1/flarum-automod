@@ -11,6 +11,8 @@ export default function managedGroups(criteria) {
         )
         .map((a) => a.settings["group_id"]);
       acc.push(...ids);
+
+      return acc;
     }, [])
     .map((groupId) => app.store.getById("groups", groupId))
     .filter((g) => g);
