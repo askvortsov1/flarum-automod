@@ -67,5 +67,7 @@ return [
         ->metricDriver('posts_made', Metric\PostsMadeDriver::class)
         ->metricDriver('likes_given', Metric\LikesGivenDriver::class)
         ->metricDriver('likes_received', Metric\LikesReceivedDriver::class)
-        ->metricDriver('best_answers', Metric\BestAnswersDriver::class),
+        ->metricDriver('best_answers', Metric\BestAnswersDriver::class)
+        ->requirementDriver('suspended', Requirement\Suspended::class)
+        ->requirementDriver('email_confirmed', Requirement\EmailConfirmed::class),
 ];

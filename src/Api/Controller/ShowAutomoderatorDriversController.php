@@ -14,6 +14,7 @@ namespace Askvortsov\AutoModerator\Api\Controller;
 use Askvortsov\AutoModerator\Action\ActionManager;
 use Askvortsov\AutoModerator\Api\Serializer\AutomoderatorDriversSerializer;
 use Askvortsov\AutoModerator\Metric\MetricManager;
+use Askvortsov\AutoModerator\Requirement\RequirementManager;
 use Flarum\Api\Controller\AbstractShowController;
 use Flarum\Http\RequestUtil;
 use Psr\Http\Message\ServerRequestInterface;
@@ -36,10 +37,16 @@ class ShowAutomoderatorDriversController extends AbstractShowController
      */
     protected $metrics;
 
-    public function __construct(ActionManager $actions, MetricManager $metrics)
+    /**
+     * @var RequirementManager
+     */
+    protected $requirements;
+
+    public function __construct(ActionManager $actions, MetricManager $metrics, RequirementManager $requirements)
     {
         $this->actions = $actions;
         $this->metrics = $metrics;
+        $this->requirements = $requirements;
     }
 
     /**
@@ -50,10 +57,12 @@ class ShowAutomoderatorDriversController extends AbstractShowController
         RequestUtil::getActor($request)->assertAdmin();
 
         return [
-            'actionDrivers'           => $this->actions->getDrivers(),
-            'actionDriversMissingExt' => $this->actions->getDrivers(true),
-            'metricDrivers'           => $this->metrics->getDrivers(),
-            'metricDriversMissingExt' => $this->metrics->getDrivers(true),
+            'actionDrivers'                => $this->actions->getDrivers(),
+            'actionDriversMissingExt'      => $this->actions->getDrivers(true),
+            'metricDrivers'                => $this->metrics->getDrivers(),
+            'metricDriversMissingExt'      => $this->metrics->getDrivers(true),
+            'requirementDrivers'           => $this->requirements->getDrivers(),
+            'requirementDriversMissingExt' => $this->requirements->getDrivers(true),
         ];
     }
 }

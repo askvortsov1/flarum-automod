@@ -13,6 +13,7 @@ namespace Askvortsov\AutoModerator\Api\Serializer;
 
 use Askvortsov\AutoModerator\Action\ActionDriverInterface;
 use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
+use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
 use Flarum\Api\Serializer\AbstractSerializer;
 
 class AutomoderatorDriversSerializer extends AbstractSerializer
@@ -30,10 +31,16 @@ class AutomoderatorDriversSerializer extends AbstractSerializer
             $this->serializeMetricDrivers($drivers['metricDrivers']),
             $this->serializeMetricDrivers($drivers['metricDriversMissingExt'], true)
         );
+
+        $requirement = array_merge(
+            $this->serializeRequirementDrivers($drivers['requirementDrivers']),
+            $this->serializeRequirementDrivers($drivers['requirementDriversMissingExt'], true)
+        );
     
         return [
-            'action' => $action,
-            'metric' => $metric
+            'action'      => $action,
+            'metric'      => $metric,
+            'requirement' => $requirement
         ];
     }
 
@@ -54,6 +61,18 @@ class AutomoderatorDriversSerializer extends AbstractSerializer
     {
         return collect($drivers)
             ->map(function (MetricDriverInterface $driver) use ($missingExt) {
+                return [
+                    'translationKey' => $driver->translationKey(),
+                    'missingExt' => $missingExt
+                ];
+            })
+            ->toArray();
+    }
+
+    protected function serializeRequirementDrivers($drivers, $missingExt = false)
+    {
+        return collect($drivers)
+            ->map(function (RequirementDriverInterface $driver) use ($missingExt) {
                 return [
                     'translationKey' => $driver->translationKey(),
                     'missingExt' => $missingExt

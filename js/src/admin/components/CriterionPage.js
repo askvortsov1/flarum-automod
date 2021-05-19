@@ -3,6 +3,7 @@ import Alert from "flarum/common/components/Alert";
 import Button from "flarum/common/components/Button";
 import LinkButton from "flarum/common/components/LinkButton";
 import Select from "flarum/common/components/Select";
+import Switch from "flarum/common/components/Switch";
 import Tooltip from "flarum/common/components/Tooltip";
 import LoadingIndicator from "flarum/common/components/LoadingIndicator";
 import icon from "flarum/common/helpers/icon";
@@ -50,7 +51,45 @@ function metricItem(metric, selected) {
   );
 }
 
-function requirementItem(requirement) {}
+function requirementItem(requirement, selected) {
+  const requirementDef = requirementDefs[requirement.type];
+
+  return (
+    <li>
+      <div
+        className={classList({
+          "DriverListItem-info": true,
+          "DriverListItem--missingExt": requirementDef.missingExt,
+        })}
+      >
+        {requirementDef.missingExt && (
+          <Tooltip
+            text={app.translator.trans(
+              "askvortsov-auto-moderator.admin.criterion_page.driver_missing_ext"
+            )}
+          >
+            {icon("fas fa-exclamation-triangle")}
+          </Tooltip>
+        )}
+        <span className="DriverListItem-name">
+          {app.translator.trans(requirementDef.translationKey)}
+        </span>
+        {Button.component({
+          className: "Button Button--link",
+          icon: "fas fa-trash-alt",
+          onclick: () =>
+            selected(selected().filter((val) => val !== requirement)),
+        })}
+      </div>
+      <Switch state={requirement.negated()} onchange={requirement.negated}>
+        {app.translator.trans(
+          "askvortsov-auto-moderator.admin.criterion_page.negated"
+        )}
+      </Switch>
+      <hr />
+    </li>
+  );
+}
 
 function actionItem(action, selected) {
   const actionDef = actionDefs[action.type];
@@ -118,9 +157,10 @@ export default class CriterionPage extends AdminPage {
     this.metrics = Stream([]);
     this.requirements = Stream([]);
 
-    this.newMetric = Stream("");
     this.newActionOnGain = Stream("");
     this.newActionOnLoss = Stream("");
+    this.newMetric = Stream("");
+    this.newRequirement = Stream("");
 
     this.loadingDrivers = true;
 
@@ -132,6 +172,7 @@ export default class CriterionPage extends AdminPage {
       .then((response) => {
         actionDefs = response["data"]["attributes"]["action"];
         metricDefs = response["data"]["attributes"]["metric"];
+        requirementDefs = response["data"]["attributes"]["requirement"];
 
         this.loadingDrivers = false;
         m.redraw();
@@ -152,7 +193,11 @@ export default class CriterionPage extends AdminPage {
       );
       this.actionsOnGain(criterion.actions().filter((a) => a.gain));
       this.actionsOnLoss(criterion.actions().filter((a) => !a.gain));
-      this.requirements(criterion.requirements());
+      this.requirements(
+        criterion.requirements().map((r) => {
+          return { type: r.type, negated: Stream(r.negated) };
+        })
+      );
 
       this.loadingCriterion = false;
       m.redraw();
@@ -347,18 +392,41 @@ export default class CriterionPage extends AdminPage {
             </span>
           </div>
 
-          {/* <div className="DriverGroup DriverGroup--secondary">
-                        <label>{app.translator.trans('askvortsov-auto-moderator.admin.criterion_page.requirements_heading')}</label>
-                        <ul className="DriverList">
-                        </ul>
-                        {Button.component(
-                            {
-                                className: 'Button DriverList-button',
-                                icon: 'fas fa-plus',
-                            },
-                            app.translator.trans('askvortsov-auto-moderator.admin.criterion_page.add_requirement')
-                        )}
-                    </div> */}
+          <div className="DriverGroup DriverGroup--secondary">
+            <label>
+              {app.translator.trans(
+                "askvortsov-auto-moderator.admin.criterion_page.requirements_heading"
+              )}
+            </label>
+            <ul className="DriverList DriverList--primary">
+              {this.requirements().map((r) =>
+                requirementItem(r, this.requirements)
+              )}
+            </ul>
+            <span class="DriverGroup-controls">
+              {Select.component({
+                options: Object.keys(requirementDefs).reduce((acc, key) => {
+                  acc[key] = app.translator.trans(
+                    requirementDefs[key].translationKey
+                  );
+                  return acc;
+                }, {}),
+                value: this.newRequirement(),
+                onchange: this.newRequirement,
+              })}
+              {Button.component({
+                className: "Button DriverList-button",
+                icon: "fas fa-plus",
+                disabled: !this.newRequirement(),
+                onclick: () => {
+                  this.requirements([
+                    ...this.requirements(),
+                    { type: this.newRequirement(), negated: Stream(false) },
+                  ]);
+                },
+              })}
+            </span>
+          </div>
         </div>
       </div>
     );
@@ -469,7 +537,9 @@ export default class CriterionPage extends AdminPage {
       metrics: this.metrics().map((m) => {
         return { type: m.type, min: m.min(), max: m.max() };
       }),
-      requirements: this.requirements(),
+      requirements: this.requirements().map((r) => {
+        return { type: r.type, negated: r.negated };
+      }),
     };
   }
 

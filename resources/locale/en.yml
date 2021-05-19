@@ -11,6 +11,9 @@ askvortsov-auto-moderator:
       likes_given: Likes Given
       likes_received: Likes Received
       best_answers: Best Answers
+    requirement_drivers:
+      email_confirmed: Email Confirmed
+      suspended: Suspended
     group_selector:
       placeholder: Select a group
     criterion_page:
@@ -21,6 +24,7 @@ askvortsov-auto-moderator:
       name_label: Name
       description_label: Description
       new_criterion: Create Criterion
+      negated: Negated?
       loading: => core.ref.loading
       delete_button: => core.ref.delete
       metrics_and_requirements_label: Metrics and Requirements
