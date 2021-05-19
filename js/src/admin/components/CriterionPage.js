@@ -3,146 +3,15 @@ import Alert from "flarum/common/components/Alert";
 import Button from "flarum/common/components/Button";
 import LinkButton from "flarum/common/components/LinkButton";
 import Select from "flarum/common/components/Select";
-import Switch from "flarum/common/components/Switch";
-import Tooltip from "flarum/common/components/Tooltip";
 import LoadingIndicator from "flarum/common/components/LoadingIndicator";
-import icon from "flarum/common/helpers/icon";
-import classList from "flarum/common/utils/classList";
 import Stream from "flarum/common/utils/Stream";
-
-import MinMaxSelector from "./MinMaxSelector";
+import ActionItem from "./ActionItem";
+import MetricItem from "./MetricItem";
+import RequirementItem from "./RequirementItem";
 
 let actionDefs;
 let metricDefs;
 let requirementDefs;
-
-function metricItem(metric, selected) {
-  const metricDef = metricDefs[metric.type];
-
-  return (
-    <li>
-      <div
-        className={classList({
-          "DriverListItem-info": true,
-          "DriverListItem--missingExt": metricDef.missingExt,
-        })}
-      >
-        {metricDef.missingExt && (
-          <Tooltip
-            text={app.translator.trans(
-              "askvortsov-auto-moderator.admin.criterion_page.driver_missing_ext"
-            )}
-          >
-            {icon("fas fa-exclamation-triangle")}
-          </Tooltip>
-        )}
-        <span className="DriverListItem-name">
-          {app.translator.trans(metricDef.translationKey)}
-        </span>
-        {Button.component({
-          className: "Button Button--link",
-          icon: "fas fa-trash-alt",
-          onclick: () => selected(selected().filter((val) => val !== metric)),
-        })}
-      </div>
-      <MinMaxSelector min={metric.min} max={metric.max}></MinMaxSelector>
-      <hr />
-    </li>
-  );
-}
-
-function requirementItem(requirement, selected) {
-  const requirementDef = requirementDefs[requirement.type];
-
-  return (
-    <li>
-      <div
-        className={classList({
-          "DriverListItem-info": true,
-          "DriverListItem--missingExt": requirementDef.missingExt,
-        })}
-      >
-        {requirementDef.missingExt && (
-          <Tooltip
-            text={app.translator.trans(
-              "askvortsov-auto-moderator.admin.criterion_page.driver_missing_ext"
-            )}
-          >
-            {icon("fas fa-exclamation-triangle")}
-          </Tooltip>
-        )}
-        <span className="DriverListItem-name">
-          {app.translator.trans(requirementDef.translationKey)}
-        </span>
-        {Button.component({
-          className: "Button Button--link",
-          icon: "fas fa-trash-alt",
-          onclick: () =>
-            selected(selected().filter((val) => val !== requirement)),
-        })}
-      </div>
-      <Switch state={requirement.negated()} onchange={requirement.negated}>
-        {app.translator.trans(
-          "askvortsov-auto-moderator.admin.criterion_page.negated"
-        )}
-      </Switch>
-      <hr />
-    </li>
-  );
-}
-
-function actionItem(action, selected) {
-  const actionDef = actionDefs[action.type];
-
-  const forms = app["askvortsov-auto-moderator"].actionDriverSettingsComponents;
-
-  let settings;
-  if (action.type in forms) {
-    settings = forms[action.type].component({ action, actionDef });
-  } else {
-    settings = Object.keys(actionDef.availableSettings).map((s) => (
-      <div className="Form-group">
-        <input
-          className="FormControl"
-          value={action.settings[s]}
-          onchange={(e) => (action.settings[s] = e.target.value)}
-          placeholder={app.translator.trans(actionDef.availableSettings[s])}
-        />
-      </div>
-    ));
-  }
-
-  return (
-    <li>
-      <div
-        className={classList({
-          "DriverListItem-info": true,
-          "DriverListItem--missingExt": actionDef.missingExt,
-        })}
-      >
-        {actionDef.missingExt && (
-          <Tooltip
-            text={app.translator.trans(
-              "askvortsov-auto-moderator.admin.criterion_page.driver_missing_ext"
-            )}
-          >
-            {icon("fas fa-exclamation-triangle")}
-          </Tooltip>
-        )}
-        <span className="DriverListItem-name">
-          {app.translator.trans(actionDef.translationKey)}
-        </span>
-        {Button.component({
-          className: "Button Button--link",
-          icon: "fas fa-trash-alt",
-          onclick: () => selected(selected().filter((val) => val !== action)),
-        })}
-        <div className="DriverListItem-form">{settings}</div>
-      </div>
-      <hr />
-    </li>
-  );
-}
 
 export default class CriterionPage extends AdminPage {
   oninit(vnode) {
@@ -365,7 +234,13 @@ export default class CriterionPage extends AdminPage {
               )}
             </label>
             <ul className="DriverList DriverList--primary">
-              {this.metrics().map((m) => metricItem(m, this.metrics))}
+              {this.metrics().map((metric) => (
+                <MetricItem
+                  metric={metric}
+                  metricDef={metricDefs[metric.type]}
+                  selected={this.metrics}
+                />
+              ))}
             </ul>
             <span class="DriverGroup-controls">
               {Select.component({
@@ -399,9 +274,13 @@ export default class CriterionPage extends AdminPage {
               )}
             </label>
             <ul className="DriverList DriverList--primary">
-              {this.requirements().map((r) =>
-                requirementItem(r, this.requirements)
-              )}
+              {this.requirements().map((r) => (
+                <RequirementItem
+                  requirement={r}
+                  requirementDef={requirementDefs[r.type]}
+                  selected={this.requirements}
+                />
+              ))}
             </ul>
             <span class="DriverGroup-controls">
               {Select.component({
@@ -453,9 +332,13 @@ export default class CriterionPage extends AdminPage {
               )}
             </label>
             <ul className="DriverList DriverList--primary">
-              {this.actionsOnGain().map((a) =>
-                actionItem(a, this.actionsOnGain)
-              )}
+              {this.actionsOnGain().map((a) => (
+                <ActionItem
+                  action={a}
+                  actionDef={actionDefs[a.type]}
+                  selected={this.actionsOnGain}
+                />
+              ))}
             </ul>
             <span class="DriverGroup-controls">
               {Select.component({
@@ -489,9 +372,13 @@ export default class CriterionPage extends AdminPage {
               )}
             </label>
             <ul className="DriverList">
-              {this.actionsOnLoss().map((a) =>
-                actionItem(a, this.actionsOnLoss)
-              )}
+              {this.actionsOnLoss().map((a) => (
+                <ActionItem
+                  action={a}
+                  actionDef={actionDefs[a.type]}
+                  selected={this.actionsOnLoss}
+                />
+              ))}
             </ul>
             <span class="DriverGroup-controls">
               {Select.component({
