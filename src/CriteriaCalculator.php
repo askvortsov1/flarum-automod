@@ -49,10 +49,9 @@ class CriteriaCalculator
     public function recalculate(User $user, string $eventClass)
     {
         $metrics = $this->calcMetrics($user);
-        $requirements = $this->calcRequirements($user);
 
         $prevCriteria = CriteriaCalculator::toAssoc($user->criteria->all());
-        $currCriteria = CriteriaCalculator::toAssoc($this->getCriteriaForStats($metrics, $requirements));
+        $currCriteria = CriteriaCalculator::toAssoc($this->getCriteriaForStats($user, $metrics));
 
         $lostCriteria = array_diff_key($prevCriteria, $currCriteria);
         $gainedCriteria = array_diff_key($currCriteria, $prevCriteria);
@@ -83,28 +82,23 @@ class CriteriaCalculator
         return $metrics;
     }
 
-    protected function calcRequirements(User $user)
+    protected function requirementSatisfied(RequirementDriverInterface $requirement, User $user, array $settings = []) : bool
     {
-        $requirements = [];
-
-        foreach ($this->requirements->getDrivers() as $name => $driver) {
-            $requirements[$name] = $driver->userSatisfies($user);
-        }
-
-        return $requirements;
+        return $requirement->userSatisfies($user, $settings);
     }
 
-    protected function getCriteriaForStats(array $metrics, array $requirements)
+    protected function getCriteriaForStats(User $user, array $metrics)
     {
+        $requirementDrivers = $this->requirements->getDrivers();
         return $this->allCriteria()
             ->filter(function (Criterion $criterion) use ($metrics) {
-                foreach ($criterion->metrics as $metric) {
-                    $userVal = Arr::get($metrics, $metric['type']);
+                foreach ($criterion->metrics as $metricConfig) {
+                    $userVal = Arr::get($metrics, $metricConfig['type']);
                     
                     // Happens when criteria invalid due to missing ext dependencies
                     if ($userVal === null) return false;
-                    $min = Arr::get($metric, "min",  -1);
-                    $max = Arr::get($metric, "max",  -1);
+                    $min = Arr::get($metricConfig, "min",  -1);
+                    $max = Arr::get($metricConfig, "max",  -1);
                     $withinRange = ($min === -1 || $userVal >= $min) && ($max === -1 || $userVal <= $max);
 
                     if (!$withinRange) {
@@ -114,13 +108,15 @@ class CriteriaCalculator
 
                 return true;
             })
-            ->filter(function (Criterion $criterion) use ($requirements) {
-                foreach ($criterion->requirements as $requirement) {
-                    $userSatisfies = Arr::get($requirements, $requirement['type']);
+            ->filter(function (Criterion $criterion) use ($user, $requirementDrivers) {
+                foreach ($criterion->requirements as $requirementConfig) {
+                    $driver = Arr::get($requirementDrivers, $requirementConfig['type']);
 
                     // Happens when criteria invalid due to missing ext dependencies
-                    if ($userSatisfies === null) return false;
-                    $negated = Arr::get($requirement, "negated",  false);
+                    if ($driver === null) return false;
+
+                    $userSatisfies = $this->requirementSatisfied($driver, $user, Arr::get($requirementConfig, 'settings', []));
+                    $negated = Arr::get($requirementConfig, "negated",  false);
                     $qualifies = ($userSatisfies xor $negated);
 
                     if (!$qualifies) {
