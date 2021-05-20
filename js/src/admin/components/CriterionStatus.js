@@ -26,18 +26,38 @@ export default class CriterionStatus extends Component {
       );
     }
 
-    const validation = criterion.invalidActionSettings();
-    if (validation && Object.keys(validation).length) {
+    const actionValidation = criterion.invalidActionSettings();
+    if (actionValidation && Object.keys(actionValidation).length) {
       messages.push(
         <Alert type="error" dismissible={false}>
           {app.translator.trans(
-            "askvortsov-auto-moderator.admin.criterion_status.validation"
+            "askvortsov-auto-moderator.admin.criterion_status.action_validation_errors"
           )}
           <div>
             <ol>
-              {Object.keys(validation).map((key) => (
+              {Object.keys(actionValidation).map((key) => (
                 <li>
-                  <strong>{key}:</strong> {validation[key].join("")}
+                  <strong>{key}:</strong> {actionValidation[key].join("")}
+                </li>
+              ))}
+            </ol>
+          </div>
+        </Alert>
+      );
+    }
+
+    const requirementValidation = criterion.invalidRequirementSettings();
+    if (requirementValidation && Object.keys(requirementValidation).length) {
+      messages.push(
+        <Alert type="error" dismissible={false}>
+          {app.translator.trans(
+            "askvortsov-auto-moderator.admin.criterion_status.requirement_validation_errors"
+          )}
+          <div>
+            <ol>
+              {Object.keys(requirementValidation).map((key) => (
+                <li>
+                  <strong>{key}:</strong> {requirementValidation[key].join("")}
                 </li>
               ))}
             </ol>

@@ -17,7 +17,9 @@ app.initializers.add("askvortsov/flarum-auto-moderator", () => {
       remove_from_group: GroupIdSelector,
       suspend: SuspendSelector,
     },
-    metric: {},
+    requirement: {
+      in_group: GroupIdSelector,
+    },
   };
 
   app.extensionData

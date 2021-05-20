@@ -36,7 +36,8 @@ class CriterionSerializer extends AbstractSerializer
             'metrics'                      => $criterion->metrics,
             'requirements'                 => $criterion->requirements,
             'isValid'                      => $criterion->isValid(resolve(ActionManager::class), resolve(MetricManager::class), resolve(RequirementManager::class)),
-            'invalidActionSettings'        => $criterion->invalidActionSettings(resolve(ActionManager::class))->messages()
+            'invalidActionSettings'        => $criterion->invalidDriverSettings(resolve(ActionManager::class), $criterion->actions)->messages(),
+            'invalidRequirementSettings'   => $criterion->invalidDriverSettings(resolve(RequirementManager::class), $criterion->requirements)->messages()
         ];
 
         return $attributes;

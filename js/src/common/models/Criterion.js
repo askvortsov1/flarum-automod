@@ -10,4 +10,5 @@ Object.assign(Criterion.prototype, {
   requirements: Model.attribute("requirements"),
   isValid: Model.attribute("isValid"),
   invalidActionSettings: Model.attribute("invalidActionSettings"),
+  invalidRequirementSettings: Model.attribute("invalidRequirementSettings"),
 });

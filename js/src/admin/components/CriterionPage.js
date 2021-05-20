@@ -86,7 +86,11 @@ export default class CriterionPage extends AdminPage {
     );
     this.requirements(
       criterion.requirements().map((r) => {
-        return { type: r.type, negated: Stream(r.negated) };
+        return {
+          type: r.type,
+          negated: Stream(r.negated),
+          settings: Stream(r.settings),
+        };
       })
     );
   }
@@ -283,7 +287,11 @@ export default class CriterionPage extends AdminPage {
                 onclick: () => {
                   this.requirements([
                     ...this.requirements(),
-                    { type: this.newRequirement(), negated: Stream(false) },
+                    {
+                      type: this.newRequirement(),
+                      negated: Stream(false),
+                      settings: Stream({}),
+                    },
                   ]);
                 },
               })}
@@ -408,7 +416,7 @@ export default class CriterionPage extends AdminPage {
         return { type: m.type, min: m.min(), max: m.max() };
       }),
       requirements: this.requirements().map((r) => {
-        return { type: r.type, negated: r.negated };
+        return { type: r.type, negated: r.negated(), settings: r.settings() };
       }),
     };
   }

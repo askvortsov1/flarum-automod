@@ -6,6 +6,7 @@ import icon from "flarum/common/helpers/icon";
 import classList from "flarum/common/utils/classList";
 
 import UndefinedDriverItem from "./UndefinedDriverItem";
+import DriverSettings from "./DriverSettings";
 
 export default class RequirementItem extends Component {
   view() {
@@ -48,6 +49,12 @@ export default class RequirementItem extends Component {
             "askvortsov-auto-moderator.admin.criterion_page.negated"
           )}
         </Switch>
+        <DriverSettings
+          driverType="requirement"
+          type={requirement.type}
+          settings={requirement.settings}
+          availableSettings={requirementDef.availableSettings}
+        />
         <hr />
       </li>
     );

@@ -74,6 +74,7 @@ class AutomoderatorDriversSerializer extends AbstractSerializer
         return collect($drivers)
             ->map(function (RequirementDriverInterface $driver) use ($missingExt) {
                 return [
+                    'availableSettings' => $driver->availableSettings(),
                     'translationKey' => $driver->translationKey(),
                     'missingExt' => $missingExt
                 ];
