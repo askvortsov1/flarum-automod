@@ -5,6 +5,7 @@ askvortsov-auto-moderator:
       add_to_group: Add to Group
       remove_from_group: Remove from Group
       suspend: Suspend
+      unsuspend: Unsuspend
     metric_drivers:
       discussions_entered: Discussions Entered
       discussions_participated: Discussions Participated
