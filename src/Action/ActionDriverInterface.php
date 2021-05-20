@@ -9,9 +9,15 @@ use Illuminate\Contracts\Validation\Factory;
 interface ActionDriverInterface
 {
     /**
-     * A translation key for a human-readable name for this metric driver.
+     * A translation key for a human-readable name for this action driver.
      */
     public function translationKey(): string;
+
+    /**
+     * A list of settings used by this action.
+     * 
+     * Keys should be setting names, values should be translation keys for placeholders.
+     */
     public function availableSettings(): array;
 
     /**
@@ -27,5 +33,5 @@ interface ActionDriverInterface
     /**
      * Apply the action to the user.
      */
-    public function execute(User $user, array $settings = [], User $lastEditedBy );
+    public function execute(User $user, array $settings = [], User $lastEditedBy);
 }

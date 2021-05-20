@@ -16,7 +16,7 @@ use Flarum\User\User as User;
 interface RequirementDriverInterface
 {
     /**
-     * A translation key for a human-readable name for this metric driver.
+     * A translation key for a human-readable name for this requirement driver.
      */
     public function translationKey(): string;
 
@@ -27,6 +27,9 @@ interface RequirementDriverInterface
 
     /**
      * A list of events that cause criteria using this event to be reevaluated.
+     * 
+     * The keys should be event class names, and the values should be functions that take the event,
+     * and return the user affected by the event.
      * 
      * `LoggedIn` is automatically a trigger for all criteria.
      */
