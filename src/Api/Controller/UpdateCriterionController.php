@@ -55,10 +55,13 @@ class UpdateCriterionController extends AbstractShowController
      */
     protected function data(ServerRequestInterface $request, Document $document)
     {
-        RequestUtil::getActor($request)->assertCan('administrate');
+        $actor = RequestUtil::getActor($request);
+        $actor->assertAdmin();
 
         $id = Arr::get($request->getQueryParams(), 'id');
         $criterion = Criterion::find($id);
+
+        $criterion->last_edited_by_id = $actor->id;
         
         $data = Arr::get($request->getParsedBody(), 'data', []);
 

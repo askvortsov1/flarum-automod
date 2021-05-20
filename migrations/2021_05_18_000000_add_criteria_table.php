@@ -17,12 +17,16 @@ return [
         $schema->create('criteria', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->integer('last_edited_by_id')->unsigned();
+
             $table->string('name', 200);
             $table->text('description');
 
             $table->text('metrics');
             $table->text('requirements');
             $table->text('actions');
+
+            $table->foreign('last_edited_by_id')->references('id')->on('users')->onDelete('cascade');
         });
     },
     'down' => function (Builder $schema) {

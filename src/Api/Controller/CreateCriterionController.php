@@ -56,12 +56,14 @@ class CreateCriterionController extends AbstractCreateController
      */
     protected function data(ServerRequestInterface $request, Document $document)
     {
-        RequestUtil::getActor($request)->assertCan('administrate');
+        $actor = RequestUtil::getActor($request);
+        $actor->assertAdmin();
 
         $data = Arr::get($request->getParsedBody(), 'data', []);
 
         $criterion = Criterion::build(
             Arr::get($data, 'attributes.name'),
+            $actor,
             Arr::get($data, 'attributes.description'),
             Arr::get($data, 'attributes.actions'),
             Arr::get($data, 'attributes.metrics'),
