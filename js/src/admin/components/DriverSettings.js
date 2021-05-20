@@ -18,7 +18,11 @@ export default class DriverSettings extends Component {
           <input
             className="FormControl"
             value={settings()[s]}
-            onchange={(e) => settings({ ...settings(), s: e.target.value })}
+            onchange={(e) => {
+              const newSettings = { ...settings() };
+              newSettings[s] = e.target.value;
+              settings(newSettings);
+            }}
             placeholder={app.translator.trans(availableSettings[s])}
           />
         </div>
