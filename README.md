@@ -86,7 +86,7 @@ The actions are:
 
 ![Admin](https://i.imgur.com/k9zfwd9.png)
 ![Criterion Edit](https://i.imgur.com/DIgcj48.png)
-![Edit User](https://i.imgur.com/T8sqsor.png)
+![Edit User](https://i.imgur.com/8kZZQmT.png)
 
 ## Metrics vs Requirements
 
