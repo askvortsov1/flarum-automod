@@ -1,6 +1,7 @@
 askvortsov-auto-moderator:
   admin:
     action_drivers:
+      activate_email: Activate Email
       add_to_group: Add to Group
       remove_from_group: Remove from Group
     metric_drivers:

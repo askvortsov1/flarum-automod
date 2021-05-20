@@ -59,6 +59,7 @@ return [
     //     ->command(RecalculateLevels::class),
 
     (new AutoModerator())
+        ->actionDriver('activate_email', Action\ActivateEmail::class)
         ->actionDriver('add_to_group', Action\AddToGroup::class)
         ->actionDriver('remove_from_group', Action\RemoveFromGroup::class)
         ->metricDriver('discussions_entered', Metric\DiscussionsEntered::class)
