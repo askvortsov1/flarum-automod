@@ -58,7 +58,8 @@ class Criterion extends AbstractModel
         return $this->validateDrivers($actions, $this->actions) &&
             $this->validateDrivers($metrics, $this->metrics) &&
             $this->validateDrivers($requirements, $this->requirements) &&
-            $this->invalidDriverSettings($actions, $this->actions)->isEmpty();
+            $this->invalidDriverSettings($actions, $this->actions)->isEmpty() &&
+            $this->invalidDriverSettings($requirements, $this->requirements)->isEmpty();
     }
 
     protected function validateDrivers(DriverManagerInterface $drivers, array $config)

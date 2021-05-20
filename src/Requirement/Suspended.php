@@ -3,15 +3,25 @@
 namespace Askvortsov\AutoModerator\Requirement;
 
 use Flarum\Suspend\Event;
-use Flarum\Suspend\Event\Unsuspended;
-use Flarum\User\Event\Activated;
 use Flarum\User\User;
+use Illuminate\Contracts\Support\MessageBag;
+use Illuminate\Contracts\Validation\Factory;
 
 class Suspended implements RequirementDriverInterface
 {
 
     public function translationKey(): string {
         return 'askvortsov-auto-moderator.admin.requirement_drivers.suspended';
+    }
+
+    public function availableSettings(): array
+    {
+        return [];
+    }
+
+    public function validateSettings(array $settings, Factory $validator): MessageBag
+    {
+        return $validator->make($settings, [])->errors();
     }
 
     public function extensionDependencies(): array {
@@ -29,7 +39,7 @@ class Suspended implements RequirementDriverInterface
         ];
     }
 
-    public function userSatisfies(User $user): bool {
+    public function userSatisfies(User $user, array $settings = []): bool {
         return $user->suspended_until !== null;
     }
 }

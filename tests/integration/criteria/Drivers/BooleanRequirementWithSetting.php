@@ -16,7 +16,7 @@ use Flarum\User\User;
 use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Contracts\Validation\Factory;
 
-class BooleanRequirement implements RequirementDriverInterface
+class BooleanRequirementWithSetting implements RequirementDriverInterface
 {
 
     public function translationKey(): string
@@ -26,12 +26,16 @@ class BooleanRequirement implements RequirementDriverInterface
 
     public function availableSettings(): array
     {
-        return [];
+        return [
+            'number' => ''
+        ];
     }
 
     public function validateSettings(array $settings, Factory $validator): MessageBag
     {
-        return $validator->make($settings, [])->errors();
+        return $validator->make($settings, [
+            'number' => 'required|integer',
+        ])->errors();
     }
 
     public function extensionDependencies(): array

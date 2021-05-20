@@ -12,6 +12,8 @@
 namespace Askvortsov\AutoModerator\Requirement;
 
 use Flarum\User\User as User;
+use Illuminate\Contracts\Support\MessageBag;
+use Illuminate\Contracts\Validation\Factory;
 
 interface RequirementDriverInterface
 {
@@ -19,6 +21,18 @@ interface RequirementDriverInterface
      * A translation key for a human-readable name for this requirement driver.
      */
     public function translationKey(): string;
+
+    /**
+     * A list of settings used by this action.
+     * 
+     * Keys should be setting names, values should be translation keys for placeholders.
+     */
+    public function availableSettings(): array;
+
+    /**
+     * Validate provided settings.
+     */
+    public function validateSettings(array $settings, Factory $validator): MessageBag;
 
     /**
      * A list of Flarum extension IDs for extensions that should be enabled for this metric to be applied.
@@ -38,5 +52,5 @@ interface RequirementDriverInterface
     /**
      * Does the given user satisfy the requirement?
      */
-    public function userSatisfies(User $user): bool;
+    public function userSatisfies(User $user, array $settings = []): bool;
 }

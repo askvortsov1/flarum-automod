@@ -57,7 +57,7 @@ class CustomCriteriaLossTest extends TestCase
                 CriteriaUtils::genCriterionGroupManagement('arbitrary', 4, [
                     ['type' => '15', 'min' => 100, 'max' => -1]
                 ], [
-                    ['type' => 'always_true', 'negated' => false]
+                    ['type' => 'always_true', 'negated' => false, 'settings' => []]
                 ], 1),
             ],
             'criterion_user' => [
@@ -87,7 +87,7 @@ class CustomCriteriaLossTest extends TestCase
                 CriteriaUtils::genCriterionGroupManagement('arbitrary', 4, [
                     ['type' => '15', 'min' => 100, 'max' => -1]
                 ], [
-                    ['type' => 'always_true', 'negated' => false]
+                    ['type' => 'always_true', 'negated' => false, 'settings' => []]
                 ], 1),
             ],
             'criterion_user' => [
@@ -118,7 +118,7 @@ class CustomCriteriaLossTest extends TestCase
                     ['type' => '15', 'min' => 100, 'max' => -1],
                     ['type' => '27', 'min' => 2, 'max' => 100]
                 ], [
-                    ['type' => 'always_true', 'negated' => false]
+                    ['type' => 'always_true', 'negated' => false, 'settings' => []]
                 ], 1),
             ],
             'criterion_user' => [
@@ -148,7 +148,7 @@ class CustomCriteriaLossTest extends TestCase
                 CriteriaUtils::genCriterionGroupManagement('arbitrary', 4, [
                     ['type' => '15', 'min' => 100, 'max' => -1]
                 ], [
-                    ['type' => 'always_true', 'negated' => false]
+                    ['type' => 'always_true', 'negated' => false, 'settings' => []]
                 ], 1),
             ],
             'criterion_user' => [

@@ -72,7 +72,7 @@ class CustomCriteriaGainTest extends TestCase
             CriteriaUtils::genCriterionGroupManagement('arbitrary', 4, [
                 ['type' => '15', 'min' => 2, 'max' => 100]
             ], [
-                ['type' => 'always_true', 'negated' => false]
+                ['type' => 'always_true', 'negated' => false, 'settings' => []]
             ]),
         ]]);
 
@@ -97,7 +97,7 @@ class CustomCriteriaGainTest extends TestCase
             CriteriaUtils::genCriterionGroupManagement('arbitrary', 4, [
                 ['type' => '15', 'min' => 2, 'max' => 100]
             ], [
-                ['type' => 'always_true', 'negated' => false]
+                ['type' => 'always_true', 'negated' => false, 'settings' => []]
             ]),
         ]]);
 
@@ -123,7 +123,7 @@ class CustomCriteriaGainTest extends TestCase
                 ['type' => '15', 'min' => 2, 'max' => 100],
                 ['type' => '27', 'min' => 2, 'max' => 100]
             ], [
-                ['type' => 'always_true', 'negated' => false]
+                ['type' => 'always_true', 'negated' => false, 'settings' => []]
             ])
         ]]);
 
@@ -148,7 +148,7 @@ class CustomCriteriaGainTest extends TestCase
             CriteriaUtils::genCriterionGroupManagement('arbitrary', 4, [
                 ['type' => '15', 'min' => 2, 'max' => 100]
             ], [
-                ['type' => 'always_true', 'negated' => false]
+                ['type' => 'always_true', 'negated' => false, 'settings' => []]
             ]),
         ]]);
 
@@ -174,13 +174,13 @@ class CustomCriteriaGainTest extends TestCase
                 ['type' => '15', 'min' => 2, 'max' => 100],
                 ['type' => '27', 'min' => 2, 'max' => 100]
             ], [
-                ['type' => 'always_true', 'negated' => true]
+                ['type' => 'always_true', 'negated' => true, 'settings' => []]
             ]),
             CriteriaUtils::genCriterionGroupManagement('meets requirements but not metrics', 4, [
                 ['type' => '15', 'min' => 2, 'max' => 100],
                 ['type' => '27', 'min' => 1000, 'max' => -1]
             ], [
-                ['type' => 'always_true', 'negated' => false]
+                ['type' => 'always_true', 'negated' => false, 'settings' => []]
             ])
         ]]);
 

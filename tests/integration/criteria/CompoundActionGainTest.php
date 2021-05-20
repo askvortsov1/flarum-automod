@@ -79,7 +79,7 @@ class CompoundActionGainTest extends TestCase
                 ['type' => '15', 'min' => 2, 'max' => 100],
                 ['type' => '27', 'min' => 2, 'max' => 100]
             ], [
-                ['type' => 'always_true', 'negated' => false]
+                ['type' => 'always_true', 'negated' => false, 'settings' => []]
             ])
         ]]);
 
@@ -106,7 +106,7 @@ class CompoundActionGainTest extends TestCase
             CriteriaUtils::genCriterionGroupManagement('arbitrary', 4, [
                 ['type' => '15', 'min' => 2, 'max' => 100]
             ], [
-                ['type' => 'always_true', 'negated' => false]
+                ['type' => 'always_true', 'negated' => false, 'settings' => []]
             ]),
         ]]);
 
