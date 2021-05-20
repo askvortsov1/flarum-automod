@@ -341,7 +341,7 @@ export default class CriterionPage extends AdminPage {
                 onclick: () => {
                   this.actionsOnGain([
                     ...this.actionsOnGain(),
-                    { type: this.newActionOnGain(), settings: {} },
+                    { type: this.newActionOnGain(), settings: Stream({}) },
                   ]);
                 },
               })}
@@ -381,7 +381,7 @@ export default class CriterionPage extends AdminPage {
                 onclick: () => {
                   this.actionsOnLoss([
                     ...this.actionsOnLoss(),
-                    { type: this.newActionOnLoss(), settings: {} },
+                    { type: this.newActionOnLoss(), settings: Stream({}) },
                   ]);
                 },
               })}
