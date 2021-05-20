@@ -29,7 +29,6 @@ class AddToGroupTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('flarum-suspend');
         $this->extension('askvortsov-auto-moderator');
 
         $this->prepareDatabase([
