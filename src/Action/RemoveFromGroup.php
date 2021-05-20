@@ -2,6 +2,7 @@
 
 namespace Askvortsov\AutoModerator\Action;
 
+use Flarum\User\Event\GroupsChanged;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Support\MessageBag;
 use Flarum\User\User;
@@ -34,6 +35,9 @@ class RemoveFromGroup implements ActionDriverInterface
 
     public function execute(User $user, array $settings = [], User $lastEditedBy )
     {
+        $groups = $user->groups->toArray();
         $user->groups()->detach($settings['group_id']);
+
+        resolve('events')->dispatch(new GroupsChanged($user, $groups));
     }
 }
