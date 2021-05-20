@@ -5,6 +5,7 @@ import icon from "flarum/common/helpers/icon";
 import classList from "flarum/common/utils/classList";
 
 import UndefinedDriverItem from "./UndefinedDriverItem";
+import DriverSettings from "./DriverSettings";
 
 export default class ActionItem extends Component {
   view() {
@@ -14,25 +15,6 @@ export default class ActionItem extends Component {
 
     if (!actionDef)
       return <UndefinedDriverItem item={action} selected={selected} />;
-
-    const forms =
-      app["askvortsov-auto-moderator"].actionDriverSettingsComponents;
-
-    let settings;
-    if (action.type in forms) {
-      settings = forms[action.type].component({ action, actionDef });
-    } else {
-      settings = Object.keys(actionDef.availableSettings).map((s) => (
-        <div className="Form-group">
-          <input
-            className="FormControl"
-            value={action.settings[s]}
-            onchange={(e) => (action.settings[s] = e.target.value)}
-            placeholder={app.translator.trans(actionDef.availableSettings[s])}
-          />
-        </div>
-      ));
-    }
 
     return (
       <li>
@@ -59,7 +41,12 @@ export default class ActionItem extends Component {
             icon: "fas fa-trash-alt",
             onclick: () => selected(selected().filter((val) => val !== action)),
           })}
-          <div className="DriverListItem-form">{settings}</div>
+          <DriverSettings
+            driverType="action"
+            type={action.type}
+            settings={action.settings}
+            availableSettings={actionDef.availableSettings}
+          />
         </div>
         <hr />
       </li>

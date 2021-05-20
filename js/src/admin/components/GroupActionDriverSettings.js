@@ -3,12 +3,12 @@ import GroupSelector from "./GroupSelector";
 
 export default class GroupActionDriverSettings extends Component {
   view() {
-    const action = this.attrs.action;
+    const settings = this.attrs.settings;
 
     return (
       <GroupSelector
-        value={action.settings.group_id}
-        onchange={(val) => (action.settings = { group_id: val })}
+        value={settings().group_id}
+        onchange={(val) => settings({ group_id: val })}
       ></GroupSelector>
     );
   }

@@ -10,11 +10,12 @@ app.initializers.add("askvortsov/flarum-auto-moderator", () => {
     component: CriterionPage,
   };
 
-  app["askvortsov-auto-moderator"] = {
-    actionDriverSettingsComponents: {
+  app.autoModeratorForms = {
+    action: {
       add_to_group: GroupActionDriverSettings,
       remove_from_group: GroupActionDriverSettings,
     },
+    metric: {},
   };
 
   app.extensionData

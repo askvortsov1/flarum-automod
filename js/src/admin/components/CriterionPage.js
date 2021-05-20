@@ -68,8 +68,22 @@ export default class CriterionPage extends AdminPage {
         return { type: m.type, min: Stream(m.min), max: Stream(m.max) };
       })
     );
-    this.actionsOnGain(criterion.actions().filter((a) => a.gain));
-    this.actionsOnLoss(criterion.actions().filter((a) => !a.gain));
+    this.actionsOnGain(
+      criterion
+        .actions()
+        .filter((a) => a.gain)
+        .map((a) => {
+          return { type: a.type, settings: Stream(a.settings) };
+        })
+    );
+    this.actionsOnLoss(
+      criterion
+        .actions()
+        .filter((a) => !a.gain)
+        .map((a) => {
+          return { type: a.type, settings: Stream(a.settings) };
+        })
+    );
     this.requirements(
       criterion.requirements().map((r) => {
         return { type: r.type, negated: Stream(r.negated) };
@@ -384,10 +398,10 @@ export default class CriterionPage extends AdminPage {
       description: this.description(),
       actions: [
         ...this.actionsOnGain().map((a) => {
-          return { ...a, gain: true };
+          return { ...a, gain: true, settings: a.settings() };
         }),
         ...this.actionsOnLoss().map((a) => {
-          return { ...a, gain: false };
+          return { ...a, gain: false, settings: a.settings() };
         }),
       ],
       metrics: this.metrics().map((m) => {
