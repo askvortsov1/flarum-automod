@@ -32,7 +32,7 @@ class RemoveFromGroup implements ActionDriverInterface
         return [];
     }
 
-    public function execute(User $user, array $settings)
+    public function execute(User $user, array $settings = [])
     {
         $user->groups()->detach($settings['group_id']);
     }

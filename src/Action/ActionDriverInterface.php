@@ -27,5 +27,5 @@ interface ActionDriverInterface
     /**
      * Apply the action to the user.
      */
-    public function execute(User $user, array $settings);
+    public function execute(User $user, array $settings = []);
 }
