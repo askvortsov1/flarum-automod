@@ -63,6 +63,7 @@ return [
         ->actionDriver('activate_email', Action\ActivateEmail::class)
         ->actionDriver('add_to_group', Action\AddToGroup::class)
         ->actionDriver('remove_from_group', Action\RemoveFromGroup::class)
+        ->actionDriver('suspend', Action\Suspend::class)
         ->metricDriver('discussions_entered', Metric\DiscussionsEntered::class)
         ->metricDriver('discussions_started', Metric\DiscussionsStarted::class)
         ->metricDriver('discussions_participated', Metric\DiscussionsParticipated::class)

@@ -3,6 +3,7 @@ import registerModels from "../common/registerModels";
 import AutoModeratorPage from "./components/AutoModeratorPage";
 import CriterionPage from "./components/CriterionPage";
 import GroupActionDriverSettings from "./components/GroupActionDriverSettings";
+import SuspendSelector from "./components/SuspendSelector";
 
 app.initializers.add("askvortsov/flarum-auto-moderator", () => {
   app.routes.criterion = {
@@ -14,6 +15,7 @@ app.initializers.add("askvortsov/flarum-auto-moderator", () => {
     action: {
       add_to_group: GroupActionDriverSettings,
       remove_from_group: GroupActionDriverSettings,
+      suspend: SuspendSelector,
     },
     metric: {},
   };
