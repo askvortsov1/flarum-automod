@@ -9,7 +9,7 @@
     "support": {
         "issues": "https://github.com/askvortsov1/flarum-auto-moderator/issues",
         "source": "https://github.com/askvortsov1/flarum-auto-moderator",
-        "forum": "https://discuss.flarum.org/d/25977-trust-levels-automatic-group-assignment"
+        "forum": "https://discuss.flarum.org/d/27306-flarum-automoderator"
     },
     "require": {
         "flarum/core": "^1.0.0"
@@ -38,13 +38,12 @@
             "Askvortsov\\AutoModerator\\Tests\\": "tests/"
         }
     },
-    "minimum-stability": "beta",
     "extra": {
         "flarum-extension": {
             "title": "Auto Moderator",
             "category": "feature",
             "icon": {
-                "name": "fas fa-angle-double-up",
+                "name": "fas fa-robot",
                 "backgroundColor": "#6932D1",
                 "color": "#fff"
             }

@@ -19,6 +19,14 @@ Let's define some key terms:
 - **Action:** Something that happens automatically when a criteria is met or lost. This could include anything from adding/removing a group to sending an email to suspending a user.
 - **Triggers:** A set of events that would cause a user's criteria groups to be reevaluated. These are associated with metrics and Requirements. `LoggedIn` is automatically a trigger for all criteria.
 
+This makes for an **extremely** powerful extension. Furthermore, since extensions can add their own metrics, requirements, and actions, this extension can automate away a lot of moderation. Beyond the examples listed below, some things that could be possible are:
+
+- Automating assignment of achievements / badges
+- Sending emails/notifications to users when they reach thresholds (or just when they register)
+- Establishing a system of "trust levels" like [Discourse](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
+- Onboard/offboard users to/from external systems when they receive/lose certain group membership
+- And a bunch more! The possibilities are endless.
+
 ## Evaluation
 
 When a trigger event occurs:
@@ -27,6 +35,8 @@ When a trigger event occurs:
 - All requirements will be calculated for the relevant user (does the user satisfy each of the requirements?)
 - The user's new criteria group will be computed and diffed against the user's current criteria group. The two sets will be diffed. Only criteria triggered by the event will be adjusted.
 - Actions will be executed for any gained and lost criteria.
+
+You can also use the `php flarum criteria:recalculate` console command to recalculate criteria for all users. Note that this will be quite slow, and shouldn't usually be done.
 
 ## Examples
 
@@ -52,23 +62,48 @@ The actions are:
 - When the criteria is met, suspend them
 - When the criteria is lost, unsuspend them
 
+### Example 3: Auto Activation
+
+**Criteria:** If a user's email matches a regex, activate their email.
+
+The requirement is "a user's email matches a regex". The triggers are saving a user.
+
+The actions are:
+
+- When the criteria is met, auto activate the user's email
+- When the criteria are not met, don't 
+
+### Example 4: Default Group
+
+**Criteria:** Add a user to a group
+
+There are no metrics or requirements, so this will be applied to all users on login.
+
+The actions are:
+
+- Add all users to a group on login
+## Screenshots
+
+![Admin](https://i.imgur.com/k9zfwd9.png)
+![Criterion Edit](https://i.imgur.com/DIgcj48.png)
+![Edit User](https://i.imgur.com/T8sqsor.png)
+
 ## Metrics vs Requirements
 
-It's clear to see that any metric could be represented as a Requirement. However, metrics are highly preferable if possible:
+It's clear to see that any metric could be represented as a Requirement. 
 
 - A requirement must be specific. "More than 50 received likes" could be a requirement. However, metrics can allow for any range of values.
 - Metrics can be stored and used for other purposes. For example, a planned feature is combining all metrics to provide a "reputation" score.
 
-## Action Settings
+## Settings
 
-When you add requirements to a criterion, you indicate whether that requirement must be met, must not be met, or whether it shouldn't apply.
+Requirements and actions can require settings in the admin dashboard. For example:
 
-When you add metrics to a criterion, you indicate a range of values.
-
-Actions can define their own settings. So when you add an action to a criterion, you might be prompted to fill in some settings. This allows creating generic actions, such as adding a user to an arbitrary group.
+- The "add to group" action takes the group ID as a setting
+- The "suspend" action takes the number of days and whether the suspension is indefinite as settings
+- The "email matches regex" requirement takes the regex as a setting
 
 ## Extensibility
-
 
 This extension is extremely flexible. It can be considered a framework for automoderation actions.
 
@@ -78,10 +113,14 @@ Extensions can use the `Askvortsov\AutoModerator\Extend\AutoModerator` extender 
 - Metric drivers
 - Requirement drivers
 
-If your extension is adding actions that have settings, you might also want to introduce a custom action setting component.
-See [this extension's group settings components](https://github.com/askvortsov1/flarum-auto-moderator/blob/b0f194acd7f360f01ec0b2588ddf9efe019894d1/js/src/admin/index.js#L13-L18) for an example. Essentially, you'll need to add an entry to `app["askvortsov-auto-moderator"].actionDriverSettingsComponents` where the key is the action's type string (provided via the extender), and the value is a component class. The component class should take an action item (an object with a `settings` property; the settings item is a map of setting keys to values), and is responsible for updating the `settings` property in that action item.
+You should look at the source code of the default drivers for examples. They're fairly exhaustive of what's offered.
 
-### TODO:
+If your extension adds action or requirement drivers that [consume settings](#settings), you have 2 options:
+
+- Provide translation keys for the settings you need in the driver's `availableSettings` method. This is very easy, but also very restrictive. You can only use strings, and can't add any restrictions or UI.
+- You can declare a settings form component for your driver. See `js/src/admin/components/SuspendSelector` for an example. The component should take a settings stream as `this.attrs.settings`. The contents of the stream should be an object that maps setting keys to values. The component is responsible for updating the stream on input. You can register a form component by adding its class to `app.autoModeratorForms[DRIVER CATEGORY][TYPE]`, where `DRIVER CATEGORY` is `"action"` or `"requirement"`, and `TYPE` is the type string you registered your driver with in `extend.php`. See `js/src/admin/index.js` for the underlying data structure and examples.
+
+## TODO:
 
 - Add support for more metrics:
   - Posts read
@@ -92,28 +131,30 @@ See [this extension's group settings components](https://github.com/askvortsov1/
 - Add support for dated metrics (discussions created in the past X days)
 - Introduce metric "weights", sum together to calculate a reputation. Make that reputation available as a metric.
 - Develop a data collection extension, which could cache things such as like counts, to improve performance on large forums
+- Investigate criterion "listeners": can we generalize stuff like removing links from posts of users without certain groups?
 
-### Screenshots
+## Contributions
 
-![Admin](https://i.imgur.com/k9zfwd9.png)
-![Criterion Edit](https://i.imgur.com/AkEYxRs.png)
-![Edit User](https://i.imgur.com/T8sqsor.png)
+Contributions and PRs are welcome! Any PRs adding new drivers should come with unit tests (like with all existing drivers).
 
+## Compatibility
 
-### Installation
+Compatible starting with Flarum 1.0.
+
+## Installation
 
 ```sh
 composer require askvortsov/flarum-auto-moderator:*
 ```
 
-### Updating
+## Updating
 
 ```sh
 composer update askvortsov/flarum-auto-moderator
 ```
 
-### Links
+## Links
 
 - [Packagist](https://packagist.org/packages/askvortsov/flarum-auto-moderator)
 - [Github](https://github.com/askvortsov1/flarum-auto-moderator)
-- [Discuss](https://discuss.flarum.org/d/25977-trust-levels-automatic-group-assignment)
+- [Discuss](https://discuss.flarum.org/d/27306-flarum-automoderator)
