@@ -19,6 +19,9 @@ askvortsov-auto-moderator:
       email_confirmed: Email Confirmed
       in_group: In Group
       suspended: Suspended
+      email_matches_regex: Email Matches Regex
+    in_group_settings:
+      regex: Regex for Valid Emails (no slashes)
     group_selector:
       placeholder: Select a group
     suspend_selector:

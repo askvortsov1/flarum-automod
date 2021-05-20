@@ -74,6 +74,7 @@ return [
         ->metricDriver('best_answers', Metric\BestAnswers::class)
         ->metricDriver('moderator_strikes', Metric\ModeratorStrikes::class)
         ->requirementDriver('email_confirmed', Requirement\EmailConfirmed::class)
+        ->requirementDriver('email_matches_regex', Requirement\EmailMatchesRegex::class)
         ->requirementDriver('in_group', Requirement\InGroup::class)
         ->requirementDriver('suspended', Requirement\Suspended::class),
 ];
