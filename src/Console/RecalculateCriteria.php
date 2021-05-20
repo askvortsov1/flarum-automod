@@ -11,12 +11,13 @@
 
 namespace Askvortsov\AutoModerator\Console;
 
-use Askvortsov\AutoModerator\CriterionCalculator;
+use Askvortsov\AutoModerator\CriteriaCalculator;
+use Flarum\User\Event\LoggedIn;
 use Flarum\User\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\ConnectionInterface;
 
-class RecalculateLevels extends Command
+class RecalculateCriteria extends Command
 {
     /**
      * @var ConnectionInterface
@@ -24,15 +25,11 @@ class RecalculateLevels extends Command
     protected $connection;
 
     /**
-     * @var CriterionCalculator
+     * @var CriteriaCalculator
      */
     protected $calculator;
 
-    /**
-     * @var ConnectionInterface
-     * @var CriterionCalculator
-     */
-    public function __construct(ConnectionInterface $connection, CriterionCalculator $calculator)
+    public function __construct(ConnectionInterface $connection, CriteriaCalculator $calculator)
     {
         parent::__construct();
 
@@ -44,7 +41,7 @@ class RecalculateLevels extends Command
     /**
      * @var string
      */
-    protected $signature = 'Criteria:recalculate {--amount=500}';
+    protected $signature = 'criteria:recalculate {--amount=500}';
 
     /**
      * @var string
@@ -107,8 +104,9 @@ class RecalculateLevels extends Command
         $this->connection->beginTransaction();
 
         // Recalculate
+        /** @var User */
         foreach ($users as $user) {
-            $this->calculator->recalculate($user);
+            $this->calculator->recalculate($user, LoggedIn::class);
             $bar->advance();
         }
 

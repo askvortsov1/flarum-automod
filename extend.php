@@ -13,6 +13,7 @@ namespace Askvortsov\AutoModerator;
 
 use Askvortsov\AutoModerator\Api\Controller;
 use Askvortsov\AutoModerator\Api\Serializer\CriterionSerializer;
+use Askvortsov\AutoModerator\Console\RecalculateCriteria;
 use Askvortsov\AutoModerator\Extend\AutoModerator;
 use Askvortsov\AutoModerator\Provider\AutoModeratorProvider;
 use Flarum\Api\Controller\ListUsersController;
@@ -55,8 +56,8 @@ return [
 
     new Extend\Locales(__DIR__.'/resources/locale'),
 
-    // (new Extend\Console())
-    //     ->command(RecalculateLevels::class),
+    (new Extend\Console())
+        ->command(RecalculateCriteria::class),
 
     (new AutoModerator())
         ->actionDriver('activate_email', Action\ActivateEmail::class)
