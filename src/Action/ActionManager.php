@@ -11,9 +11,10 @@
 
 namespace Askvortsov\AutoModerator\Action;
 
+use Askvortsov\AutoModerator\DriverManagerInterface;
 use Flarum\Extension\ExtensionManager;
 
-class ActionManager
+class ActionManager implements DriverManagerInterface
 {
     /**
      * @var ExtensionManager

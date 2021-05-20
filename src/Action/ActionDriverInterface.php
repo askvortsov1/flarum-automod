@@ -32,6 +32,7 @@ interface ActionDriverInterface
 
     /**
      * Apply the action to the user.
+     * Don't forget to dispatch any events that should be emitted!
      */
     public function execute(User $user, array $settings = [], User $lastEditedBy);
 }
