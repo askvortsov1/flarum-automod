@@ -2,6 +2,7 @@
 
 namespace Askvortsov\AutoModerator\Action;
 
+use Flarum\User\Event\Activated;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Support\MessageBag;
 use Flarum\User\User;
@@ -29,5 +30,7 @@ class ActivateEmail implements ActionDriverInterface
     public function execute(User $user, array $settings = [], User $lastEditedBy ) {
         $user->is_email_confirmed = true;
         $user->save();
+
+        resolve('events')->dispatch(new Activated($user));
     }
 }
