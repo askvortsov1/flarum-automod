@@ -11,7 +11,6 @@
 
 namespace Askvortsov\AutoModerator;
 
-use Askvortsov\AutoModerator\Action\ActionDriverInterface;
 use Askvortsov\AutoModerator\Action\ActionManager;
 use Askvortsov\AutoModerator\Metric\MetricManager;
 use Askvortsov\AutoModerator\Requirement\RequirementManager;
@@ -56,63 +55,40 @@ class Criterion extends AbstractModel
     }
 
     public function isValid(ActionManager $actions, MetricManager $metrics, RequirementManager $requirements) {
-        $actionDriversWithMissingExts = $actions->getDrivers(true);
-        $hasActionsWithMissingExts = collect($this->actions)
-            ->some(function ($action) use ($actionDriversWithMissingExts) {
-                return array_key_exists($action['type'], $actionDriversWithMissingExts);
-            });
-
-        $metricDriversWithMissingExts = $metrics->getDrivers(true);
-        $hasMetricsWithMissingExts = collect($this->metrics)
-            ->some(function ($metric) use ($metricDriversWithMissingExts) {
-                return array_key_exists($metric['type'], $metricDriversWithMissingExts);
-            });
-
-        $requirementDriversWithMissingExts = $requirements->getDrivers(true);
-        $hasRequirementsWithMissingExts = collect($this->requirements)
-            ->some(function ($requirement) use ($requirementDriversWithMissingExts) {
-                return array_key_exists($requirement['type'], $requirementDriversWithMissingExts);
-            });
-
-        if ($hasActionsWithMissingExts || $hasMetricsWithMissingExts || $hasRequirementsWithMissingExts) return false;
-
-
-        $actionDriversMissing = $actions->getDrivers();
-        $hasActionsMissing = collect($this->actions)
-            ->some(function ($action) use ($actionDriversMissing) {
-                return !array_key_exists($action['type'], $actionDriversMissing);
-            });
-
-        $metricDriversMissing = $metrics->getDrivers();
-        $hasMetricsMissing = collect($this->metrics)
-            ->some(function ($metric) use ($metricDriversMissing) {
-                return !array_key_exists($metric['type'], $metricDriversMissing);
-            });
-
-        $requirementDriversMissing = $requirements->getDrivers();
-        $hasRequirementsMissing = collect($this->requirements)
-            ->some(function ($requirement) use ($requirementDriversMissing) {
-                return !array_key_exists($requirement['type'], $requirementDriversMissing);
-            });
-
-        if ($hasActionsMissing || $hasMetricsMissing || $hasRequirementsMissing) return false;
-
-        if ($this->invalidActionSettings($actions)->isNotEmpty()) return false;
-
-        return true;
+        return $this->validateDrivers($actions, $this->actions) &&
+            $this->validateDrivers($metrics, $this->metrics) &&
+            $this->validateDrivers($requirements, $this->requirements) &&
+            $this->invalidDriverSettings($actions, $this->actions)->isEmpty();
     }
 
-    public function invalidActionSettings(ActionManager $actions): MessageBag
+    protected function validateDrivers(DriverManagerInterface $drivers, array $config)
+    {
+        $driversWithMissingExts = $drivers->getDrivers(true);
+        $hasDriversWithMissingExts = collect($config)
+            ->some(function ($driverConfig) use ($driversWithMissingExts) {
+                return array_key_exists($driverConfig['type'], $driversWithMissingExts);
+            });
+
+        $allDrivers = $drivers->getDrivers();
+        $hasDriversMissing = collect($this->drivers)
+            ->some(function ($driver) use ($allDrivers) {
+                return !array_key_exists($driver['type'], $allDrivers);
+            });
+
+        return !$hasDriversWithMissingExts && !$hasDriversMissing;
+    }
+
+    public function invalidDriverSettings(DriverManagerInterface $drivers, array $config): MessageBag
     {
         $factory = resolve(Factory::class);
-        $actionDrivers = $actions->getDrivers();
+        $allDrivers = $drivers->getDrivers();
 
-        return collect($this->actions)
-            ->reduce(function (MessageBag $acc, $action) use ($actionDrivers, $factory) {
-                /** @var ActionDriverInterface */
-                if (($driver = Arr::get($actionDrivers, $action['type']))) {
+
+        return collect($config)
+            ->reduce(function (MessageBag $acc, $driverConfig) use ($allDrivers, $factory) {
+                if (($driver = Arr::get($allDrivers, $driverConfig['type']))) {
                     /** @var MessageBag */
-                    $errors = $driver->validateSettings($action['settings'], $factory);
+                    $errors = $driver->validateSettings($driverConfig['settings'], $factory);
 
                     return $acc->merge($errors);
                 }
