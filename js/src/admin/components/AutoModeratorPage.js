@@ -14,10 +14,13 @@ function criterionItem(criterion) {
     : app.translator.trans(
         "askvortsov-auto-moderator.admin.automoderator_page.create_criterion_button"
       );
-  const iconName = criterion ? "fas fa-bolt" : "fas fa-plus";
+  const iconName = criterion
+    ? criterion.icon() || "fas fa-bolt"
+    : "fas fa-plus";
   const style = criterion
-    ? { "background-color": stringToColor(criterion.name()), color: "white" }
+    ? { "background-color": `#${stringToColor(criterion.name())}` }
     : "";
+
   return (
     <Link className="ExtensionListItem" href={app.route.criterion(criterion)}>
       <span className="ExtensionListItem-icon ExtensionIcon" style={style}>

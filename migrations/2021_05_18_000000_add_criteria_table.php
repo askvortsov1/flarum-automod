@@ -20,6 +20,7 @@ return [
             $table->integer('last_edited_by_id')->unsigned();
 
             $table->string('name', 200);
+            $table->string('icon', 50);
             $table->text('description');
 
             $table->text('metrics');

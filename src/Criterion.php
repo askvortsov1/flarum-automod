@@ -40,12 +40,13 @@ class Criterion extends AbstractModel
         'requirements' => 'array',
     ];
 
-    public static function build(string $name, int $lastEditedById, string $description, array $actions, array $metrics, array $requirements)
+    public static function build(string $name, int $lastEditedById, string $icon, string $description, array $actions, array $metrics, array $requirements)
     {
         $criterion = new static();
 
         $criterion->last_edited_by_id = $lastEditedById;
         $criterion->name = $name;
+        $criterion->icon = $icon;
         $criterion->description = $description;
         $criterion->actions = $actions;
         $criterion->metrics = $metrics;

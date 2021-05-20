@@ -21,6 +21,7 @@ export default class CriterionPage extends AdminPage {
     this.id = m.route.param("id");
 
     this.name = Stream("");
+    this.icon = Stream("fas fa-bolt");
     this.description = Stream("");
     this.actionsOnGain = Stream([]);
     this.actionsOnLoss = Stream([]);
@@ -62,6 +63,7 @@ export default class CriterionPage extends AdminPage {
   loadCriterion(criterion) {
     this.criterion = criterion;
     this.name(criterion.name());
+    this.icon(criterion.icon() || "fas fa-bolt");
     this.description(criterion.description());
     this.metrics(
       criterion.metrics().map((m) => {
@@ -116,7 +118,7 @@ export default class CriterionPage extends AdminPage {
 
     return {
       className: "CriterionPage",
-      icon: "fas fa-bolt",
+      icon: this.icon(),
       title,
       description,
     };
@@ -158,6 +160,14 @@ export default class CriterionPage extends AdminPage {
                 )}
               </label>
               <input className="FormControl" bidi={this.name} required={true} />
+            </div>
+            <div className="Form-group">
+              <label>
+                {app.translator.trans(
+                  "askvortsov-auto-moderator.admin.criterion_page.icon_label"
+                )}
+              </label>
+              <input className="FormControl" bidi={this.icon} required={true} />
             </div>
             <div className="Form-group">
               <label>
@@ -403,6 +413,7 @@ export default class CriterionPage extends AdminPage {
   data() {
     return {
       name: this.name(),
+      icon: this.icon(),
       description: this.description(),
       actions: [
         ...this.actionsOnGain().map((a) => {

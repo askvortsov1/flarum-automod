@@ -39,6 +39,7 @@ askvortsov-auto-moderator:
       driver_missing_ext: This driver depends on extensions that aren't enabled.
       back: Back to Criteria List
       name_label: Name
+      icon_label: Icon
       description_label: Description
       new_criterion: Create Criterion
       negated: Negated?

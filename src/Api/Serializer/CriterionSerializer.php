@@ -31,6 +31,7 @@ class CriterionSerializer extends AbstractSerializer
     {
         $attributes = [
             'name'                         => $criterion->name,
+            'icon'                         => $criterion->icon,
             'description'                  => $criterion->description,
             'actions'                      => $criterion->actions,
             'metrics'                      => $criterion->metrics,

@@ -4,6 +4,7 @@ export default class Criterion extends Model {}
 
 Object.assign(Criterion.prototype, {
   name: Model.attribute("name"),
+  icon: Model.attribute("icon"),
   description: Model.attribute("description"),
   actions: Model.attribute("actions"),
   metrics: Model.attribute("metrics"),
