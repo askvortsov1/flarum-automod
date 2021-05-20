@@ -40,6 +40,7 @@ class CriteriaUtils
     {
         $criterion = Criterion::build(
             $name,
+            1,
             '',
             $actions,
             $metrics,

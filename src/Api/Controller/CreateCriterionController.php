@@ -63,7 +63,7 @@ class CreateCriterionController extends AbstractCreateController
 
         $criterion = Criterion::build(
             Arr::get($data, 'attributes.name'),
-            $actor,
+            $actor->id,
             Arr::get($data, 'attributes.description'),
             Arr::get($data, 'attributes.actions'),
             Arr::get($data, 'attributes.metrics'),

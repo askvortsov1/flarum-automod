@@ -26,7 +26,7 @@ class ActivateEmail implements ActionDriverInterface
         return [];
     }
 
-    public function execute(User $user, array $settings = []) {
+    public function execute(User $user, array $settings = [], User $lastEditedBy ) {
         $user->is_email_confirmed = true;
         $user->save();
     }

@@ -13,10 +13,9 @@ namespace Askvortsov\AutoModerator\Tests\integration\action;
 
 use Askvortsov\AutoModerator\Action\ActionDriverInterface;
 use Askvortsov\AutoModerator\Action\ActivateEmail;
-use Askvortsov\AutoModerator\Action\AddToGroup;
-use Flarum\Group\Group;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\Guest;
 use Flarum\User\User;
 
 class ActivateEmailTest extends TestCase
@@ -51,7 +50,7 @@ class ActivateEmailTest extends TestCase
         $user->is_email_confirmed = false;
         $user->save();
 
-        $driver->execute(User::find(2), []);
+        $driver->execute(User::find(2), [], new Guest());
 
         $this->assertEquals(1, User::find(2)->is_email_confirmed);
     }
@@ -66,7 +65,7 @@ class ActivateEmailTest extends TestCase
 
         $this->assertEquals(1, User::find(2)->is_email_confirmed);
 
-        $driver->execute(User::find(2), []);
+        $driver->execute(User::find(2), [], new Guest());
 
         $this->assertEquals(1, User::find(2)->is_email_confirmed);
     }

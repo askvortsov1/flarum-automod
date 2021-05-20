@@ -16,6 +16,7 @@ use Askvortsov\AutoModerator\Action\AddToGroup;
 use Flarum\Group\Group;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\Guest;
 use Flarum\User\User;
 
 class AddToGroupTest extends TestCase
@@ -48,7 +49,7 @@ class AddToGroupTest extends TestCase
 
         $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
 
-        $driver->execute(User::find(2), ['group_id' => 4]);
+        $driver->execute(User::find(2), ['group_id' => 4], new Guest());
 
         $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
     }
@@ -69,7 +70,7 @@ class AddToGroupTest extends TestCase
 
         $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
 
-        $driver->execute(User::find(2), ['group_id' => 4]);
+        $driver->execute(User::find(2), ['group_id' => 4], new Guest());
 
         $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
     }

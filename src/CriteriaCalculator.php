@@ -186,8 +186,8 @@ class CriteriaCalculator
             ->filter(function ($action) use ($gain) {
                 return $action['gain'] === $gain;
             })
-            ->each(function ($action) use ($user, $drivers) {
-                $drivers[$action['type']]->execute($user, $action['settings']);
+            ->each(function ($action) use ($user, $drivers, $criterion) {
+                $drivers[$action['type']]->execute($user, $action['settings'], $criterion->lastEditedBy);
             });
     }
 

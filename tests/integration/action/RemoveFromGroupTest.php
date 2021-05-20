@@ -16,6 +16,7 @@ use Askvortsov\AutoModerator\Action\RemoveFromGroup;
 use Flarum\Group\Group;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
+use Flarum\User\Guest;
 use Flarum\User\User;
 
 class RemoveFromGroupTest extends TestCase
@@ -54,7 +55,7 @@ class RemoveFromGroupTest extends TestCase
 
         $this->assertContains(4, User::find(2)->groups->pluck('id')->all());
 
-        $driver->execute(User::find(2), ['group_id' => 4]);
+        $driver->execute(User::find(2), ['group_id' => 4], new Guest());
 
         $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
     }
@@ -69,7 +70,7 @@ class RemoveFromGroupTest extends TestCase
 
         $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
 
-        $driver->execute(User::find(2), ['group_id' => 4]);
+        $driver->execute(User::find(2), ['group_id' => 4], new Guest());
 
         $this->assertNotContains(4, User::find(2)->groups->pluck('id')->all());
     }
