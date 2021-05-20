@@ -1,5 +1,5 @@
 export default function managedGroups(criteria) {
-  return criteria
+  const ids = criteria
     .filter((criterion) => {
       return criterion.actions();
     })
@@ -13,7 +13,9 @@ export default function managedGroups(criteria) {
       acc.push(...ids);
 
       return acc;
-    }, [])
+    }, []);
+
+  return Array.from(new Set(ids).values())
     .map((groupId) => app.store.getById("groups", groupId))
     .filter((g) => g);
 }
