@@ -37,6 +37,6 @@ class DiscussionsStarted implements MetricDriverInterface
 
     public function getValue(User $user): int
     {
-        return $user->discussion_count;
+        return intval($user->discussion_count);
     }
 }

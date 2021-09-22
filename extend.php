@@ -60,12 +60,6 @@ return [
     (new Extend\Console())
         ->command(RecalculateCriteria::class),
 
-    (new Extend\Event())
-        ->listen(Registered::class, function(Registered $event) {
-            $event->user->refreshDiscussionCount();
-            $event->user->refreshCommentCount();
-        }),
-
     (new AutoModerator())
         ->actionDriver('activate_email', Action\ActivateEmail::class)
         ->actionDriver('add_to_group', Action\AddToGroup::class)
