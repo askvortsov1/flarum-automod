@@ -14,6 +14,7 @@ use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
 use Askvortsov\AutoModerator\Metric\MetricManager;
 use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\User\Event\LoggedIn;
+use Flarum\User\Event\Registered;
 use Illuminate\Contracts\Events\Dispatcher;
 
 class AutoModeratorProvider extends AbstractServiceProvider
@@ -24,6 +25,12 @@ class AutoModeratorProvider extends AbstractServiceProvider
             [
                 'eventClass' => LoggedIn::class,
                 'getUser' =>  function (LoggedIn $event) {
+                    return $event->user;
+                }
+            ],
+            [
+                'eventClass' => Registered::class,
+                'getUser' => function (Registered $event) {
                     return $event->user;
                 }
             ]
