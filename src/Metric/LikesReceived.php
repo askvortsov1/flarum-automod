@@ -43,7 +43,7 @@ class LikesReceived implements MetricDriverInterface
     public function getValue(User $user): int
     {
         if (property_exists($user, 'clarkwinkelmann_likes_received_count')) {
-            return $user->clarkwinkelmann_likes_received_count;
+            return intval($user->clarkwinkelmann_likes_received_count);
         }
 
         return Post::where('user_id', $user->id)->select('id')->withCount('likes')->get()->sum('likes_count');

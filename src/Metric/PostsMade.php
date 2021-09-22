@@ -37,6 +37,6 @@ class PostsMade implements MetricDriverInterface
 
     public function getValue(User $user): int
     {
-        return $user->comment_count;
+        return intval($user->comment_count);
     }
 }

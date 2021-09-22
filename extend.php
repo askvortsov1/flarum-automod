@@ -20,6 +20,7 @@ use Flarum\Api\Controller\ListUsersController;
 use Flarum\Api\Controller\ShowUserController;
 use Flarum\Api\Serializer\UserSerializer;
 use Flarum\Extend;
+use Flarum\User\Event\Registered;
 use Flarum\User\User;
 
 return [

@@ -17,6 +17,7 @@ use Askvortsov\AutoModerator\Metric\MetricManager;
 use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
 use Askvortsov\AutoModerator\Requirement\RequirementManager;
 use Flarum\User\Event\LoggedIn;
+use Flarum\User\Event\Registered;
 use Flarum\User\User;
 use Illuminate\Support\Arr;
 
@@ -136,7 +137,7 @@ class CriteriaCalculator
                 return $criterion->isValid($this->actions, $this->metrics, $this->requirements);
             });
 
-        if ($eventClass === LoggedIn::class) {
+        if ($eventClass === LoggedIn::class || $eventClass === Registered::class) {
             return $validCriteria;
         }
 
