@@ -37,14 +37,8 @@ class PostsRead implements MetricDriverInterface
 
     public function getValue(User $user): int
     {
-        $posts = 0;
-
         // Find all read posts
         // Count read post by last read post number
-        foreach ($user->read()->get(['last_read_post_number']) as $readDiscussions) {
-            $posts += $readDiscussions->last_read_post_number;
-        }
-
-        return $posts;
+        return $user->read()->sum('last_read_post_number');
     }
 }
