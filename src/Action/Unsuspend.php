@@ -29,7 +29,7 @@ class Unsuspend implements ActionDriverInterface
         return ['flarum-suspend'];
     }
 
-    public function execute(User $user, array $settings = [], User $lastEditedBy )
+    public function execute(User $user, array $settings, User $lastEditedBy)
     {
         $user->suspended_until = null;
         $user->save();
