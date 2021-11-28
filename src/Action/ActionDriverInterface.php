@@ -15,7 +15,7 @@ interface ActionDriverInterface
 
     /**
      * A list of settings used by this action.
-     * 
+     *
      * Keys should be setting names, values should be translation keys for placeholders.
      */
     public function availableSettings(): array;
@@ -34,5 +34,5 @@ interface ActionDriverInterface
      * Apply the action to the user.
      * Don't forget to dispatch any events that should be emitted!
      */
-    public function execute(User $user, array $settings = [], User $lastEditedBy);
+    public function execute(User $user, array $settings, User $lastEditedBy);
 }
