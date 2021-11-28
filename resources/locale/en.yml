@@ -16,6 +16,7 @@ askvortsov-auto-moderator:
       likes_received: Likes Received
       best_answers: Best Answers
       moderator_strikes: Moderator Warnings Strikes
+      days_since_account_creation: Days since creating an account
     requirement_drivers:
       email_confirmed: Email Confirmed
       in_group: In Group

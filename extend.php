@@ -75,6 +75,7 @@ return [
         ->metricDriver('likes_received', Metric\LikesReceived::class)
         ->metricDriver('best_answers', Metric\BestAnswers::class)
         ->metricDriver('moderator_strikes', Metric\ModeratorStrikes::class)
+        ->metricDriver('days_since_account_creation', Metric\DaysSinceAccountCreation::class)
         ->requirementDriver('email_confirmed', Requirement\EmailConfirmed::class)
         ->requirementDriver('email_matches_regex', Requirement\EmailMatchesRegex::class)
         ->requirementDriver('in_group', Requirement\InGroup::class)
