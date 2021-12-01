@@ -39,6 +39,7 @@ class BestAnswers implements MetricDriverInterface
 
     public function getValue(User $user): int
     {
-        return Discussion::where('best_answer_user_id', $user->id)->count();
+        return $user->posts()->join('discussions', 'discussions.best_answer_post_id', '=', 'posts.id')
+            ->count();
     }
 }
