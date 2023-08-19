@@ -8,7 +8,7 @@
     convertErrorsToExceptions="true"
     convertNoticesToExceptions="true"
     convertWarningsToExceptions="true"
-    processIsolation="true"
+    processIsolation="false"
     stopOnFailure="false"
 >
     <coverage processUncoveredFiles="true">
@@ -17,9 +17,11 @@
         </include>
     </coverage>
     <testsuites>
-        <testsuite name="Flarum Integration Tests">
-            <directory suffix="Test.php">./integration</directory>
-             <exclude>./integration/tmp</exclude>
+        <testsuite name="Flarum Unit Tests">
+            <directory suffix="Test.php">./unit</directory>
         </testsuite>
     </testsuites>
+    <listeners>
+        <listener class="\Mockery\Adapter\Phpunit\TestListener" />
+    </listeners>
 </phpunit>

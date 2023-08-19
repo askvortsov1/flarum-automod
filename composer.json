@@ -15,7 +15,7 @@
         "flarum/core": "^1.0.0"
     },
     "require-dev": {
-        "flarum/testing": "*@dev",
+        "flarum/testing": "^1.0.0",
         "flarum/likes": "*@dev",
         "flarum/suspend": "*@dev",
         "fof/best-answer": "*@dev",
@@ -47,18 +47,38 @@
                 "backgroundColor": "#6932D1",
                 "color": "#fff"
             }
+        },
+        "flarum-cli": {
+            "modules": {
+                "admin": true,
+                "forum": true,
+                "js": true,
+                "jsCommon": true,
+                "css": false,
+                "gitConf": true,
+                "githubActions": true,
+                "prettier": true,
+                "typescript": false,
+                "bundlewatch": false,
+                "backendTesting": true,
+                "editorConfig": true,
+                "styleci": true
+            }
         }
     },
     "scripts": {
         "test": [
+            "@test:unit",
             "@test:integration"
         ],
         "test:integration": "phpunit -c tests/phpunit.integration.xml",
-        "test:setup": "@php tests/integration/setup.php"
+        "test:setup": "@php tests/integration/setup.php",
+        "test:unit": "phpunit -c tests/phpunit.unit.xml"
     },
     "scripts-descriptions": {
         "test": "Runs all tests.",
         "test:integration": "Runs all integration tests.",
-        "test:setup": "Sets up a database for use with integration tests. Execute this only once."
+        "test:setup": "Sets up a database for use with integration tests. Execute this only once.",
+        "test:unit": "Runs all unit tests."
     }
 }
