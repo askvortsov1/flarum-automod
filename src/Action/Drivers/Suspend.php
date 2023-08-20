@@ -1,6 +1,6 @@
 <?php
 
-namespace Askvortsov\AutoModerator\Action;
+namespace Askvortsov\AutoModerator\Action\Drivers;
 
 use Carbon\Carbon;
 use Flarum\Suspend\Event\Suspended;

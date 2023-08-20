@@ -9,7 +9,7 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\AutoModerator\Metric;
+namespace Askvortsov\AutoModerator\Metric\Drivers;
 
 use Flarum\Discussion\Discussion;
 use Flarum\User\User;

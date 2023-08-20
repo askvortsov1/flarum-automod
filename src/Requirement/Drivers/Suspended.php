@@ -1,7 +1,8 @@
 <?php
 
-namespace Askvortsov\AutoModerator\Requirement;
+namespace Askvortsov\AutoModerator\Requirement\Drivers;
 
+use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
 use Flarum\Suspend\Event;
 use Flarum\User\User;
 use Illuminate\Contracts\Support\MessageBag;

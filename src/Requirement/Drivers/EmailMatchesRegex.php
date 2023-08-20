@@ -1,6 +1,6 @@
 <?php
 
-namespace Askvortsov\AutoModerator\Requirement;
+namespace Askvortsov\AutoModerator\Requirement\Drivers;
 
 use Flarum\User\Event\Saving;
 use Flarum\User\User;

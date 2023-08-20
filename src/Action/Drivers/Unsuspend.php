@@ -1,6 +1,6 @@
 <?php
 
-namespace Askvortsov\AutoModerator\Action;
+namespace Askvortsov\AutoModerator\Action\Drivers;
 
 use Flarum\Suspend\Event\Unsuspended;
 use Illuminate\Contracts\Validation\Factory;
