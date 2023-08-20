@@ -5,7 +5,7 @@ import CriterionPage from "./components/CriterionPage";
 import GroupIdSelector from "./components/GroupIdSelector";
 import SuspendSelector from "./components/SuspendSelector";
 
-app.initializers.add("askvortsov/flarum-auto-moderator", () => {
+app.initializers.add("askvortsov/flarum-automod", () => {
   app.routes.criterion = {
     path: "/askvortsov-auto-moderator/criterion/:id",
     component: CriterionPage,

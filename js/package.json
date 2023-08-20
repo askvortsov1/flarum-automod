@@ -1,5 +1,5 @@
 {
-    "name": "@askvortsov/flarum-auto-moderator",
+    "name": "@askvortsov/flarum-automod",
     "version": "0.0.0",
     "private": true,
     "devDependencies": {
