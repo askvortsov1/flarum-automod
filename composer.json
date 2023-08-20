@@ -1,14 +1,14 @@
 {
-    "name": "askvortsov/flarum-auto-moderator",
-    "description": "Automatically assign groups based on activity.",
+    "name": "askvortsov/flarum-automod-2",
+    "description": "Automate rules and actions.",
     "keywords": [
         "flarum"
     ],
     "type": "flarum-extension",
     "license": "MIT",
     "support": {
-        "issues": "https://github.com/askvortsov1/flarum-auto-moderator/issues",
-        "source": "https://github.com/askvortsov1/flarum-auto-moderator",
+        "issues": "https://github.com/askvortsov1/flarum-automod/issues",
+        "source": "https://github.com/askvortsov1/flarum-automod",
         "forum": "https://discuss.flarum.org/d/27306-flarum-automoderator"
     },
     "require": {
@@ -19,7 +19,8 @@
         "flarum/likes": "*@dev",
         "flarum/suspend": "*@dev",
         "fof/best-answer": "*@dev",
-        "askvortsov/flarum-moderator-warnings": "*@dev"
+        "askvortsov/flarum-moderator-warnings": "*@dev",
+        "flarum/phpstan": "^1.0"
     },
     "authors": [
         {
@@ -67,6 +68,8 @@
         }
     },
     "scripts": {
+        "analyse:phpstan": "phpstan analyse",
+        "clear-cache:phpstan": "phpstan clear-result-cache",
         "test": [
             "@test:unit",
             "@test:integration"
@@ -76,6 +79,7 @@
         "test:unit": "phpunit -c tests/phpunit.unit.xml"
     },
     "scripts-descriptions": {
+        "analyse:phpstan": "Run static analysis",
         "test": "Runs all tests.",
         "test:integration": "Runs all integration tests.",
         "test:setup": "Sets up a database for use with integration tests. Execute this only once.",
