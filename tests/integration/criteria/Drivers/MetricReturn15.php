@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-auto-moderator
+ * This file is part of askvortsov/flarum-automod
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *

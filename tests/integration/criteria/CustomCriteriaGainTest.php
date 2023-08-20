@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-auto-moderator
+ * This file is part of askvortsov/flarum-automod
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -143,7 +143,7 @@ class CustomCriteriaGainTest extends TestCase
                 ->metricDriver('27', MetricReturn27::class)
                 ->requirementDriver('always_true', BooleanRequirement::class),
         );
-    
+
         $this->prepareDatabase(['criteria' => [
             CriteriaUtils::genCriterionGroupManagement('arbitrary', 4, [
                 ['type' => '15', 'min' => 2, 'max' => 100]
@@ -168,7 +168,7 @@ class CustomCriteriaGainTest extends TestCase
                 ->metricDriver('27', MetricReturn27::class)
                 ->requirementDriver('always_true', BooleanRequirement::class),
         );
-    
+
         $this->prepareDatabase(['criteria' => [
             CriteriaUtils::genCriterionGroupManagement('meets metrics but not requirements', 4, [
                 ['type' => '15', 'min' => 2, 'max' => 100],

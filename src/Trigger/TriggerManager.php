@@ -9,13 +9,13 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\AutoModerator\Metric;
+namespace Askvortsov\AutoModerator\Trigger;
 
 use Askvortsov\AutoModerator\DriverManager;
+use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
 
 /**
- * @extends DriverManager<MetricDriverInterface>
+ * @extends DriverManager<RequirementDriverInterface>
  */
-class MetricManager extends DriverManager
-{
-}
+class TriggerManager extends DriverManager
+{}

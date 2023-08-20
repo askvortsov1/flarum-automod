@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-auto-moderator
+ * This file is part of askvortsov/flarum-automod
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -52,7 +52,7 @@ class ExtDependencyTest extends TestCase
             (new AutoModerator())
                 ->metricDriver('ext-dependent', MetricDependentOnExt::class)
         );
-    
+
         $this->prepareDatabase(['criteria' => [
             CriteriaUtils::genCriterionGroupManagement('dependent on missing ext', 4, [
                 ['type' => 'ext-dependent', 'min' => 2, 'max' => 100]

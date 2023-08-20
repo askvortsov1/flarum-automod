@@ -12,32 +12,29 @@ namespace Askvortsov\AutoModerator\Provider;
 use Askvortsov\AutoModerator\CriteriaCalculator;
 use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
 use Askvortsov\AutoModerator\Metric\MetricManager;
+use Askvortsov\AutoModerator\Trigger\TriggerDriverInterface;
+use Askvortsov\AutoModerator\Trigger\TriggerManager;
 use Flarum\Foundation\AbstractServiceProvider;
+use Flarum\Settings\SettingsRepositoryInterface;
 use Flarum\User\Event\LoggedIn;
 use Flarum\User\Event\Registered;
 use Illuminate\Contracts\Events\Dispatcher;
 
 class AutoModeratorProvider extends AbstractServiceProvider
 {
-    public function boot(Dispatcher $events, MetricManager $metrics)
+    public function boot(Dispatcher $events, SettingsRepositoryInterface $settings, TriggerManager $triggerManager)
     {
-        $universalTriggers = [
-            [
-                'eventClass' => LoggedIn::class,
-                'getUser' =>  function (LoggedIn $event) {
-                    return $event->user;
-                }
-            ],
-            [
-                'eventClass' => Registered::class,
-                'getUser' => function (Registered $event) {
-                    return $event->user;
-                }
-            ]
-        ];
+
+        $rulesByTriggers = Rule
+
+        $triggers = collect($triggerManager->getDrivers())
+            ->each(function (TriggerDriverInterface $trigger) {
+                return $trigger->eventClass();
+            })
+            ->
 
         $triggers = collect($metrics->getDrivers())
-            ->reduce(function (array $curr, MetricDriverInterface $driver) {
+            ->reduce(function (array P$curr, MetricDriverInterface $driver) {
                 $formatTriggers = collect($driver->eventTriggers())
                     ->map(function (callable $getUser, string $key) {
                         return [

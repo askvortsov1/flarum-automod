@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-auto-moderator
+ * This file is part of askvortsov/flarum-automod
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -36,7 +36,7 @@ class AutomoderatorDriversSerializer extends AbstractSerializer
             $this->serializeRequirementDrivers($drivers['requirementDrivers']),
             $this->serializeRequirementDrivers($drivers['requirementDriversMissingExt'], true)
         );
-    
+
         return [
             'action'      => $action,
             'metric'      => $metric,
