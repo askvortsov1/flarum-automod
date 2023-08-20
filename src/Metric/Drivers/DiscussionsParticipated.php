@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-auto-moderator
+ * This file is part of askvortsov/flarum-automod
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -14,11 +14,11 @@ namespace Askvortsov\AutoModerator\Metric;
 use Flarum\Post\Event\Posted;
 use Flarum\User\User;
 
-class DiscussionsStarted implements MetricDriverInterface
+class DiscussionsParticipated implements MetricDriverInterface
 {
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.discussions_started';
+        return 'askvortsov-auto-moderator.admin.metric_drivers.discussions_participated';
     }
 
     public function extensionDependencies(): array
@@ -37,6 +37,9 @@ class DiscussionsStarted implements MetricDriverInterface
 
     public function getValue(User $user): int
     {
-        return intval($user->discussion_count);
+        return $user->posts()
+                    ->where('type', 'comment')
+                    ->where('is_private', false)
+                    ->distinct()->count('discussion_id');
     }
 }

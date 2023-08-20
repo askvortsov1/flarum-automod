@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of askvortsov/flarum-auto-moderator
+ * This file is part of askvortsov/flarum-automod
  *
  *  Copyright (c) 2021 Alexander Skvortsov.
  *
@@ -11,29 +11,32 @@
 
 namespace Askvortsov\AutoModerator\Metric;
 
-use Askvortsov\FlarumWarnings\Model\Warning;
+use Flarum\Post\Event\Posted;
 use Flarum\User\User;
 
-class ModeratorStrikes implements MetricDriverInterface
+class DiscussionsStarted implements MetricDriverInterface
 {
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.moderator_strikes';
+        return 'askvortsov-auto-moderator.admin.metric_drivers.discussions_started';
     }
 
     public function extensionDependencies(): array
     {
-        return ['askvortsov-moderator-warnings'];
+        return [];
     }
 
     public function eventTriggers(): array
     {
-        // Ext doesnt currently have events
-        return [];
+        return [
+            Posted::class => function (Posted $event) {
+                return $event->post->user;
+            }
+        ];
     }
 
     public function getValue(User $user): int
     {
-        return Warning::where('user_id', $user->id)->sum('strikes');
+        return intval($user->discussion_count);
     }
 }
