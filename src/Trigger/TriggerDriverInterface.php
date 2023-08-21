@@ -5,12 +5,15 @@ namespace Askvortsov\AutoModerator\Trigger;
 use Askvortsov\AutoModerator\DriverInterface;
 use Flarum\Database\AbstractModel;
 
+/**
+ * @template E
+ */
 interface TriggerDriverInterface extends DriverInterface
 {
     /**
      * Which event is linked to this trigger?
      *
-     * @return class-string
+     * @return class-string<E>
      */
     public function eventClass(): string;
 
@@ -22,7 +25,7 @@ interface TriggerDriverInterface extends DriverInterface
     public function subjectClasses(): array;
 
     /**
-     * @template T
+     * @template T of AbstractModel
      * @param class-string<T> $subjectClass
      * @param mixed $event
      * @return T

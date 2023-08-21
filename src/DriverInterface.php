@@ -2,11 +2,10 @@
 
 namespace Askvortsov\AutoModerator;
 
-use Illuminate\Contracts\Support\MessageBag;
-use Illuminate\Contracts\Validation\Factory;
-
 interface DriverInterface
 {
+    public function id(): string;
+
     /**
      * A translation key for a human-readable name for this action driver.
      */

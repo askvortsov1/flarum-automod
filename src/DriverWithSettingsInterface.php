@@ -5,7 +5,7 @@ namespace Askvortsov\AutoModerator;
 use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Contracts\Validation\Factory;
 
-interface DriverWithSettingsInterface
+interface DriverWithSettingsInterface extends DriverInterface
 {
     /**
      * A list of settings used by this action.

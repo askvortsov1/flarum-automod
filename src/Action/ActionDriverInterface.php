@@ -25,5 +25,5 @@ interface ActionDriverInterface extends DriverInterface, DriverWithSettingsInter
      *
      * @param T $subject
      */
-    public function execute(AbstractModel $subject, array $settings = [], User $lastEditedBy);
+    public function execute(AbstractModel $subject, array $settings, User $lastEditedBy);
 }

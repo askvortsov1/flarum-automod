@@ -12,10 +12,9 @@
 namespace Askvortsov\AutoModerator\Trigger;
 
 use Askvortsov\AutoModerator\DriverManager;
-use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
 
 /**
- * @extends DriverManager<RequirementDriverInterface>
+ * @extends DriverManager<TriggerDriverInterface>
  */
 class TriggerManager extends DriverManager
 {}

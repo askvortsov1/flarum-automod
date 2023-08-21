@@ -12,9 +12,10 @@
 namespace Askvortsov\AutoModerator;
 
 use Flarum\Extension\ExtensionManager;
+use Illuminate\Support\Arr;
 
 /**
- * @template I
+ * @template I of DriverInterface
  */
 abstract class DriverManager
 {
@@ -29,23 +30,34 @@ abstract class DriverManager
     }
 
     /**
-     * @var list<I>
+     * @var array<string, I>
      */
     protected $drivers = [];
 
     /**
-     * @param string $name
      * @param I $driver
      * @return void
      */
-    public function addDriver(string $name, $driver)
+    public function addDriver(DriverInterface $driver)
     {
+        $name = $driver->id();
         $this->drivers[$name] = $driver;
     }
 
     /**
+     * @param string $id
+     * @return I|null
+     */
+    public function getDriver(string $id)
+    {
+        $filtered = $this->getDrivers();
+
+        return Arr::get($filtered, $id);
+    }
+
+    /**
      * @param bool $inverse
-     * @return list<I>
+     * @return array<string, I>
      */
     public function getDrivers(bool $inverse = false)
     {

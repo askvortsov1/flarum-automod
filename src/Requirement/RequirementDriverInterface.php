@@ -32,5 +32,5 @@ interface RequirementDriverInterface extends DriverInterface, DriverWithSettings
      *
      * @param T $subject
      */
-    public function subjectSafisfies(AbstractModel $subject, array $settings = []): bool;
+    public function subjectSatisfies(AbstractModel $subject, array $settings ): bool;
 }
