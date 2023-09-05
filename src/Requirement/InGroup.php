@@ -42,6 +42,6 @@ class InGroup implements RequirementDriverInterface
     }
 
     public function userSatisfies(User $user, array $settings = []): bool {
-        return $user->groups()->where('id', $settings['group_id'])->exists();
+        return $user->groups()->where('groups.id', $settings['group_id'])->exists();
     }
 }
