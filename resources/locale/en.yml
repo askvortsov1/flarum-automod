@@ -11,10 +11,12 @@ askvortsov-auto-moderator:
       discussions_participated: Discussions Participated
       discussions_started: Discussions Started
       posts_made: Posts Made
+      posts_read: Posts Read
       likes_given: Likes Given
       likes_received: Likes Received
       best_answers: Best Answers
       moderator_strikes: Moderator Warnings Strikes
+      days_since_account_creation: Days since creating an account
     requirement_drivers:
       email_confirmed: Email Confirmed
       in_group: In Group
@@ -80,7 +82,7 @@ askvortsov-auto-moderator:
 
   forum:
     edit_user:
-      managed_groups_heading: 
+      managed_groups_heading:
 
   lib:
     group_id: Group ID
@@ -88,4 +90,3 @@ askvortsov-auto-moderator:
       header: "Managed Groups:"
       group_item: "<badge></badge> {groupName}"
       groups_not_editable: Groups managed by automoderator criteria cannot be added/removed to/from users manually to prevent inconsistencies.
-

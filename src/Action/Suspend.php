@@ -37,7 +37,7 @@ class Suspend implements ActionDriverInterface
         return ['flarum-suspend'];
     }
 
-    public function execute(User $user, array $settings = [], User $lastEditedBy )
+    public function execute(User $user, array $settings, User $lastEditedBy)
     {
         $days = Arr::get($settings, 'indefinitely', false) ? 365 * 100 : $settings['days'];
 

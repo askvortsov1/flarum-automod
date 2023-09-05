@@ -25,12 +25,12 @@ use Flarum\User\User;
 
 return [
     (new Extend\Frontend('forum'))
-        ->js(__DIR__.'/js/dist/forum.js')
-        ->css(__DIR__.'/resources/less/forum.less'),
+        ->js(__DIR__ . '/js/dist/forum.js')
+        ->css(__DIR__ . '/resources/less/forum.less'),
 
     (new Extend\Frontend('admin'))
-        ->js(__DIR__.'/js/dist/admin.js')
-        ->css(__DIR__.'/resources/less/admin.less'),
+        ->js(__DIR__ . '/js/dist/admin.js')
+        ->css(__DIR__ . '/resources/less/admin.less'),
 
     (new Extend\Routes('api'))
         ->get('/criteria', 'criteria.index', Controller\ListCriteriaController::class)
@@ -55,7 +55,7 @@ return [
     (new Extend\ServiceProvider)
         ->register(AutoModeratorProvider::class),
 
-    new Extend\Locales(__DIR__.'/resources/locale'),
+    new Extend\Locales(__DIR__ . '/resources/locale'),
 
     (new Extend\Console())
         ->command(RecalculateCriteria::class),
@@ -70,10 +70,12 @@ return [
         ->metricDriver('discussions_started', Metric\DiscussionsStarted::class)
         ->metricDriver('discussions_participated', Metric\DiscussionsParticipated::class)
         ->metricDriver('posts_made', Metric\PostsMade::class)
+        ->metricDriver('posts_read', Metric\PostsRead::class)
         ->metricDriver('likes_given', Metric\LikesGiven::class)
         ->metricDriver('likes_received', Metric\LikesReceived::class)
         ->metricDriver('best_answers', Metric\BestAnswers::class)
         ->metricDriver('moderator_strikes', Metric\ModeratorStrikes::class)
+        ->metricDriver('days_since_account_creation', Metric\DaysSinceAccountCreation::class)
         ->requirementDriver('email_confirmed', Requirement\EmailConfirmed::class)
         ->requirementDriver('email_matches_regex', Requirement\EmailMatchesRegex::class)
         ->requirementDriver('in_group', Requirement\InGroup::class)

@@ -14,11 +14,13 @@ class ActivateEmail implements ActionDriverInterface
         return 'askvortsov-auto-moderator.admin.action_drivers.activate_email';
     }
 
-    public function availableSettings(): array {
+    public function availableSettings(): array
+    {
         return [];
     }
 
-    public function validateSettings(array $settings, Factory $validator): MessageBag {
+    public function validateSettings(array $settings, Factory $validator): MessageBag
+    {
         return $validator->make($settings, [])->errors();
     }
 
@@ -27,7 +29,8 @@ class ActivateEmail implements ActionDriverInterface
         return [];
     }
 
-    public function execute(User $user, array $settings = [], User $lastEditedBy ) {
+    public function execute(User $user, array $settings, User $lastEditedBy)
+    {
         $user->is_email_confirmed = true;
         $user->save();
 
