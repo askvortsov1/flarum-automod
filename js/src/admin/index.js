@@ -7,7 +7,7 @@ import SuspendSelector from "./components/SuspendSelector";
 
 app.initializers.add("askvortsov/flarum-automod", () => {
   app.routes.criterion = {
-    path: "/askvortsov-auto-moderator/criterion/:id",
+    path: "/askvortsov-automod/criterion/:id",
     component: CriterionPage,
   };
 
@@ -23,7 +23,7 @@ app.initializers.add("askvortsov/flarum-automod", () => {
   };
 
   app.extensionData
-    .for("askvortsov-auto-moderator")
+    .for("askvortsov-automod")
     .registerPage(AutoModeratorPage);
 
   app.route.criterion = (criterion) => {

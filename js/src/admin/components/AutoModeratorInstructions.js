@@ -6,12 +6,12 @@ export default class AutoModeratorInstructions extends Component {
       <div className="AutoModeratorInstructions">
         <h4>
           {app.translator.trans(
-            "askvortsov-auto-moderator.admin.automoderator_instructions.header"
+            "askvortsov-automod.admin.automoderator_instructions.header"
           )}
         </h4>
         <ul>
           {app.translator.trans(
-            "askvortsov-auto-moderator.admin.automoderator_instructions.text"
+            "askvortsov-automod.admin.automoderator_instructions.text"
           )}
         </ul>
       </div>

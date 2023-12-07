@@ -27,7 +27,7 @@ export default class MetricItem extends Component {
           {metricDef.missingExt && (
             <Tooltip
               text={app.translator.trans(
-                "askvortsov-auto-moderator.admin.criterion_page.driver_missing_ext"
+                "askvortsov-automod.admin.criterion_page.driver_missing_ext"
               )}
             >
               {icon("fas fa-exclamation-triangle")}

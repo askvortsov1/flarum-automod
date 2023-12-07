@@ -103,16 +103,16 @@ export default class CriterionPage extends AdminPage {
 
     if (this.loadingCriterion) {
       description = app.translator.trans(
-        "askvortsov-auto-moderator.admin.criterion_page.loading"
+        "askvortsov-automod.admin.criterion_page.loading"
       );
       title = app.translator.trans(
-        "askvortsov-auto-moderator.admin.criterion_page.loading"
+        "askvortsov-automod.admin.criterion_page.loading"
       );
     } else if (this.criterion) {
       title = this.criterion.name();
     } else {
       title = app.translator.trans(
-        "askvortsov-auto-moderator.admin.criterion_page.new_criterion"
+        "askvortsov-automod.admin.criterion_page.new_criterion"
       );
     }
 
@@ -144,11 +144,11 @@ export default class CriterionPage extends AdminPage {
                 className="Button"
                 icon="fas fa-chevron-left"
                 href={app.route("extension", {
-                  id: "askvortsov-auto-moderator",
+                  id: "askvortsov-automod",
                 })}
               >
                 {app.translator.trans(
-                  "askvortsov-auto-moderator.admin.criterion_page.back"
+                  "askvortsov-automod.admin.criterion_page.back"
                 )}
               </LinkButton>
             </div>
@@ -156,7 +156,7 @@ export default class CriterionPage extends AdminPage {
             <div className="Form-group">
               <label>
                 {app.translator.trans(
-                  "askvortsov-auto-moderator.admin.criterion_page.name_label"
+                  "askvortsov-automod.admin.criterion_page.name_label"
                 )}
               </label>
               <input className="FormControl" bidi={this.name} required={true} />
@@ -164,7 +164,7 @@ export default class CriterionPage extends AdminPage {
             <div className="Form-group">
               <label>
                 {app.translator.trans(
-                  "askvortsov-auto-moderator.admin.criterion_page.icon_label"
+                  "askvortsov-automod.admin.criterion_page.icon_label"
                 )}
               </label>
               <input className="FormControl" bidi={this.icon} required={true} />
@@ -172,7 +172,7 @@ export default class CriterionPage extends AdminPage {
             <div className="Form-group">
               <label>
                 {app.translator.trans(
-                  "askvortsov-auto-moderator.admin.criterion_page.description_label"
+                  "askvortsov-automod.admin.criterion_page.description_label"
                 )}
               </label>
               <input className="FormControl" bidi={this.description} />
@@ -198,7 +198,7 @@ export default class CriterionPage extends AdminPage {
                 disabled={this.saving}
               >
                 {app.translator.trans(
-                  "askvortsov-auto-moderator.admin.criterion_page.delete_button"
+                  "askvortsov-automod.admin.criterion_page.delete_button"
                 )}
               </Button>
             )}
@@ -215,19 +215,19 @@ export default class CriterionPage extends AdminPage {
       <div className="Form-group">
         <label>
           {app.translator.trans(
-            "askvortsov-auto-moderator.admin.criterion_page.metrics_and_requirements_label"
+            "askvortsov-automod.admin.criterion_page.metrics_and_requirements_label"
           )}
         </label>
         <div className="helpText">
           {app.translator.trans(
-            "askvortsov-auto-moderator.admin.criterion_page.metrics_and_requirements_help"
+            "askvortsov-automod.admin.criterion_page.metrics_and_requirements_help"
           )}
         </div>
         <div className="SettingsGroups">
           <div className="DriverGroup">
             <label>
               {app.translator.trans(
-                "askvortsov-auto-moderator.admin.criterion_page.metrics_heading"
+                "askvortsov-automod.admin.criterion_page.metrics_heading"
               )}
             </label>
             <ul className="DriverList DriverList--primary">
@@ -267,7 +267,7 @@ export default class CriterionPage extends AdminPage {
           <div className="DriverGroup DriverGroup--secondary">
             <label>
               {app.translator.trans(
-                "askvortsov-auto-moderator.admin.criterion_page.requirements_heading"
+                "askvortsov-automod.admin.criterion_page.requirements_heading"
               )}
             </label>
             <ul className="DriverList DriverList--primary">
@@ -317,19 +317,19 @@ export default class CriterionPage extends AdminPage {
       <div className="Form-group">
         <label>
           {app.translator.trans(
-            "askvortsov-auto-moderator.admin.criterion_page.actions_label"
+            "askvortsov-automod.admin.criterion_page.actions_label"
           )}
         </label>
         <div className="helpText">
           {app.translator.trans(
-            "askvortsov-auto-moderator.admin.criterion_page.actions_help"
+            "askvortsov-automod.admin.criterion_page.actions_help"
           )}
         </div>
         <div className="SettingsGroups">
           <div className="DriverGroup">
             <label>
               {app.translator.trans(
-                "askvortsov-auto-moderator.admin.criterion_page.actions_on_gain_heading"
+                "askvortsov-automod.admin.criterion_page.actions_on_gain_heading"
               )}
             </label>
             <ul className="DriverList DriverList--primary">
@@ -369,7 +369,7 @@ export default class CriterionPage extends AdminPage {
           <div className="DriverGroup DriverGroup--secondary">
             <label>
               {app.translator.trans(
-                "askvortsov-auto-moderator.admin.criterion_page.actions_on_loss_heading"
+                "askvortsov-automod.admin.criterion_page.actions_on_loss_heading"
               )}
             </label>
             <ul className="DriverList">
@@ -439,7 +439,7 @@ export default class CriterionPage extends AdminPage {
     m.redraw();
 
     this.criterion.delete().then(() => {
-      m.route.set(app.route("extension", { id: "askvortsov-auto-moderator" }));
+      m.route.set(app.route("extension", { id: "askvortsov-automod" }));
     });
   }
 

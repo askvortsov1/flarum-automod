@@ -12,7 +12,7 @@ export default class ManagedGroups extends Component {
         <hr />
         <h4>
           {app.translator.trans(
-            "askvortsov-auto-moderator.lib.managed_groups.header"
+            "askvortsov-automod.lib.managed_groups.header"
           )}
         </h4>
         <ul>
@@ -26,7 +26,7 @@ export default class ManagedGroups extends Component {
                 />
               )}
               {app.translator.trans(
-                "askvortsov-auto-moderator.lib.managed_groups.group_item",
+                "askvortsov-automod.lib.managed_groups.group_item",
                 {
                   badge: GroupBadge.component({
                     group,
@@ -40,7 +40,7 @@ export default class ManagedGroups extends Component {
         </ul>
         <p>
           {app.translator.trans(
-            "askvortsov-auto-moderator.lib.managed_groups.groups_not_editable"
+            "askvortsov-automod.lib.managed_groups.groups_not_editable"
           )}
         </p>
       </div>

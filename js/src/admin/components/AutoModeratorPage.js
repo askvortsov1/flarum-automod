@@ -12,7 +12,7 @@ function criterionItem(criterion) {
   const name = criterion
     ? criterion.name()
     : app.translator.trans(
-        "askvortsov-auto-moderator.admin.automoderator_page.create_criterion_button"
+        "askvortsov-automod.admin.automoderator_page.create_criterion_button"
       );
   const iconName = criterion
     ? criterion.icon() || "fas fa-bolt"
@@ -35,7 +35,7 @@ function criterionItem(criterion) {
         {criterion && !criterion.isValid() && (
           <Tooltip
             text={app.translator.trans(
-              "askvortsov-auto-moderator.admin.automoderator_page.criterion_invalid"
+              "askvortsov-automod.admin.automoderator_page.criterion_invalid"
             )}
           >
             {icon("fas fa-exclamation-triangle")}
@@ -75,7 +75,7 @@ export default class AutoModeratorPage extends ExtensionPage {
           <div className="ExtensionsWidget-list Criteria-list">
             <p className="Criteria-list-heading">
               {app.translator.trans(
-                "askvortsov-auto-moderator.admin.automoderator_page.list_heading"
+                "askvortsov-automod.admin.automoderator_page.list_heading"
               )}
             </p>
             <div className="ExtensionList">

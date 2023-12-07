@@ -10,7 +10,7 @@ export default class GroupSelector extends Component {
     const label = group
       ? [icon(group.icon()), "\t", group.namePlural()]
       : app.translator.trans(
-          "askvortsov-auto-moderator.admin.group_selector.placeholder"
+          "askvortsov-automod.admin.group_selector.placeholder"
         );
     return (
       <div className="Form-group">

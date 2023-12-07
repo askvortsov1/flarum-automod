@@ -1,6 +1,6 @@
 {
-    "name": "askvortsov/flarum-automod-2",
-    "description": "Automate rules and actions.",
+    "name": "askvortsov/flarum-automod",
+    "description": "Powerful automation engine.",
     "keywords": [
         "flarum"
     ],

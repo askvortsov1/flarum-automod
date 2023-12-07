@@ -11,7 +11,7 @@ export default class UndefinedDriverItem extends Component {
         <div className="DriverListItem-info">
           <span className="DriverListItem-name DriverListItem-undefined">
             {app.translator.trans(
-              "askvortsov-auto-moderator.admin.undefined_driver_item.text",
+              "askvortsov-automod.admin.undefined_driver_item.text",
               { driverName: item.type }
             )}
           </span>

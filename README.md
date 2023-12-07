@@ -1,23 +1,22 @@
 # Auto Moderator
 
-![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/askvortsov1/flarum-auto-moderator.svg)](https://packagist.org/packages/askvortsov/flarum-auto-moderator)
+![License](https://img.shields.io/badge/license-MIT-blue.svg) [![Latest Stable Version](https://img.shields.io/packagist/v/askvortsov1/flarum-automod.svg)](https://packagist.org/packages/askvortsov/flarum-automod)
 
 A [Flarum](http://flarum.org) extension.
 
 ## Core Concept
 
-The core idea is as follows:
+The idea is simple: **When X, if Y, do Z**.
 
-When a user meets criteria X, do Y. When a user no longer meets criteria X, do Z. 
+
+
 
 Let's define some key terms:
 
-- **Criteria Group:** The set of all criteria that a user meets.
-- **Criteria (singular Criterion):** An arbitrary set of conditions. Criteria are paired with triggers and actions, and are composed of:
-  - **Metrics:** A numerical condition. For example, post count or number of likes received. A criterion could require a range/minimum/maximum of metrics.
-  - **Requirement:** An abstract boolean condition. For example, not being suspended, or having an email that matches a certain regex.
+- **Triggers:** A set of events (usually just one) that can trigger an automation. Triggers can provide For example, "Posted" 
+- **Metrics:** A numerical condition. For example, post count or number of likes received. A criterion could require a range/minimum/maximum of metrics.
+- **Requirement:** An abstract boolean condition. For example, not being suspended, or having an email that matches a certain regex.
 - **Action:** Something that happens automatically when a criteria is met or lost. This could include anything from adding/removing a group to sending an email to suspending a user.
-- **Triggers:** A set of events that would cause a user's criteria groups to be reevaluated. These are associated with metrics and Requirements. `LoggedIn` is automatically a trigger for all criteria.
 
 This makes for an **extremely** powerful extension. Furthermore, since extensions can add their own metrics, requirements, and actions, this extension can automate away a lot of moderation. Beyond the examples listed below, some things that could be possible are:
 
@@ -144,17 +143,52 @@ Compatible starting with Flarum 1.0.
 ## Installation
 
 ```sh
-composer require askvortsov/flarum-auto-moderator:*
+composer require askvortsov/flarum-automod:*
 ```
 
 ## Updating
 
 ```sh
-composer update askvortsov/flarum-auto-moderator
+composer update askvortsov/flarum-automod
 ```
 
 ## Links
 
-- [Packagist](https://packagist.org/packages/askvortsov/flarum-auto-moderator)
-- [Github](https://github.com/askvortsov1/flarum-auto-moderator)
+- [Packagist](https://packagist.org/packages/askvortsov/flarum-automod)
+- [Github](https://github.com/askvortsov1/flarum-automod)
 - [Discuss](https://discuss.flarum.org/d/27306-flarum-automoderator)
+
+
+
+------
+
+When X, if Y, do Z
+
+Triggers have:
+
+- Name
+- "Short Formatter"
+- List of subject classnames
+- subject getter
+- Event classname
+
+Metrics/Requirements have:
+
+- Name
+- "Short Formatter"
+- Subject classname
+- Value "getter"
+- Settings setter / validator (requirements only)
+
+Actions have:
+
+- Name
+- Subject
+- Settings setter / validator
+- Side effect "executor"
+
+Rules store:
+
+- List of triggers
+- List of (negatable) metrics + requirements
+- List of actions
