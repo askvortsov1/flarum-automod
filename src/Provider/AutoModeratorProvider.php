@@ -10,7 +10,6 @@
 namespace Askvortsov\AutoModerator\Provider;
 
 use Askvortsov\AutoModerator\Rule;
-use Askvortsov\AutoModerator\Trigger\TriggerDriverInterface;
 use Askvortsov\AutoModerator\Trigger\TriggerManager;
 use Flarum\Foundation\AbstractServiceProvider;
 use Flarum\Settings\SettingsRepositoryInterface;
@@ -20,20 +19,23 @@ class AutoModeratorProvider extends AbstractServiceProvider
 {
     public function boot(Dispatcher $events, SettingsRepositoryInterface $settings, TriggerManager $triggerManager)
     {
-        $rules = Rule::fromSettings($settings);
-        $rulesByTriggers = collect($rules)->groupBy(fn(Rule $r) => $r->triggerId);
+        $raw = $settings->get('automod-rules', '[]');
+        $json = json_decode($raw, true);
 
-        collect($triggerManager->getDrivers())
-            ->each(function (TriggerDriverInterface $trigger) use ($events, $rulesByTriggers) {
-                $triggerClass = get_class($trigger);
-                /**
-                 * @var array<Rule> $rules
-                 */
-                $rules = $rulesByTriggers->get($triggerClass, []);
+        $rules = collect($json)->map(fn (array $r) => new Rule($r))->toArray();
+        $rulesByTriggers = collect($rules)->groupBy(fn (Rule $r) => $r->triggerId);
 
-                $events->listen($trigger->eventClass(), function ($e) use ($rules) {
-                    collect($rules)->each(fn(Rule $r) => $r->execute($e));
-                });
+        foreach ($triggerManager->getDrivers() as $trigger) {
+            /**
+             * @var array<Rule> $rules
+             */
+            $rules = $rulesByTriggers->get($trigger->id(), []);
+
+            $events->listen($trigger->eventClass(), function ($e) use ($rules) {
+                foreach ($rules as $rule) {
+                    $rule->execute($e);
+                }
             });
+        }
     }
 }

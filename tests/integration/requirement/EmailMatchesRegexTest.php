@@ -11,12 +11,10 @@
 
 namespace Askvortsov\AutoModerator\Tests\integration\requirement;
 
-use Askvortsov\AutoModerator\Requirement\EmailMatchesRegex;
+use Askvortsov\AutoModerator\Requirement\Drivers\EmailMatchesRegex;
 use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
-use Flarum\User\Event\Saving;
-use Flarum\User\Guest;
 use Flarum\User\User;
 
 class EmailMatchesRegexTest extends TestCase
@@ -30,7 +28,7 @@ class EmailMatchesRegexTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('askvortsov-auto-moderator');
+        $this->extension('askvortsov-automod');
 
         $this->prepareDatabase([
             'users' => [
@@ -38,21 +36,6 @@ class EmailMatchesRegexTest extends TestCase
             ]
         ]);
     }
-
-    /**
-     * @test
-     */
-    public function gets_user_properly_from_saving_event()
-    {
-        /** @var RequirementDriverInterface */
-        $driver = $this->app()->getContainer()->make(EmailMatchesRegex::class);
-
-        $event = new Saving(User::find(2), new Guest(), []);
-        $user = $driver->eventTriggers()[Saving::class]($event);
-
-        $this->assertEquals(2, $user->id);
-    }
-
     /**
      * @test
      */
@@ -61,10 +44,10 @@ class EmailMatchesRegexTest extends TestCase
         /** @var RequirementDriverInterface */
         $driver = $this->app()->getContainer()->make(EmailMatchesRegex::class);
 
-        $value = $driver->userSatisfies(User::find(1), ['regex' => '^n.*@machine.local$']);
+        $value = $driver->subjectSatisfies(User::find(1), ['regex' => '^n.*@machine.local$']);
         $this->assertEquals(false, $value);
 
-        $value = $driver->userSatisfies(User::find(2), ['regex' => '^n.*@machine.local$']);
+        $value = $driver->subjectSatisfies(User::find(2), ['regex' => '^n.*@machine.local$']);
         $this->assertEquals(true, $value);
     }
 }

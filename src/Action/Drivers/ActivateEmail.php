@@ -2,16 +2,36 @@
 
 namespace Askvortsov\AutoModerator\Action\Drivers;
 
+use Askvortsov\AutoModerator\Action\ActionDriverInterface;
+use Flarum\Database\AbstractModel;
 use Flarum\User\Event\Activated;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Support\MessageBag;
 use Flarum\User\User;
 
+/**
+ * @implements ActionDriverInterface<User>
+ */
 class ActivateEmail implements ActionDriverInterface
 {
+    public function subject(): string
+    {
+        return User::class;
+    }
+
+    public function id(): string
+    {
+        return 'activate_email';
+    }
+
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.action_drivers.activate_email';
+        return 'askvortsov-automod.admin.action_drivers.activate_email';
+    }
+
+    public function extensionDependencies(): array
+    {
+        return [];
     }
 
     public function availableSettings(): array {
@@ -22,12 +42,7 @@ class ActivateEmail implements ActionDriverInterface
         return $validator->make($settings, [])->errors();
     }
 
-    public function extensionDependencies(): array
-    {
-        return [];
-    }
-
-    public function execute(User $user, array $settings = [], User $lastEditedBy ) {
+    public function execute(AbstractModel $user, array $settings, User $lastEditedBy ) {
         $user->is_email_confirmed = true;
         $user->save();
 

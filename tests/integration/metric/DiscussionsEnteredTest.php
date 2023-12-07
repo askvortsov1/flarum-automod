@@ -11,10 +11,8 @@
 
 namespace Askvortsov\AutoModerator\Tests\integration\metric;
 
-use Askvortsov\AutoModerator\Metric\DiscussionsEntered;
-use Carbon\Carbon;
-use Flarum\Discussion\Event\UserRead;
-use Flarum\Discussion\UserState;
+use Askvortsov\AutoModerator\Metric\Drivers\DiscussionsEntered;
+use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
@@ -30,7 +28,7 @@ class DiscussionsEnteredTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('askvortsov-auto-moderator');
+        $this->extension('askvortsov-automod');
 
         $this->prepareDatabase([
             'users' => [
@@ -46,22 +44,6 @@ class DiscussionsEnteredTest extends TestCase
                 ['discussion_id' => 2, 'user_id' => 2]
             ],
         ]);
-    }
-
-    /**
-     * @test
-     */
-    public function gets_user_properly_from_user_read_event()
-    {
-        /** @var MetricDriverInterface */
-        $driver = $this->app()->getContainer()->make(DiscussionsEntered::class);
-
-        $state = new UserState();
-        $state->user = User::find(2);
-        $event = new UserRead($state);
-        $user = $driver->eventTriggers()[UserRead::class]($event);
-
-        $this->assertEquals(2, $user->id);
     }
 
     /**

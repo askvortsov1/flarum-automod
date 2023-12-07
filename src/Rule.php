@@ -22,6 +22,7 @@ use Askvortsov\AutoModerator\Trigger\TriggerDriverInterface;
 use Askvortsov\AutoModerator\Trigger\TriggerManager;
 use Flarum\Filesystem\DriverInterface;
 use Flarum\Settings\SettingsRepositoryInterface;
+use Flarum\User\Guest;
 use Flarum\User\User;
 use Illuminate\Support\Arr;
 
@@ -54,19 +55,12 @@ class Rule
      */
     public $requirements;
 
-    /**
-     * @var int
-     */
-    public $lastEditedById;
-
     public function __construct(array $json)
     {
-        $this->triggerId = $json['trigger'];
+        $this->triggerId = $json['triggerId'];
         $this->actions = $json['actions'];
-        $this->metrics = $json['metrics'];
-        $this->requirements = $json['requirements'];
-        $this->requirements = $json['requirements'];
-        $this->lastEditedById = $json['lastEditedById'];
+        $this->metrics = $json['metrics'] ?? [];
+        $this->requirements = $json['requirements'] ?? [];
     }
 
     public function execute(mixed $event)
@@ -89,11 +83,12 @@ class Rule
             return;
         }
 
-        $satisfiesMetrics = collect($this->metrics)->every(function ($metricConfig) use ($event, $triggerDriver, $metricManager) {
+        foreach ($this->metrics as $metricConfig) {
             $metricDriver = $metricManager->getDriver($metricConfig['id']);
+
             if ($metricDriver === null) {
                 // Shouldn't get here due to `isValid` checks.
-                return false;
+                return;
             }
 
             $subject = $triggerDriver->getSubject($metricDriver->subject(), $event);
@@ -104,43 +99,41 @@ class Rule
             $max = Arr::get($metricConfig, "max",  -1);
             $withinRange = ($min === -1 || $metricVal >= $min) && ($max === -1 || $metricVal <= $max);
 
-            return $metricConfig['negate'] xor $withinRange;
-        });
+            $meets = boolval(Arr::get($metricConfig, 'negate', false)) ^ $withinRange;
 
-        if (!$satisfiesMetrics) {
-            // Shouldn't get here due to `isValid` checks.
-            return;
+            if (!$meets) return;
         }
 
-        $satisfiesRequirements = collect($this->requirements)->every(function ($reqConfig) use ($event, $triggerDriver, $requirementManager) {
+        foreach ($this->requirements as $reqConfig) {
             $reqDriver = $requirementManager->getDriver($reqConfig['id']);
             if ($reqDriver === null) {
-                return false;
+                // Shouldn't get here due to `isValid` checks.
+                return;
             }
 
             $subject = $triggerDriver->getSubject($reqDriver->subject(), $event);
 
             $settings = Arr::get($reqConfig, 'settings', []);
-            return $reqConfig['negate'] xor $reqDriver->subjectSatisfies($subject, $settings);
-        });
 
-        if (!$satisfiesRequirements) {
-            return;
+            $meets = Arr::get($reqConfig, 'negate', false) ^ $reqDriver->subjectSatisfies($subject, $settings);
+            if (!$meets) return;
         }
 
-        $lastEditedBy = User::find($this->lastEditedById);
+        $lastEditedBy = new Guest();
+        // $lastEditedBy = User::find($this->lastEditedById);
 
-        collect($this->actions)->each(function ($actionConfig) use ($event, $triggerDriver, $actionManager, $lastEditedBy) {
+        foreach ($this->actions as $actionConfig) {
             $actionDriver = $actionManager->getDriver($actionConfig['id']);
             if ($actionDriver === null) {
-                return false;
+                // Shouldn't get here due to `isValid` checks.
+                return;
             }
 
             $subject = $triggerDriver->getSubject($actionDriver->subject(), $event);
 
             $settings = Arr::get($actionConfig, 'settings', []);
             $actionDriver->execute($subject, $settings, $lastEditedBy);
-        });
+        }
     }
 
     public function isValid(TriggerManager $triggers, ActionManager $actions, MetricManager $metrics, RequirementManager $requirements)
@@ -191,26 +184,12 @@ class Rule
             ->reduce(function (MessageBag $acc, $driverConfig) use ($allDrivers, $factory) {
                 if (($driver = Arr::get($allDrivers, $driverConfig['id']))) {
                     /** @var MessageBagConcrete */
-                    $errors = $driver->validateSettings($driverConfig['settings'], $factory);
+                    $errors = $driver->validateSettings($driverConfig['settings'] ?? [], $factory);
 
                     return $acc->merge($errors->getMessages());
                 }
 
                 return $acc;
             }, new MessageBagConcrete());
-    }
-
-    /**
-     * @param SettingsRepositoryInterface $settings
-     * @return list<Rule>
-     */
-    public static function fromSettings(SettingsRepositoryInterface $settings): array
-    {
-        $raw = $settings->get('automod-rules', '[]');
-        $json = json_decode($raw);
-
-        return collect($json)->map(function ($ruleJson) {
-            return new Rule($ruleJson);
-        })->toArray();
     }
 }

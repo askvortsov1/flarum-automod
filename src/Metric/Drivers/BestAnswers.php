@@ -11,15 +11,22 @@
 
 namespace Askvortsov\AutoModerator\Metric\Drivers;
 
-use Flarum\Discussion\Discussion;
+use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
+use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use FoF\BestAnswer\Events\BestAnswerSet;
 
+/**
+ * @implements MetricDriverInterface<User>
+ */
 class BestAnswers implements MetricDriverInterface
 {
-    public function translationKey(): string
-    {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.best_answers';
+    public function subject(): string {
+        return User::class;
+    }
+
+    public function id(): string {
+        return 'best_answers';
     }
 
     public function extensionDependencies(): array
@@ -27,17 +34,12 @@ class BestAnswers implements MetricDriverInterface
         return ['fof-best-answer'];
     }
 
-    public function eventTriggers(): array
+    public function translationKey(): string
     {
-        // Best answer unset isn't included because it doesn't contain the best answer user.
-        return [
-            BestAnswerSet::class => function (BestAnswerSet $event) {
-                return $event->discussion->bestAnswerUser;
-            }
-        ];
+        return 'askvortsov-automod.admin.metric_drivers.best_answers';
     }
 
-    public function getValue(User $user): int
+    public function getValue(AbstractModel $user): int
     {
         return $user->posts()->join('discussions', 'discussions.best_answer_post_id', '=', 'posts.id')
             ->count();

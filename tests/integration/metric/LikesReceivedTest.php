@@ -11,11 +11,7 @@
 
 namespace Askvortsov\AutoModerator\Tests\integration\metric;
 
-use Askvortsov\AutoModerator\Metric\LikesReceived;
-use Carbon\Carbon;
-use Flarum\Likes\Event\PostWasLiked;
-use Flarum\Likes\Event\PostWasUnliked;
-use Flarum\Post\Post;
+use Askvortsov\AutoModerator\Metric\Drivers\LikesReceived;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\User;
@@ -32,7 +28,7 @@ class LikesReceivedTest extends TestCase
         parent::setUp();
 
         $this->extension('flarum-likes');
-        $this->extension('askvortsov-auto-moderator');
+        $this->extension('askvortsov-automod');
 
         $this->prepareDatabase([
             'users' => [
@@ -61,36 +57,6 @@ class LikesReceivedTest extends TestCase
                 ['post_id' => 5, 'user_id' => 2],
             ],
         ]);
-    }
-
-    /**
-     * @test
-     */
-    public function gets_user_properly_from_post_was_liked_event()
-    {
-        /** @var MetricDriverInterface */
-        $driver = $this->app()->getContainer()->make(LikesReceived::class);
-
-        // 2nd argument is a red herring: should use post author
-        $event = new PostWasLiked(Post::find(1), User::find(2));
-        $user = $driver->eventTriggers()[PostWasLiked::class]($event);
-
-        $this->assertEquals(1, $user->id);
-    }
-
-    /**
-     * @test
-     */
-    public function gets_user_properly_from_post_was_unliked_event()
-    {
-        /** @var MetricDriverInterface */
-        $driver = $this->app()->getContainer()->make(LikesReceived::class);
-
-        // 2nd argument is a red herring: should use post author
-        $event = new PostWasUnliked(Post::find(1), User::find(2));
-        $user = $driver->eventTriggers()[PostWasUnliked::class]($event);
-
-        $this->assertEquals(1, $user->id);
     }
 
     /**

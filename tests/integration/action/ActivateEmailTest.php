@@ -12,7 +12,7 @@
 namespace Askvortsov\AutoModerator\Tests\integration\action;
 
 use Askvortsov\AutoModerator\Action\ActionDriverInterface;
-use Askvortsov\AutoModerator\Action\ActivateEmail;
+use Askvortsov\AutoModerator\Action\Drivers\ActivateEmail;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
 use Flarum\User\Guest;
@@ -29,7 +29,7 @@ class ActivateEmailTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('askvortsov-auto-moderator');
+        $this->extension('askvortsov-automod');
 
         $this->prepareDatabase([
             'users' => [

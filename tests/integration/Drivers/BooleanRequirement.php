@@ -9,15 +9,23 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\AutoModerator\Tests\integration\criteria\Drivers;
+namespace Askvortsov\AutoModerator\Tests\integration\Drivers;
 
 use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
+use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Contracts\Validation\Factory;
 
-class BooleanRequirementWithSetting implements RequirementDriverInterface
+class BooleanRequirement implements RequirementDriverInterface
 {
+    public function subject(): string {
+        return User::class;
+    }
+
+    public function id(): string {
+        return 'always_true';
+    }
 
     public function translationKey(): string
     {
@@ -26,16 +34,12 @@ class BooleanRequirementWithSetting implements RequirementDriverInterface
 
     public function availableSettings(): array
     {
-        return [
-            'number' => ''
-        ];
+        return [];
     }
 
     public function validateSettings(array $settings, Factory $validator): MessageBag
     {
-        return $validator->make($settings, [
-            'number' => 'required|integer',
-        ])->errors();
+        return $validator->make($settings, [])->errors();
     }
 
     public function extensionDependencies(): array
@@ -43,12 +47,7 @@ class BooleanRequirementWithSetting implements RequirementDriverInterface
         return [];
     }
 
-    public function eventTriggers(): array
-    {
-        return [];
-    }
-
-    public function userSatisfies(User $user, array $settings = []): bool
+    public function subjectSatisfies(AbstractModel $user, array $settings ): bool
     {
         return true;
     }

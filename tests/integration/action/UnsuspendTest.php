@@ -12,8 +12,7 @@
 namespace Askvortsov\AutoModerator\Tests\integration\action;
 
 use Askvortsov\AutoModerator\Action\ActionDriverInterface;
-use Askvortsov\AutoModerator\Action\Suspend;
-use Askvortsov\AutoModerator\Action\Unsuspend;
+use Askvortsov\AutoModerator\Action\Drivers\Unsuspend;
 use Carbon\Carbon;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
@@ -30,7 +29,7 @@ class UnsuspendTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('askvortsov-auto-moderator');
+        $this->extension('askvortsov-automod');
 
         $this->prepareDatabase([
             'users' => [

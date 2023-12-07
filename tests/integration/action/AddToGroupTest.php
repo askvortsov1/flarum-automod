@@ -12,7 +12,7 @@
 namespace Askvortsov\AutoModerator\Tests\integration\action;
 
 use Askvortsov\AutoModerator\Action\ActionDriverInterface;
-use Askvortsov\AutoModerator\Action\AddToGroup;
+use Askvortsov\AutoModerator\Action\Drivers\AddToGroup;
 use Flarum\Group\Group;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
@@ -30,7 +30,7 @@ class AddToGroupTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('askvortsov-auto-moderator');
+        $this->extension('askvortsov-automod');
 
         $this->prepareDatabase([
             'users' => [

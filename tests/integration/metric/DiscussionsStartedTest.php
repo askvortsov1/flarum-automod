@@ -11,8 +11,8 @@
 
 namespace Askvortsov\AutoModerator\Tests\integration\metric;
 
-use Askvortsov\AutoModerator\Metric\DiscussionsStarted;
-use Carbon\Carbon;
+use Askvortsov\AutoModerator\Metric\Drivers\DiscussionsStarted;
+use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
 use Flarum\Post\Event\Posted;
 use Flarum\Post\Post;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
@@ -30,7 +30,7 @@ class DiscussionsStartedTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('askvortsov-auto-moderator');
+        $this->extension('askvortsov-automod');
 
         $this->prepareDatabase([
             'users' => [
@@ -51,21 +51,6 @@ class DiscussionsStartedTest extends TestCase
                 ['id' => 5, 'discussion_id' => 5,  'user_id' => 2, 'type' => 'comment', 'content' => '<t><p>foo bar</p></t>'],
             ],
         ]);
-    }
-
-    /**
-     * @test
-     */
-    public function gets_user_properly_from_posted_event()
-    {
-        /** @var MetricDriverInterface */
-        $driver = $this->app()->getContainer()->make(DiscussionsStarted::class);
-
-        // 2nd argument is a red herring: should use post author
-        $event = new Posted(Post::find(1), User::find(1));
-        $user = $driver->eventTriggers()[Posted::class]($event);
-
-        $this->assertEquals(2, $user->id);
     }
 
     /**

@@ -11,14 +11,27 @@
 
 namespace Askvortsov\AutoModerator\Metric\Drivers;
 
+use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
 use Askvortsov\FlarumWarnings\Model\Warning;
+use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 
+/**
+ * @implements MetricDriverInterface<User>
+ */
 class ModeratorStrikes implements MetricDriverInterface
 {
+    public function subject(): string {
+        return User::class;
+    }
+
+    public function id(): string {
+        return 'moderator_strikes';
+    }
+
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.moderator_strikes';
+        return 'askvortsov-automod.admin.metric_drivers.moderator_strikes';
     }
 
     public function extensionDependencies(): array
@@ -26,13 +39,7 @@ class ModeratorStrikes implements MetricDriverInterface
         return ['askvortsov-moderator-warnings'];
     }
 
-    public function eventTriggers(): array
-    {
-        // Ext doesnt currently have events
-        return [];
-    }
-
-    public function getValue(User $user): int
+    public function getValue(AbstractModel $user): int
     {
         return Warning::where('user_id', $user->id)->sum('strikes');
     }

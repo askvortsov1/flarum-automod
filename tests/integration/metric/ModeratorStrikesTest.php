@@ -11,7 +11,7 @@
 
 namespace Askvortsov\AutoModerator\Tests\integration\metric;
 
-use Askvortsov\AutoModerator\Metric\ModeratorStrikes;
+use Askvortsov\AutoModerator\Metric\Drivers\ModeratorStrikes;
 use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
@@ -28,7 +28,7 @@ class ModeratorStrikesTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('fof-best-answer');
+        $this->extension('askvortsov-automod');
         $this->extension('askvortsov-moderator-warnings');
 
         $this->prepareDatabase([

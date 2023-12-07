@@ -11,11 +11,10 @@
 
 namespace Askvortsov\AutoModerator\Tests\integration\requirement;
 
-use Askvortsov\AutoModerator\Requirement\EmailConfirmed;
+use Askvortsov\AutoModerator\Requirement\Drivers\EmailConfirmed;
 use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
 use Flarum\Testing\integration\RetrievesAuthorizedUsers;
 use Flarum\Testing\integration\TestCase;
-use Flarum\User\Event\Activated;
 use Flarum\User\User;
 
 class EmailConfirmedTest extends TestCase
@@ -29,7 +28,7 @@ class EmailConfirmedTest extends TestCase
     {
         parent::setUp();
 
-        $this->extension('askvortsov-auto-moderator');
+        $this->extension('askvortsov-automod');
 
         $this->prepareDatabase([
             'users' => [
@@ -41,32 +40,18 @@ class EmailConfirmedTest extends TestCase
     /**
      * @test
      */
-    public function gets_user_properly_from_activated_event()
-    {
-        /** @var RequirementDriverInterface */
-        $driver = $this->app()->getContainer()->make(EmailConfirmed::class);
-
-        $event = new Activated(User::find(2));
-        $user = $driver->eventTriggers()[Activated::class]($event);
-
-        $this->assertEquals(2, $user->id);
-    }
-
-    /**
-     * @test
-     */
     public function returns_correct_value()
     {
         /** @var RequirementDriverInterface */
         $driver = $this->app()->getContainer()->make(EmailConfirmed::class);
 
-        $value = $driver->userSatisfies(User::find(1));
+        $value = $driver->subjectSatisfies(User::find(1), []);
         $this->assertEquals(true, $value);
 
         $user = User::find(2);
         $user->is_email_confirmed = false;
         $user->save();
-        $value = $driver->userSatisfies(User::find(2));
+        $value = $driver->subjectSatisfies(User::find(2), []);
         $this->assertEquals(false, $value);
     }
 }

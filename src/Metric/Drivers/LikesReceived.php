@@ -11,16 +11,29 @@
 
 namespace Askvortsov\AutoModerator\Metric\Drivers;
 
+use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
+use Flarum\Database\AbstractModel;
 use Flarum\Likes\Event\PostWasLiked;
 use Flarum\Likes\Event\PostWasUnliked;
 use Flarum\Post\Post;
 use Flarum\User\User;
 
+/**
+ * @implements MetricDriverInterface<User>
+ */
 class LikesReceived implements MetricDriverInterface
 {
+    public function subject(): string {
+        return User::class;
+    }
+
+    public function id(): string {
+        return 'likes_received';
+    }
+
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.likes_received';
+        return 'askvortsov-automod.admin.metric_drivers.likes_received';
     }
 
     public function extensionDependencies(): array
@@ -28,19 +41,7 @@ class LikesReceived implements MetricDriverInterface
         return ['flarum-likes'];
     }
 
-    public function eventTriggers(): array
-    {
-        return [
-            PostWasLiked::class => function (PostWasLiked $event) {
-                return $event->post->user;
-            },
-            PostWasUnliked::class => function (PostWasUnliked $event) {
-                return $event->post->user;
-            },
-        ];
-    }
-
-    public function getValue(User $user): int
+    public function getValue(AbstractModel $user): int
     {
         if (property_exists($user, 'clarkwinkelmann_likes_received_count')) {
             return intval($user->clarkwinkelmann_likes_received_count);

@@ -37,7 +37,7 @@ class AutoModerator implements ExtenderInterface
      */
     public function triggerDriver(string $driver)
     {
-        $this->actionDrivers[] = $driver;
+        $this->triggerDrivers[] = $driver;
 
         return $this;
     }

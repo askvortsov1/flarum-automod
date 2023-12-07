@@ -11,14 +11,27 @@
 
 namespace Askvortsov\AutoModerator\Metric\Drivers;
 
+use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
+use Flarum\Database\AbstractModel;
 use Flarum\Discussion\Event\UserRead;
 use Flarum\User\User;
 
+/**
+ * @implements MetricDriverInterface<User>
+ */
 class DiscussionsEntered implements MetricDriverInterface
 {
+    public function subject(): string {
+        return User::class;
+    }
+
+    public function id(): string {
+        return 'discussions_entered';
+    }
+
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.metric_drivers.discussions_entered';
+        return 'askvortsov-automod.admin.metric_drivers.discussions_entered';
     }
 
     public function extensionDependencies(): array
@@ -26,16 +39,7 @@ class DiscussionsEntered implements MetricDriverInterface
         return [];
     }
 
-    public function eventTriggers(): array
-    {
-        return [
-            UserRead::class => function (UserRead $event) {
-                return $event->state->user;
-            }
-        ];
-    }
-
-    public function getValue(User $user): int
+    public function getValue(AbstractModel $user): int
     {
         return $user->read()->count();
     }

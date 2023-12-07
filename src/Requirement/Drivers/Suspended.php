@@ -3,16 +3,30 @@
 namespace Askvortsov\AutoModerator\Requirement\Drivers;
 
 use Askvortsov\AutoModerator\Requirement\RequirementDriverInterface;
-use Flarum\Suspend\Event;
+use Flarum\Database\AbstractModel;
 use Flarum\User\User;
 use Illuminate\Contracts\Support\MessageBag;
 use Illuminate\Contracts\Validation\Factory;
 
+/**
+ * @implements RequirementDriverInterface<User>
+ */
 class Suspended implements RequirementDriverInterface
 {
+    public function subject(): string {
+        return User::class;
+    }
+
+    public function id(): string {
+        return 'suspended';
+    }
 
     public function translationKey(): string {
-        return 'askvortsov-auto-moderator.admin.requirement_drivers.suspended';
+        return 'askvortsov-automod.admin.requirement_drivers.suspended';
+    }
+
+    public function extensionDependencies(): array {
+        return ['flarum-suspend'];
     }
 
     public function availableSettings(): array
@@ -25,22 +39,8 @@ class Suspended implements RequirementDriverInterface
         return $validator->make($settings, [])->errors();
     }
 
-    public function extensionDependencies(): array {
-        return ['flarum-suspend'];
-    }
-
-    public function eventTriggers(): array {
-        return [
-            Event\Suspended::class => function (Event\Suspended $event) {
-                return $event->user;
-            },
-            Event\Unsuspended::class => function (Event\Unsuspended $event) {
-                return $event->user;
-            }
-        ];
-    }
-
-    public function userSatisfies(User $user, array $settings = []): bool {
+    public function subjectSatisfies(AbstractModel $user, array $settings): bool {
+        /** @phpstan-ignore-next-line */
         return $user->suspended_until !== null;
     }
 }

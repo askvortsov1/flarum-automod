@@ -2,16 +2,36 @@
 
 namespace Askvortsov\AutoModerator\Action\Drivers;
 
+use Askvortsov\AutoModerator\Action\ActionDriverInterface;
+use Flarum\Database\AbstractModel;
 use Flarum\Suspend\Event\Unsuspended;
 use Illuminate\Contracts\Validation\Factory;
 use Illuminate\Contracts\Support\MessageBag;
 use Flarum\User\User;
 
+/**
+ * @implements ActionDriverInterface<User>
+ */
 class Unsuspend implements ActionDriverInterface
 {
+    public function subject(): string
+    {
+        return User::class;
+    }
+
+    public function id(): string
+    {
+        return 'suspend';
+    }
+
+    public function extensionDependencies(): array
+    {
+        return ['flarum-suspend'];
+    }
+
     public function translationKey(): string
     {
-        return 'askvortsov-auto-moderator.admin.action_drivers.unsuspend';
+        return 'askvortsov-automod.admin.action_drivers.unsuspend';
     }
 
     public function availableSettings(): array
@@ -23,14 +43,9 @@ class Unsuspend implements ActionDriverInterface
     {
         return $validator->make($settings, [])->errors();
     }
-
-    public function extensionDependencies(): array
+    public function execute(AbstractModel $user, array $settings , User $lastEditedBy )
     {
-        return ['flarum-suspend'];
-    }
-
-    public function execute(User $user, array $settings = [], User $lastEditedBy )
-    {
+        /** @phpstan-ignore-next-line */
         $user->suspended_until = null;
         $user->save();
 

@@ -9,15 +9,23 @@
  *  LICENSE file that was distributed with this source code.
  */
 
-namespace Askvortsov\AutoModerator\Tests\integration\criteria\Drivers;
+namespace Askvortsov\AutoModerator\Tests\integration\Drivers;
 
 use Askvortsov\AutoModerator\Metric\MetricDriverInterface;
-use Flarum\User\Event\Activated;
+use Exception;
+use Flarum\Database\AbstractModel;
 use Flarum\User\Event\LoggedOut;
 use Flarum\User\User;
 
-class MetricReturn27 implements MetricDriverInterface
+class MetricExplode implements MetricDriverInterface
 {
+    public function subject(): string {
+        return User::class;
+    }
+
+    public function id(): string {
+        return 'test_metric_explode';
+    }
 
     public function translationKey(): string
     {
@@ -29,20 +37,8 @@ class MetricReturn27 implements MetricDriverInterface
         return [];
     }
 
-    public function eventTriggers(): array
+    public function getValue(AbstractModel $user): int
     {
-        return [
-            LoggedOut::class => function (LoggedOut $event) {
-                return $event->user;
-            },
-            Activated::class => function (Activated $event) {
-                return $event->user;
-            },
-        ];
-    }
-
-    public function getValue(User $user): int
-    {
-        return 27;
+        throw new Exception("Should have short-circuited!!!");
     }
 }
