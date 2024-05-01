@@ -8,34 +8,86 @@ A [Flarum](http://flarum.org) extension.
 
 The idea is simple: **When X, if Y, do Z**.
 
-
-
-
 Let's define some key terms:
 
-- **Triggers:** A set of events (usually just one) that can trigger an automation. Triggers can provide For example, "Posted" 
-- **Metrics:** A numerical condition. For example, post count or number of likes received. A criterion could require a range/minimum/maximum of metrics.
-- **Requirement:** An abstract boolean condition. For example, not being suspended, or having an email that matches a certain regex.
-- **Action:** Something that happens automatically when a criteria is met or lost. This could include anything from adding/removing a group to sending an email to suspending a user.
+- **Trigger:** A set of events (usually just one) that can trigger an automation. For example, "Posted", "LoggedIn", "Post liked".
+- **Metric:** A numerical quantity. For example, post count or number of likes received.
+- **Requirement:** An abstract boolean condition. For example, not being suspended, having an email that matches some regex, etc. 
+- **Action:** Some side effect / mutation to perform.  This could include anything from adding/removing a group to sending an email to suspending a user.
 
-This makes for an **extremely** powerful extension. Furthermore, since extensions can add their own metrics, requirements, and actions, this extension can automate away a lot of moderation. Beyond the examples listed below, some things that could be possible are:
+Code-wise, these are represented by "Drivers", implementing one of `TriggerDriverInterface`, `MetricDriverInterface`, etc.
+
+_Requirement_ and _Action_ drivers take a list of "settings", which they specify validation rules for. This means you can build a `UserEmailMatchesRegex : RequirementDriverInterface`, or a `AddUserToGroup : ActionDriverInterface`, and then create multiple instances of the drivers with any regex or group ID.
+
+All these are tied together by **Rules**. Rules are stored as [A DATABASE TABLE OR A SETTING, IDK], and specify:
+
+- A trigger for when the rule should run
+- A list of metrics "instances". Each instance includes:
+  - which metric driver is used
+  - a numerical range (could also be a one-sided min or max range). If the value computed by the metric driver falls **in** this range, the metric is satisfied. E.g. "between 10 and 100" likes received
+  - a "negation" Boolean. If true, the metric will be satisfied if the value computed by the metric driver falls **outside** of the range
+- A list of requirement "instances". Each instance includes:
+  - which requirement driver is being used.
+  - A value for the requirement driver's config. It will be plugged into the requirement driver to compute whether the requirement is satisfied. E.g. a users email needs to end with "flarum.org"
+  - A "negation" Boolean. As with metrics, this allows inverting the requirement driver's output
+- a list of actions instances. Each includes:
+  - which action driver is used
+  - a "settings" value, that will be plugged into an action driver to run the action (e.g. which group to remove a user from)
+
+Trigger drivers specify a list of "subject models", e.g. the author and post in a post created event. These determine which metrics, requirements, and actions are available when defining a rule for some trigger, since "running" a metric, requirement, or action always requires some subject (e.g. which user are we calculating num likes received for, which post are we auto-flagging, etc)
+
+Whenever any event that has rules attached via triggers runs, we "evaluate" all valid rules, and if all the rule's metrics and requirements are satisfied, the rule's actions will run.
+
+A rule is invalid if (1) it has requirements or actions where settings don't pass validation, (2) any of it's components depend on an extension that isn't currently enabled, or (3) any of it's components reference drivers that don't currently exist.
+
+This makes for an **extremely** powerful extension. Since extensions can add their own metrics, requirements, and actions, this extension can automate away a lot of moderation. Beyond the examples listed below, some things that could be possible are:
 
 - Automating assignment of achievements / badges
 - Sending emails/notifications to users when they reach thresholds (or just when they register)
 - Establishing a system of "trust levels" like [Discourse](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)
 - Onboard/offboard users to/from external systems when they receive/lose certain group membership
-- And a bunch more! The possibilities are endless.
+- auto-flagging posts that fail some test
 
-## Evaluation
+## Testability
 
-When a trigger event occurs:
+Because this system is so generic, we can separate testing the framework for (validating, evaluating, running) rules, from each of the drivers.
 
-- All metrics will be calculated for the relevant user (what is the numerical value of the metric?)
-- All requirements will be calculated for the relevant user (does the user satisfy each of the requirements?)
-- The user's new criteria group will be computed and diffed against the user's current criteria group. The two sets will be diffed. Only criteria triggered by the event will be adjusted.
-- Actions will be executed for any gained and lost criteria.
+Testing drivers is super easy, which makes it cheap and easy to add any drivers we want. See this extension's test suite for examples.
 
-You can also use the `php flarum criteria:recalculate` console command to recalculate criteria for all users. Note that this will be quite slow, and shouldn't usually be done.
+## TODO:
+
+- Implement the frontend for creating, viewing, and editing rules. Maybe there could be a feature to import a `Rule` as JSON, so that rules could be easily shared between forums?
+  - We could allow registering form components / config for the settings of certain drivers, so that e.g. "AddUserToGroup" actions could be configured with a real group selector, not just a number field.
+  - I've already implemented a metric range selector component.
+- Add a ton more drivers.
+  - Actions e.g. send emails, flag posts, create warmings 
+  - metrics e.g. posts read, time spent, days visited, days since account creation
+  - requirements e.g. "user has bio", "post matches regex", etc
+- more tests for rule evaluation and validation
+- add support for "dated" metrics, e.g. "num discussions created in the past X days"
+- cache / store calculated metric values for use by other extensions
+- making metric values available to action implementations
+
+### Already Implemented
+
+- interfaces for the various drivers 
+  - a bunch of instances of each driver 
+  - tests for each instance
+- an extender for adding new drivers
+- A `Rule` class, including the core validation and evaluation logic for rules
+  - And some tests for this, although more would be nice!
+
+## Metrics vs Requirements
+
+Any metric driver could be implemented as a requirement driver, since requirements are more powerful. But if your requirements are about numerical conditions, metric drivers are better because:
+
+- it's easy to specify a range of numbers that is valid
+- the output of the metric driver contains the actual value, and so could be used for other features, e.g. calculating a "reputation" score per-user
+
+
+# EVERYTHING BELOW THIS LINE IS OUTDATED
+
+---
 
 ## Examples
 
@@ -87,21 +139,6 @@ The actions are:
 ![Criterion Edit](https://i.imgur.com/DIgcj48.png)
 ![Edit User](https://i.imgur.com/8kZZQmT.png)
 
-## Metrics vs Requirements
-
-It's clear to see that any metric could be represented as a Requirement. 
-
-- A requirement must be specific. "More than 50 received likes" could be a requirement. However, metrics can allow for any range of values.
-- Metrics can be stored and used for other purposes. For example, a planned feature is combining all metrics to provide a "reputation" score.
-
-## Settings
-
-Requirements and actions can require settings in the admin dashboard. For example:
-
-- The "add to group" action takes the group ID as a setting
-- The "suspend" action takes the number of days and whether the suspension is indefinite as settings
-- The "email matches regex" requirement takes the regex as a setting
-
 ## Extensibility
 
 This extension is extremely flexible. It can be considered a framework for automoderation actions.
@@ -119,18 +156,6 @@ If your extension adds action or requirement drivers that [consume settings](#se
 - Provide translation keys for the settings you need in the driver's `availableSettings` method. This is very easy, but also very restrictive. You can only use strings, and can't add any restrictions or UI.
 - You can declare a settings form component for your driver. See `js/src/admin/components/SuspendSelector` for an example. The component should take a settings stream as `this.attrs.settings`. The contents of the stream should be an object that maps setting keys to values. The component is responsible for updating the stream on input. You can register a form component by adding its class to `app.autoModeratorForms[DRIVER CATEGORY][TYPE]`, where `DRIVER CATEGORY` is `"action"` or `"requirement"`, and `TYPE` is the type string you registered your driver with in `extend.php`. See `js/src/admin/index.js` for the underlying data structure and examples.
 
-## TODO:
-
-- Add support for more metrics:
-  - Posts read
-  - Time spent on forum
-  - Days visited
-  - Days since account creation
-  - Etc
-- Add support for dated metrics (discussions created in the past X days)
-- Introduce metric "weights", sum together to calculate a reputation. Make that reputation available as a metric.
-- Develop a data collection extension, which could cache things such as like counts, to improve performance on large forums
-- Investigate criterion "listeners": can we generalize stuff like removing links from posts of users without certain groups?
 
 ## Contributions
 
@@ -159,36 +184,3 @@ composer update askvortsov/flarum-automod
 - [Discuss](https://discuss.flarum.org/d/27306-flarum-automoderator)
 
 
-
-------
-
-When X, if Y, do Z
-
-Triggers have:
-
-- Name
-- "Short Formatter"
-- List of subject classnames
-- subject getter
-- Event classname
-
-Metrics/Requirements have:
-
-- Name
-- "Short Formatter"
-- Subject classname
-- Value "getter"
-- Settings setter / validator (requirements only)
-
-Actions have:
-
-- Name
-- Subject
-- Settings setter / validator
-- Side effect "executor"
-
-Rules store:
-
-- List of triggers
-- List of (negatable) metrics + requirements
-- List of actions
